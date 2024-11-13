@@ -20,7 +20,7 @@ function CodePlayground() {
   const onJsChange = (value: string) => setJsCode(value);
 
   return (
-    <Tabs defaultValue="html" className="w-full">
+    <Tabs defaultValue="html" className="px-1">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger
           value="html"

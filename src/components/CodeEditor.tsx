@@ -41,7 +41,7 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
         onChange={onChangeCode}
         theme={editorThemeInit({
           settings: {
-            fontFamily: "JetBrains Mono",
+            fontFamily: "mono",
             fontSize: ".95rem",
           },
         })}
