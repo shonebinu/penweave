@@ -2,8 +2,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { githubDark } from "@uiw/codemirror-theme-github";
-import { EditorView } from "@uiw/react-codemirror";
+import { sublimeInit } from "@uiw/codemirror-theme-sublime";
 
 const langMap = {
   html,
@@ -22,23 +21,22 @@ interface CodeEditorProps {
 function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
   const selectedLang = langMap[lang as LangType] || javascript;
 
-  const FontFamilyTheme = EditorView.theme({
-    ".cm-content": {
-      fontFamily: "JetBrains Mono, monospace",
-      fontSize: ".9rem",
-    },
-  });
-
   return (
-    // TODO: Create a shadcn theme for the codemirror
-    // TODO: should be aware of shadcn current theme context
-    <CodeMirror
-      value={code}
-      height="40vh"
-      extensions={[selectedLang(), FontFamilyTheme]}
-      onChange={onChangeCode}
-      theme={githubDark}
-    />
+    // TODO: option to set font and colorscheme
+    <div className="p-2 border-2 rounded">
+      <CodeMirror
+        value={code}
+        height="40vh"
+        extensions={[selectedLang()]}
+        onChange={onChangeCode}
+        theme={sublimeInit({
+          settings: {
+            fontFamily: "JetBrains Mono",
+            fontSize: ".9rem",
+          },
+        })}
+      />
+    </div>
   );
 }
 
