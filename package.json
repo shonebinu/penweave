@@ -13,6 +13,7 @@
     "@codemirror/lang-css": "^6.3.0",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
+    "@radix-ui/react-tabs": "^1.1.1",
     "@uiw/codemirror-theme-github": "^4.23.6",
     "@uiw/react-codemirror": "^4.23.6",
     "class-variance-authority": "^0.7.0",
