@@ -2,7 +2,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { sublimeInit } from "@uiw/codemirror-theme-sublime";
+import { githubDarkInit } from "@uiw/codemirror-theme-github";
 
 const langMap = {
   html,
@@ -29,7 +29,7 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
         height="40vh"
         extensions={[selectedLang()]}
         onChange={onChangeCode}
-        theme={sublimeInit({
+        theme={githubDarkInit({
           settings: {
             fontFamily: "JetBrains Mono",
             fontSize: ".95rem",
