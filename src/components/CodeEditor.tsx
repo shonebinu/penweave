@@ -32,7 +32,7 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
         theme={sublimeInit({
           settings: {
             fontFamily: "JetBrains Mono",
-            fontSize: ".9rem",
+            fontSize: ".95rem",
           },
         })}
       />

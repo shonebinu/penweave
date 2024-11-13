@@ -20,15 +20,21 @@ function CodePlayground() {
   const onJsChange = (value: string) => setJsCode(value);
 
   return (
-    <Tabs defaultValue="html" className="w-full">
+    <Tabs defaultValue="html" className="w-full p-2">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="html" className="font-bold flex gap-1 items-center">
+        <TabsTrigger
+          value="html"
+          className="font-bold flex gap-1 items-center border-2 border-transparent data-[state=active]:border-red-500"
+        >
           <span>HTML</span>
           <svg className="w-5 aspect-square fill-red-500" viewBox="0 0 128 128">
             <path d="M9.032 2l10.005 112.093 44.896 12.401 45.02-12.387L118.968 2H9.032zm89.126 26.539l-.627 7.172L97.255 39H44.59l1.257 14h50.156l-.336 3.471-3.233 36.119-.238 2.27L64 102.609v.002l-.034.018-28.177-7.423L33.876 74h13.815l.979 10.919L63.957 89H64v-.546l15.355-3.875L80.959 67H33.261l-3.383-38.117L29.549 25h68.939l-.33 3.539z"></path>
           </svg>
         </TabsTrigger>
-        <TabsTrigger value="css" className="font-bold flex gap-1 items-center">
+        <TabsTrigger
+          value="css"
+          className="font-bold flex gap-1 items-center border-2 border-transparent data-[state=active]:border-blue-500"
+        >
           <span>CSS</span>
           <svg
             className="w-5 aspect-square fill-blue-500"
@@ -37,7 +43,10 @@ function CodePlayground() {
             <path d="M8.76 1l10.055 112.883 45.118 12.58 45.244-12.626L119.24 1H8.76zm89.591 25.862l-3.347 37.605.01.203-.014.467v-.004l-2.378 26.294-.262 2.336L64 101.607v.001l-.022.019-28.311-7.888L33.75 72h13.883l.985 11.054 15.386 4.17-.004.008v-.002l15.443-4.229L81.075 65H48.792l-.277-3.043-.631-7.129L47.553 51h34.749l1.264-14H30.64l-.277-3.041-.63-7.131L29.401 23h69.281l-.331 3.862z"></path>
           </svg>
         </TabsTrigger>
-        <TabsTrigger value="js" className="font-bold flex gap-1 items-center">
+        <TabsTrigger
+          value="js"
+          className="font-bold flex gap-1 items-center border-2 border-transparent data-[state=active]:border-yellow-500"
+        >
           <span>JS</span>
           <svg
             className="w-5 aspect-square fill-yellow-500"
