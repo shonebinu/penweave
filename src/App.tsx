@@ -1,4 +1,4 @@
-import CodePlayground from "./components/CodeEditorGroup";
+import CodePlayground from "./components/CodePlayground";
 
 function App() {
   return <CodePlayground />;

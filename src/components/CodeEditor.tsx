@@ -2,7 +2,8 @@ import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { githubDarkInit } from "@uiw/codemirror-theme-github";
+import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
+import { useTheme } from "@/components/theme-provider";
 
 const langMap = {
   html: html,
@@ -20,16 +21,25 @@ type CodeEditorProps = {
 
 function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
   const selectedLang = langMap[lang];
+  const { theme } = useTheme();
+
+  const isDarkMode =
+    theme === "dark"
+      ? true
+      : theme === "light"
+      ? false
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const editorThemeInit = isDarkMode ? githubDarkInit : githubLightInit;
 
   return (
-    // TODO: option to set font and colorscheme
     <div className="p-2 border-2 rounded">
       <CodeMirror
         value={code}
         height="40vh"
         extensions={[selectedLang()]}
         onChange={onChangeCode}
-        theme={githubDarkInit({
+        theme={editorThemeInit({
           settings: {
             fontFamily: "JetBrains Mono",
             fontSize: ".95rem",
