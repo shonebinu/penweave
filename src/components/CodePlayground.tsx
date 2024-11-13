@@ -2,6 +2,7 @@ import CodeEditorGroup from "./CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Cloud } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 function CodePlayground() {
   return (
@@ -11,6 +12,7 @@ function CodePlayground() {
           <strong>Pen Weave</strong>
         </div>
         <div className="flex gap-2">
+          <ModeToggle />
           <Button
             variant="outline"
             className="bg-green-500 hover:bg-green-400 dark:bg-green-600 dark:hover:bg-green-700"
