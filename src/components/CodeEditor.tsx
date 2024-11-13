@@ -5,21 +5,21 @@ import { javascript } from "@codemirror/lang-javascript";
 import { githubDarkInit } from "@uiw/codemirror-theme-github";
 
 const langMap = {
-  html,
-  css,
+  html: html,
+  css: css,
   js: javascript,
 };
 
 type LangType = keyof typeof langMap;
 
-interface CodeEditorProps {
-  lang: string;
+type CodeEditorProps = {
+  lang: LangType;
   code: string;
   onChangeCode: (value: string) => void;
-}
+};
 
 function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
-  const selectedLang = langMap[lang as LangType] || javascript;
+  const selectedLang = langMap[lang];
 
   return (
     // TODO: option to set font and colorscheme
