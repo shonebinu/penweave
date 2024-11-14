@@ -41,7 +41,7 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
         onChange={onChangeCode}
         theme={editorThemeInit({
           settings: {
-            fontFamily: "mono",
+            fontFamily: "monospace",
             fontSize: ".95rem",
           },
         })}
