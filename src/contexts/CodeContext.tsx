@@ -3,9 +3,10 @@ import { createContext, useContext, useState } from "react";
 const CODE_DEFAULT_VALUES = {
   html: `<button>Click Here</button>`,
   css: `button {
-    padding: 10px;
+    padding: 6px 3px;
 }`,
-  js: `document.querySelector("button").onClick = () => window.alert("Welcome to Pen Weave");`,
+  js: `const button = document.querySelector("button");
+button.addEventListener("click", () => window.alert("Hello world"));`,
 };
 
 type CodeState = {

@@ -4,9 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Cloud } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import {
+  html as beautifyHTML,
+  css as beautifyCSS,
+  js as beautifyJS,
+} from "js-beautify";
 
 function CodePlaygroundContent() {
-  const { htmlCode, cssCode, jsCode } = useCode();
+  const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
+    useCode();
+
+  const handlePrettify = () => {
+    setHtmlCode(beautifyHTML(htmlCode));
+    setCssCode(beautifyCSS(cssCode));
+    setJsCode(beautifyJS(jsCode));
+  };
   const handleSave = () => console.log({ htmlCode, cssCode, jsCode });
 
   return (
@@ -16,7 +28,9 @@ function CodePlaygroundContent() {
           <strong>Pen Weave</strong>
         </div>
         <div className="flex gap-2">
-          <ModeToggle />
+          <Button variant="outline" onClick={handlePrettify}>
+            Prettify
+          </Button>
           <Button
             variant="outline"
             className="bg-green-500 hover:bg-green-400 dark:bg-green-600 dark:hover:bg-green-700"
@@ -25,6 +39,7 @@ function CodePlaygroundContent() {
             <Cloud />
             Save
           </Button>
+          <ModeToggle />
           <Button>Sign Up</Button>
           <Button variant="secondary">Log In</Button>
         </div>
