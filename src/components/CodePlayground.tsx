@@ -2,14 +2,8 @@ import { CodeProvider, useCode } from "../contexts/CodeContext";
 import CodeEditorGroup from "./CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Cloud, Settings } from "lucide-react";
+import { Cloud } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 
 function CodePlaygroundContent() {
   const { htmlCode, cssCode, jsCode } = useCode();
@@ -22,19 +16,6 @@ function CodePlaygroundContent() {
           <strong>Pen Weave</strong>
         </div>
         <div className="flex gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Settings />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Label htmlFor="font-select">Select an Editor font</Label>
-              <Label htmlFor="editor-theme-select">
-                Select an Editor Theme
-              </Label>
-            </PopoverContent>
-          </Popover>
           <ModeToggle />
           <Button
             variant="outline"

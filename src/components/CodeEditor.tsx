@@ -2,7 +2,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
+import { vscodeLightInit, vscodeDarkInit } from "@uiw/codemirror-theme-vscode";
 import { useTheme } from "@/contexts/theme-provider";
 
 const langMap = {
@@ -30,7 +30,7 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
       ? false
       : window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-  const editorThemeInit = isDarkMode ? githubDarkInit : githubLightInit;
+  const editorThemeInit = isDarkMode ? vscodeDarkInit : vscodeLightInit;
 
   return (
     <div className="p-2 border-2 rounded">
