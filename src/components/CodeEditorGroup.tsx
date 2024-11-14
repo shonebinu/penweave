@@ -7,7 +7,7 @@ function CodePlayground() {
     useCode();
 
   return (
-    <Tabs defaultValue="html" className="px-1">
+    <Tabs defaultValue="html" className="px-1 pb-2">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger
           value="html"

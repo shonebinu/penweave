@@ -6,6 +6,7 @@ const CODE_DEFAULT_VALUES = {
     padding: 6px 3px;
 }`,
   js: `const button = document.querySelector("button");
+
 button.addEventListener("click", () => window.alert("Hello world"));`,
 };
 

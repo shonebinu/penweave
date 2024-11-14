@@ -5,3 +5,13 @@
 5. iframe security
 6. lint and prettify codemirror using external library or codemirror
 7. parse html so that no xss attack happen. use dom parser library
+8. google gemini api integration to generate code
+9. publicize, get liked and commented by others
+10. share with others with sharable link. also download the whole code in one single file index.html
+11. show the live render in a separate page and sharable link for its own as well
+12. firebase backend for easy auth???
+13. give warning that only content inside body tag goes there
+14. prettify on save??? option for that
+15. profile with avatar icon, contains my account option etc
+16. only dark mode
+17. vi bindings
