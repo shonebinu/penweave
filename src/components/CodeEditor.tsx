@@ -3,7 +3,7 @@ import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
 import { githubDarkInit, githubLightInit } from "@uiw/codemirror-theme-github";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/contexts/theme-provider";
 
 const langMap = {
   html: html,
