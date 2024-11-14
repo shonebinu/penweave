@@ -1,3 +1,4 @@
+import { CodeProvider, useCode } from "../contexts/CodeContext";
 import CodeEditorGroup from "./CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +15,10 @@ import { Label } from "@/components/ui/label";
 // TODO: font and editor theme select
 // TODO: https://medium.com/@yuvrajkakkar1/best-2024-top-20-visual-studio-code-extensions-for-react-js-developers-f3bfde74d4e2
 
-function CodePlayground() {
+function CodePlaygroundContent() {
+  const { htmlCode, cssCode, jsCode } = useCode();
+  const handleSave = () => console.log({ htmlCode, cssCode, jsCode });
+
   return (
     <main>
       <nav className="flex justify-between items-center pt-2 px-2">
@@ -23,7 +27,7 @@ function CodePlayground() {
         </div>
         <div className="flex gap-2">
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
               <Button variant="outline" size="icon">
                 <Settings />
               </Button>
@@ -39,6 +43,7 @@ function CodePlayground() {
           <Button
             variant="outline"
             className="bg-green-500 hover:bg-green-400 dark:bg-green-600 dark:hover:bg-green-700"
+            onClick={handleSave}
           >
             <Cloud />
             Save
@@ -50,6 +55,14 @@ function CodePlayground() {
       <Separator className="my-2" />
       <CodeEditorGroup />
     </main>
+  );
+}
+
+function CodePlayground() {
+  return (
+    <CodeProvider>
+      <CodePlaygroundContent />
+    </CodeProvider>
   );
 }
 

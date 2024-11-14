@@ -65,3 +65,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Disable CodeMirror code editor outline */
+div.cm-focused {
+  outline: none !important;
+}

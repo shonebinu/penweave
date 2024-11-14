@@ -1,23 +1,10 @@
-import { useState } from "react";
+import { useCode } from "../contexts/CodeContext";
 import CodeEditor from "./CodeEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const CODE_DEFAULT_VALUES = {
-  html: `<button>Click Here</button>`,
-  css: `button {
-    padding: 10px;
-}`,
-  js: `document.querySelector("button").onClick = () => window.alert("Welcome to Pen Weave");`,
-};
-
 function CodePlayground() {
-  const [htmlCode, setHtmlCode] = useState(CODE_DEFAULT_VALUES.html);
-  const [cssCode, setCssCode] = useState(CODE_DEFAULT_VALUES.css);
-  const [jsCode, setJsCode] = useState(CODE_DEFAULT_VALUES.js);
-
-  const onHtmlChange = (value: string) => setHtmlCode(value);
-  const onCssChange = (value: string) => setCssCode(value);
-  const onJsChange = (value: string) => setJsCode(value);
+  const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
+    useCode();
 
   return (
     <Tabs defaultValue="html" className="px-1">
@@ -58,15 +45,15 @@ function CodePlayground() {
       </TabsList>
 
       <TabsContent value="html">
-        <CodeEditor lang="html" code={htmlCode} onChangeCode={onHtmlChange} />
+        <CodeEditor lang="html" code={htmlCode} onChangeCode={setHtmlCode} />
       </TabsContent>
 
       <TabsContent value="css">
-        <CodeEditor lang="css" code={cssCode} onChangeCode={onCssChange} />
+        <CodeEditor lang="css" code={cssCode} onChangeCode={setCssCode} />
       </TabsContent>
 
       <TabsContent value="js">
-        <CodeEditor lang="js" code={jsCode} onChangeCode={onJsChange} />
+        <CodeEditor lang="js" code={jsCode} onChangeCode={setJsCode} />
       </TabsContent>
     </Tabs>
   );
