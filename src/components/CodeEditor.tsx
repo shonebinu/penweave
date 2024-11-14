@@ -32,7 +32,6 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
 
   const editorThemeInit = isDarkMode ? githubDarkInit : githubLightInit;
 
-  // TODO: disable the codemirror outline this way: https://codemirror.net/examples/styling/
   return (
     <div className="p-2 border-2 rounded">
       <CodeMirror

@@ -11,10 +11,6 @@ import {
 } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 
-// TODO: penweave logo, filename and username
-// TODO: font and editor theme select
-// TODO: https://medium.com/@yuvrajkakkar1/best-2024-top-20-visual-studio-code-extensions-for-react-js-developers-f3bfde74d4e2
-
 function CodePlaygroundContent() {
   const { htmlCode, cssCode, jsCode } = useCode();
   const handleSave = () => console.log({ htmlCode, cssCode, jsCode });
