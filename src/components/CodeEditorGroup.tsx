@@ -1,6 +1,7 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { useCode } from "../contexts/CodeContext";
 import CodeEditor from "./CodeEditor";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function CodePlayground() {
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =

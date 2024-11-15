@@ -1,8 +1,8 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
+import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import { vscodeDarkInit } from "@uiw/codemirror-theme-vscode";
+import CodeMirror from "@uiw/react-codemirror";
 
 const langMap = {
   html: html,

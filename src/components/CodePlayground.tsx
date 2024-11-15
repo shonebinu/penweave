@@ -1,14 +1,17 @@
-import { CodeProvider, useCode } from "../contexts/CodeContext";
-import CodeEditorGroup from "./CodeEditorGroup";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Cloud, Loader2 } from "lucide-react";
 import {
-  html as beautifyHTML,
   css as beautifyCSS,
+  html as beautifyHTML,
   js as beautifyJS,
 } from "js-beautify";
-import { useState, useEffect, useRef } from "react";
+import { Cloud, Loader2 } from "lucide-react";
+
+import { useEffect, useRef, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
+import { CodeProvider, useCode } from "../contexts/CodeContext";
+import CodeEditorGroup from "./CodeEditorGroup";
 import PenWeaveIcon from "./PenWeaveIcon";
 
 function CodePlaygroundContent() {
