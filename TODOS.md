@@ -15,3 +15,6 @@
 15. profile with avatar icon, contains my account option etc
 16. only dark mode
 17. vi bindings
+18. codemirror and prettify tab width sync (2 or 4)
+19. iframe sandboxing also dont show js in screen when html has open tags
+20. split components
