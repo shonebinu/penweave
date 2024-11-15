@@ -3,7 +3,6 @@ import CodeEditorGroup from "./CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Cloud, Loader2 } from "lucide-react";
-import { ModeToggle } from "./ModeToggle";
 import {
   html as beautifyHTML,
   css as beautifyCSS,
@@ -82,7 +81,6 @@ function CodePlaygroundContent() {
           <Button variant="outline" onClick={handlePrettify}>
             Prettify
           </Button>
-          <ModeToggle />
           <Button variant="secondary">Sign In</Button>
         </div>
       </nav>
