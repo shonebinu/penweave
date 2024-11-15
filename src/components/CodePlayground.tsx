@@ -55,12 +55,14 @@ function CodePlaygroundContent() {
         <style>
           ${cssCode}
         </style>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            ${jsCode}
+          });
+        </script> 
       </head>
       <body>
         ${htmlCode}
-        <script>
-          ${jsCode}
-        </script>
       </body>
     </html>
   `;
