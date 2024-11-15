@@ -22,10 +22,9 @@ function CodeEditor({ lang, code, onChangeCode }: CodeEditorProps) {
   const selectedLang = langMap[lang];
 
   return (
-    <div className="p-2 border-2 rounded">
+    <div className="p-2 border-2 rounded h-[40vh]">
       <CodeMirror
         value={code}
-        height="40vh"
         extensions={[selectedLang()]}
         onChange={onChangeCode}
         theme={vscodeDarkInit({

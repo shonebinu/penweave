@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useCode } from "../contexts/CodeContext";
@@ -6,6 +8,21 @@ import CodeEditor from "./CodeEditor";
 function CodePlayground() {
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
     useCode();
+
+  const htmlEditor = useMemo(
+    () => <CodeEditor lang="html" code={htmlCode} onChangeCode={setHtmlCode} />,
+    [htmlCode, setHtmlCode],
+  );
+
+  const cssEditor = useMemo(
+    () => <CodeEditor lang="css" code={cssCode} onChangeCode={setCssCode} />,
+    [cssCode, setCssCode],
+  );
+
+  const jsEditor = useMemo(
+    () => <CodeEditor lang="js" code={jsCode} onChangeCode={setJsCode} />,
+    [jsCode, setJsCode],
+  );
 
   return (
     <Tabs defaultValue="html" className="px-1 pb-2">
@@ -45,17 +62,11 @@ function CodePlayground() {
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="html">
-        <CodeEditor lang="html" code={htmlCode} onChangeCode={setHtmlCode} />
-      </TabsContent>
+      <TabsContent value="html">{htmlEditor}</TabsContent>
 
-      <TabsContent value="css">
-        <CodeEditor lang="css" code={cssCode} onChangeCode={setCssCode} />
-      </TabsContent>
+      <TabsContent value="css">{cssEditor}</TabsContent>
 
-      <TabsContent value="js">
-        <CodeEditor lang="js" code={jsCode} onChangeCode={setJsCode} />
-      </TabsContent>
+      <TabsContent value="js">{jsEditor}</TabsContent>
     </Tabs>
   );
 }
