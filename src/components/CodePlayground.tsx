@@ -69,11 +69,11 @@ function CodePlaygroundContent() {
 
   return (
     <main>
-      <nav className="flex justify-between items-center pt-2 px-2">
-        <div className="flex gap-2 items-center">
+      <nav className="flex items-center justify-between px-2 pt-2">
+        <div className="flex items-center gap-2">
           <PenWeaveIcon />
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             className="bg-green-500 hover:bg-green-400 dark:bg-green-600 dark:hover:bg-green-700"
@@ -94,7 +94,7 @@ function CodePlaygroundContent() {
       <iframe
         srcDoc={combinedCode}
         title="Code Preview"
-        className="w-full h-screen border-2 bg-white"
+        className="h-screen w-full border-2 bg-white"
         sandbox="allow-scripts allow-modals"
       />
     </main>
