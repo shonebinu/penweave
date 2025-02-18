@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCode } from "@/hooks/useCode.ts";
 
-import { useCode } from "../contexts/CodeContext";
 import CodeEditor from "./CodeEditor";
 
 function CodePlayground() {

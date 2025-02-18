@@ -1,4 +1,4 @@
-import CodePlayground from "./components/CodePlayground";
+import CodePlayground from "./pages/CodePlayground";
 
 function App() {
   return <CodePlayground />;

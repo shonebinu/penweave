@@ -7,12 +7,12 @@ import { Cloud, Loader2 } from "lucide-react";
 
 import { useEffect, useRef, useState } from "react";
 
+import CodeEditorGroup from "@/components/CodeEditorGroup";
+import PenWeaveIcon from "@/components/PenWeaveIcon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
-import { CodeProvider, useCode } from "../contexts/CodeContext";
-import CodeEditorGroup from "./CodeEditorGroup";
-import PenWeaveIcon from "./PenWeaveIcon";
+import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
+import { useCode } from "@/hooks/useCode.ts";
 
 function CodePlaygroundContent() {
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
