@@ -9,4 +9,5 @@ type CodeStateType = {
   setJsCode: (code: string) => void;
 };
 
+// We don't pass the default value here. The undefined here is a fallback if no provider is present.
 export const CodeContext = createContext<CodeStateType | undefined>(undefined);

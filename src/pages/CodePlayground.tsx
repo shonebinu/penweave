@@ -7,8 +7,8 @@ import { Cloud, Loader2 } from "lucide-react";
 
 import { useEffect, useRef, useState } from "react";
 
-import CodeEditorGroup from "@/components/CodeEditorGroup";
 import PenWeaveIcon from "@/components/PenWeaveIcon";
+import CodeEditorGroup from "@/components/playground/CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
