@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
 import { useCode } from "@/hooks/useCode.ts";
 
-function CodePlaygroundContent() {
+function PlaygroundContent() {
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
     useCode();
   const [isSaving, setIsSaving] = useState(false);
@@ -101,12 +101,10 @@ function CodePlaygroundContent() {
   );
 }
 
-function CodePlayground() {
+export default function Playground() {
   return (
     <CodeProvider>
-      <CodePlaygroundContent />
+      <PlaygroundContent />
     </CodeProvider>
   );
 }
-
-export default CodePlayground;

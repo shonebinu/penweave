@@ -1,4 +1,7 @@
-function PenWeaveIcon({ color = "currentColor", size = "36px" }) {
+export default function PenWeaveIcon({
+  color = "currentColor",
+  size = "36px",
+}) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -73,5 +76,3 @@ function PenWeaveIcon({ color = "currentColor", size = "36px" }) {
     </svg>
   );
 }
-
-export default PenWeaveIcon;

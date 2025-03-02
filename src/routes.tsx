@@ -1,10 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import CodePlayground from "./pages/CodePlayground.tsx";
+import Home from "./pages/Home.tsx";
+import Login from "./pages/Login.tsx";
+import Playground from "./pages/Playground.tsx";
 
 const router = createBrowserRouter([
-  { path: "/login", element: <h1>Login</h1> },
-  { path: "/playground", element: <CodePlayground /> },
+  { path: "/", element: <Home /> },
+  { path: "/login", element: <Login /> },
+  { path: "/playground", element: <Playground /> },
 ]);
 
 export default router;
