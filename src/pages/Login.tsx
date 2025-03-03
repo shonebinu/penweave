@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { LoginForm } from "@/components/LoginForm.tsx";
+import { LoginForm } from "@/components/login/LoginForm";
 import { doSignInWithGoogle } from "@/services/firebase/auth.ts";
 
 export default function Login() {
