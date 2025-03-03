@@ -50,7 +50,6 @@ export function SignUpForm({
       /[!@#$%^&*(),.?":{}|<>]/.test(newPassword),
     ];
 
-    // Apply sequential checks
     const progress = checks.reduce<number[]>((acc, passed, index) => {
       if (acc[index - 1] === 100 || index === 0) acc.push(passed ? 100 : 0);
       else acc.push(0);
@@ -59,7 +58,6 @@ export function SignUpForm({
 
     setStrength(progress);
 
-    // Set message based on progress
     const messages = [
       "Password must be at least 8 characters.",
       "Add an uppercase letter and a number.",

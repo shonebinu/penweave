@@ -3,8 +3,7 @@ import { User } from "firebase/auth";
 import { createContext } from "react";
 
 type AuthContextType = {
-  currentUser: User | null;
-  userLoggedIn: boolean;
+  user: User | null;
   loading: boolean;
 };
 
