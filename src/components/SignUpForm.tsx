@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -10,12 +11,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
-export function LoginForm({
+export function SignUpForm({
   className,
   onSubmit,
-  onGoogleLogin,
+  onGoogleSignUp,
+  name,
+  setName,
   email,
   setEmail,
   password,
@@ -23,24 +27,72 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   onSubmit: (e: React.FormEvent) => void;
-  onGoogleLogin: () => void;
+  onGoogleSignUp: () => void;
+  name: string;
+  setName: (name: string) => void;
   email: string;
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
 }) {
+  const [strength, setStrength] = useState([0, 0, 0]);
+  const [message, setMessage] = useState(
+    "Password must be at least 8 characters.",
+  );
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    const checks = [
+      newPassword.length >= 8,
+      /[A-Z]/.test(newPassword) && /[0-9]/.test(newPassword),
+      /[!@#$%^&*(),.?":{}|<>]/.test(newPassword),
+    ];
+
+    // Apply sequential checks
+    const progress = checks.reduce<number[]>((acc, passed, index) => {
+      if (acc[index - 1] === 100 || index === 0) acc.push(passed ? 100 : 0);
+      else acc.push(0);
+      return acc;
+    }, []);
+
+    setStrength(progress);
+
+    // Set message based on progress
+    const messages = [
+      "Password must be at least 8 characters.",
+      "Add an uppercase letter and a number.",
+      "Include a special character.",
+      "Strong password!",
+    ];
+
+    setMessage(messages[progress.filter((val) => val === 100).length]);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
           <CardDescription>
-            Enter your credentials to login to your account
+            Welcome! Please fill in the details to get started
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit}>
             <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -53,25 +105,32 @@ export function LoginForm({
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   required
                 />
+                <div className="flex gap-2">
+                  <Progress
+                    value={strength[0]}
+                    className="w-1/3 [&>div]:bg-red-500"
+                  />
+                  <Progress
+                    value={strength[1]}
+                    className="w-1/3 [&>div]:bg-yellow-500"
+                  />
+                  <Progress
+                    value={strength[2]}
+                    className="w-1/3 [&>div]:bg-green-500"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{message}</p>
               </div>
               <Button type="submit" className="w-full">
-                Login
+                Sign Up
               </Button>
               <p className="flex items-center gap-x-3 text-sm text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
                 or
@@ -80,7 +139,7 @@ export function LoginForm({
                 variant="outline"
                 className="w-full"
                 type="button"
-                onClick={onGoogleLogin}
+                onClick={onGoogleSignUp}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
@@ -88,13 +147,13 @@ export function LoginForm({
                     fill="currentColor"
                   />
                 </svg>
-                Login with Google
+                Continue with Google
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link to="/signup" className="underline underline-offset-4">
-                Sign up
+              Already have an account?{" "}
+              <Link to="/login" className="underline underline-offset-4">
+                Login
               </Link>
             </div>
           </form>
