@@ -20,6 +20,8 @@ export default function Login() {
     e.preventDefault();
     console.log("Email: ", email, "Password: ", password);
     // TODO: Setup login using email and pass
+    // TODO: What to do if tried to log in using email from different provider
+    // TODO: Forgot password of OAuth email - what to do here
   };
 
   const handleGoogleLogin = async () => {

@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import { SignUpForm } from "@/components/signup/SignUpForm";
 import { useAuth } from "@/hooks/useAuth.ts";
-import { doSignInWithGoogle } from "@/services/firebase/auth.ts";
+import {
+  doCreateUserWithEmailAndPassword,
+  doSignInWithGoogle,
+} from "@/services/firebase/auth.ts";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -11,22 +14,27 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (user) navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email: ", email, "Password: ", password);
+    try {
+      await doCreateUserWithEmailAndPassword(email, password, name);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Email and password signup error", error);
+    }
     // TODO: Setup sign up using email and pass
+    // TODO: What to do if acc already exists with same provider or different provider
   };
 
   const handleGoogleLogin = async () => {
     try {
       await doSignInWithGoogle();
-      console.log(user, loading);
       navigate("/dashboard");
     } catch (error) {
       // TODO: Setup error here
