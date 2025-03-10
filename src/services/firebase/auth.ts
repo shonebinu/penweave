@@ -1,7 +1,6 @@
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
@@ -23,7 +22,8 @@ export const doCreateUserWithEmailAndPassword = async (
 
   await updateProfile(user, { displayName: name });
 
-  await sendEmailVerification(user);
+  // TODO: Do Email verification later
+  // await sendEmailVerification(user);
 
   return user;
 };

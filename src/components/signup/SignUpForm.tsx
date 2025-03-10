@@ -1,3 +1,5 @@
+import { Loader2 } from "lucide-react";
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -24,6 +26,8 @@ export function SignUpForm({
   setEmail,
   password,
   setPassword,
+  loading,
+  googleLoading,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   onSubmit: (e: React.FormEvent) => void;
@@ -34,10 +38,12 @@ export function SignUpForm({
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
+  loading: boolean;
+  googleLoading: boolean;
 }) {
   const [strength, setStrength] = useState([0, 0, 0]);
   const [message, setMessage] = useState(
-    "Password must be at least 8 characters.",
+    "Password must be at least 6 characters.",
   );
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +51,9 @@ export function SignUpForm({
     setPassword(newPassword);
 
     const checks = [
-      newPassword.length >= 8,
+      newPassword.length >= 6,
       /[A-Z]/.test(newPassword) && /[0-9]/.test(newPassword),
-      /[!@#$%^&*(),.?":{}|<>]/.test(newPassword),
+      /\W/.test(newPassword),
     ];
 
     const progress = checks.reduce<number[]>((acc, passed, index) => {
@@ -59,7 +65,7 @@ export function SignUpForm({
     setStrength(progress);
 
     const messages = [
-      "Password must be at least 8 characters.",
+      "Password must be at least 6 characters.",
       "Add an uppercase letter and a number.",
       "Include a special character.",
       "Strong password!",
@@ -109,6 +115,8 @@ export function SignUpForm({
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
+                  pattern="^(?=.*[A-Z])(?=.*\d)(?=.*\W).{6,}$"
+                  title="Password must be at least 6 characters long, include one uppercase letter, one number, and one special character."
                   required
                 />
                 <div className="flex gap-2">
@@ -127,7 +135,12 @@ export function SignUpForm({
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{message}</p>
               </div>
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                disabled={loading || googleLoading}
+                className="w-full"
+              >
+                {loading && <Loader2 className="animate-spin" />}
                 Sign Up
               </Button>
               <p className="flex items-center gap-x-3 text-sm text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
@@ -135,10 +148,12 @@ export function SignUpForm({
               </p>
               <Button
                 variant="outline"
+                disabled={loading || googleLoading}
                 className="w-full"
                 type="button"
                 onClick={onGoogleSignUp}
               >
+                {googleLoading && <Loader2 className="animate-spin" />}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
