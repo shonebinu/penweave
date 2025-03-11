@@ -22,7 +22,7 @@ export default function SignUp() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate("/dashboard", { replace: true });
+    if (user && user.emailVerified) navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,15 +34,20 @@ export default function SignUp() {
         password,
         name.trim(),
       );
-      navigate("/dashboard");
+      setName("");
+      setEmail("");
+      setPassword("");
+      toast.info("Verification email sent", {
+        description: "Please verify before logging in.",
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         if ("code" in error && error?.code === "auth/email-already-in-use")
-          toast("Email Already in Use", {
+          toast.error("Email Already in Use", {
             description: "This email is already registered. Try logging in.",
           });
-        else if ("message" in error) toast(error.message);
-        else toast("An unexpected error occurred.");
+        else if ("message" in error) toast.error(error.message);
+        else toast.error("An unexpected error occurred.");
       }
     } finally {
       setLoading(false);
@@ -55,8 +60,9 @@ export default function SignUp() {
       await doSignInWithGoogle();
       navigate("/dashboard");
     } catch (error: unknown) {
-      if (error instanceof Error && "message" in error) toast(error.message);
-      else toast("An unexpected error occurred.");
+      if (error instanceof Error && "message" in error)
+        toast.error(error.message);
+      else toast.error("An unexpected error occurred.");
     } finally {
       setGoogleLoading(false);
     }
@@ -78,7 +84,7 @@ export default function SignUp() {
           googleLoading={googleLoading}
         />
       </div>
-      <Toaster />
+      <Toaster richColors />
     </div>
   );
 }

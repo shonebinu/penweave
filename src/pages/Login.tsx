@@ -1,7 +1,10 @@
+import { toast } from "sonner";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { LoginForm } from "@/components/login/LoginForm";
+import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import {
   doSignInWithEmailAndPassword,
@@ -16,24 +19,25 @@ export default function Login() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate("/dashboard", { replace: true });
+    if (user && user.emailVerified) navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await doSignInWithEmailAndPassword(email.trim(), password);
       navigate("/dashboard");
     } catch (error) {
-      // TODO: Setup error here
-      console.log("Sign in error", error);
+      if (error instanceof Error) toast.error(error.message);
+      else toast.error("An unexpected error occured");
     }
     // TODO: Setup login using email and pass
     // TODO: What to do if tried to log in using email from different provider
     // TODO: Forgot password of OAuth email - what to do here
     // TODO: Forgot password
     // TODO: Give some feedback in signing up like button rotating
+    // TODO: Invalid credential error
   };
 
   const handleGoogleLogin = async () => {
@@ -52,7 +56,7 @@ export default function Login() {
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <LoginForm
-          onSubmit={handleSubmit}
+          onSubmit={handleLogin}
           onGoogleLogin={handleGoogleLogin}
           email={email}
           setEmail={setEmail}
@@ -60,6 +64,7 @@ export default function Login() {
           setPassword={setPassword}
         />
       </div>
+      <Toaster richColors />
     </div>
   );
 }

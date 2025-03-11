@@ -1,6 +1,7 @@
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
@@ -22,8 +23,7 @@ export const doCreateUserWithEmailAndPassword = async (
 
   await updateProfile(user, { displayName: name });
 
-  //await sendEmailVerification(user);
-  // TODO: Setup email verification, like only logging in after verifying email or creating project only after verifying email
+  await sendEmailVerification(user);
 
   return user;
 };
@@ -32,7 +32,17 @@ export const doSignInWithEmailAndPassword = async (
   email: string,
   password: string,
 ) => {
-  return signInWithEmailAndPassword(auth, email, password);
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
+  const user = userCredential.user;
+
+  if (!user.emailVerified)
+    throw new Error("Please verify your email before signing in");
+
+  return userCredential;
 };
 
 export const doSignInWithGoogle = async () => {
