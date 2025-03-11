@@ -29,11 +29,14 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     try {
+      if (name.trim().length === 0) throw new Error("Name shouldn't be empty");
+
       await doCreateUserWithEmailAndPassword(
         email.trim(),
         password,
         name.trim(),
       );
+
       setName("");
       setEmail("");
       setPassword("");
@@ -42,12 +45,13 @@ export default function SignUp() {
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        if ("code" in error && error?.code === "auth/email-already-in-use")
+        if ("code" in error && error.code === "auth/email-already-in-use")
           toast.error("Email Already in Use", {
             description: "This email is already registered. Try logging in.",
           });
-        else if ("message" in error) toast.error(error.message);
-        else toast.error("An unexpected error occurred.");
+        else toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setLoading(false);
@@ -60,9 +64,16 @@ export default function SignUp() {
       await doSignInWithGoogle();
       navigate("/dashboard");
     } catch (error: unknown) {
-      if (error instanceof Error && "message" in error)
-        toast.error(error.message);
-      else toast.error("An unexpected error occurred.");
+      if (error instanceof Error) {
+        const message =
+          "code" in error && error.code === "auth/popup-closed-by-user"
+            ? "Signup popup was closed before completing sign-up. Please try again."
+            : error.message;
+
+        toast.error(message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setGoogleLoading(false);
     }

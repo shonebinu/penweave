@@ -33,16 +33,19 @@ export default function Login() {
       await doSignInWithEmailAndPassword(email.trim(), password);
       navigate("/dashboard");
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
-      else toast.error("An unexpected error occured");
+      if (error instanceof Error) {
+        const message =
+          "code" in error && error.code === "auth/invalid-credential"
+            ? "Invalid email or password. Please try again."
+            : error.message;
+
+        toast.error(message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }
-    // TODO: What to do if tried to log in using email from different provider
-    // TODO: Forgot password of OAuth email - what to do here
-    // TODO: Forgot password
-    // TODO: Invalid credential error -> wrong pass or wrong email
-    // TODO: Firebase: Error (auth/popup-closed-by-user)
   };
 
   const handleGoogleLogin = async () => {
@@ -51,8 +54,16 @@ export default function Login() {
       await doSignInWithGoogle();
       navigate("/dashboard");
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
-      else toast.error("An unexpected error occured");
+      if (error instanceof Error) {
+        const message =
+          "code" in error && error.code === "auth/popup-closed-by-user"
+            ? "Login popup was closed before completing sign-in. Please try again."
+            : error.message;
+
+        toast.error(message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setGoogleLoading(false);
     }
@@ -63,7 +74,10 @@ export default function Login() {
     e.stopPropagation();
     try {
       await doPasswordReset(resetEmail);
-      toast.success("Password reset email sent!");
+      toast.success("Password reset email sent!", {
+        description:
+          "If an account exists for the provided email, a password reset email will be arrived shortly.",
+      });
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
       else toast.error("An unexpected error occurred");
