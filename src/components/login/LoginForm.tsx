@@ -10,6 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -24,6 +33,9 @@ export function LoginForm({
   setPassword,
   loading,
   googleLoading,
+  resetEmail,
+  setResetEmail,
+  handlePasswordReset,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   onSubmit: (e: React.FormEvent) => void;
@@ -34,6 +46,9 @@ export function LoginForm({
   setPassword: (password: string) => void;
   loading: boolean;
   googleLoading: boolean;
+  resetEmail: string;
+  setResetEmail: (resetEmail: string) => void;
+  handlePasswordReset: (e: React.FormEvent) => void;
 }) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -61,12 +76,47 @@ export function LoginForm({
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        type="button"
+                        variant={"link"}
+                        className="m-0 ml-auto h-2 p-0 text-sm font-normal"
+                      >
+                        Forgot your password?
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Reset Password</DialogTitle>
+                        <DialogDescription>
+                          Enter your email to get a reset link if your account
+                          exists.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form
+                        onSubmit={handlePasswordReset}
+                        className="grid gap-4"
+                      >
+                        <div className="grid gap-2">
+                          <Label htmlFor="reset-email">Email</Label>
+                          <Input
+                            id="reset-email"
+                            type="email"
+                            placeholder="m@example.com"
+                            value={resetEmail}
+                            onChange={(e) => {
+                              setResetEmail(e.target.value);
+                            }}
+                            required
+                          />
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Send Reset Email</Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <Input
                   id="password"
