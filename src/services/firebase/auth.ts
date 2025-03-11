@@ -2,6 +2,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
@@ -43,6 +44,10 @@ export const doSignInWithEmailAndPassword = async (
     throw new Error("Please verify your email before signing in");
 
   return userCredential;
+};
+
+export const doPasswordReset = async (email: string) => {
+  return sendPasswordResetEmail(auth, email);
 };
 
 export const doSignInWithGoogle = async () => {

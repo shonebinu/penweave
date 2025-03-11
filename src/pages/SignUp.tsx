@@ -25,7 +25,7 @@ export default function SignUp() {
     if (user && user.emailVerified) navigate("/dashboard", { replace: true });
   }, [user, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -54,7 +54,7 @@ export default function SignUp() {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignUp = async () => {
     setGoogleLoading(true);
     try {
       await doSignInWithGoogle();
@@ -72,8 +72,8 @@ export default function SignUp() {
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <SignUpForm
-          onSubmit={handleSubmit}
-          onGoogleSignUp={handleGoogleLogin}
+          onSubmit={handleSignUp}
+          onGoogleSignUp={handleGoogleSignUp}
           name={name}
           setName={setName}
           email={email}
