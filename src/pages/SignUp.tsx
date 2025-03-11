@@ -47,7 +47,6 @@ export default function SignUp() {
     } finally {
       setLoading(false);
     }
-    // TODO: Setup email verification. If user signed up with email/pass, redirect to login page and only login if verified
   };
 
   const handleGoogleLogin = async () => {

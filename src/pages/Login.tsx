@@ -33,9 +33,7 @@ export default function Login() {
     // TODO: What to do if tried to log in using email from different provider
     // TODO: Forgot password of OAuth email - what to do here
     // TODO: Forgot password
-    // TODO: Setup button feedback
     // TODO: Give some feedback in signing up like button rotating
-    // TODO: Only login if user has verified his email
   };
 
   const handleGoogleLogin = async () => {

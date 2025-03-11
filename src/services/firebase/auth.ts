@@ -22,8 +22,8 @@ export const doCreateUserWithEmailAndPassword = async (
 
   await updateProfile(user, { displayName: name });
 
-  // TODO: Do Email verification later
-  // await sendEmailVerification(user);
+  //await sendEmailVerification(user);
+  // TODO: Setup email verification, like only logging in after verifying email or creating project only after verifying email
 
   return user;
 };
