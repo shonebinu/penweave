@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import ProtectedLayout from "./components/ProtectedRoute.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -11,12 +11,18 @@ const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <SignUp /> },
-  { path: "/playground", element: <Playground /> },
   {
     path: "/dashboard",
     element: <ProtectedLayout />,
-    children: [{ path: "", element: <Dashboard /> }],
+    children: [
+      { path: "", element: <Dashboard /> },
+      { path: "playground/:playgroundId", element: <Playground /> },
+      { path: "*", element: <Navigate to="/dashboard" replace /> },
+    ],
   },
+  { path: "*", element: <Navigate to="/" replace /> },
 ]);
 
 export default router;
+
+// TODO: Change /dashboard/playground to /playground
