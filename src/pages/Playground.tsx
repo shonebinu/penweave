@@ -105,8 +105,10 @@ function PlaygroundContent() {
       </body>
     </html>
   `;
+  // TODO: USE lucide icon for html, css, js
 
-  // TODO: Change the green colors to a theme in shadcn and use the var name
+  // TODO: OPtion to change theme, font, etc, add cdn links
+
   return (
     <main>
       <nav className="flex items-center justify-between px-2 pt-2">
@@ -116,7 +118,7 @@ function PlaygroundContent() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="bg-green-500 hover:bg-green-400 dark:bg-green-600 dark:hover:bg-green-700"
+            className="pw-button"
             onClick={handleSave}
             disabled={isSaving}
           >

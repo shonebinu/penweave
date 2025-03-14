@@ -1,13 +1,15 @@
 import {
   BellDot,
   Bookmark,
-  BriefcaseBusiness,
   Code,
-  LayoutDashboard,
+  Earth,
+  House,
+  LogOut,
   Rss,
+  Settings,
 } from "lucide-react";
 
-import { Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -25,55 +27,86 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/useAuth.ts";
+import { doSignOut } from "@/services/firebase/auth.ts";
 
 import PenWeaveIcon from "./PenWeaveIcon.tsx";
 import { ThemeToggle } from "./ThemeToggle.tsx";
+import { Button } from "./ui/button.tsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu.tsx";
+import { Separator } from "./ui/separator.tsx";
 
 const items = [
   {
-    title: "New Playground",
-    url: "#",
-    icon: Code,
+    title: "Home",
+    url: "/home",
+    icon: House,
   },
   {
-    title: "Dashboard",
-    url: "#",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "My Works",
-    url: "#",
-    icon: BriefcaseBusiness,
+    title: "Explore",
+    url: "/explore",
+    icon: Earth,
   },
   {
     title: "Following",
-    url: "#",
+    url: "/following",
     icon: Rss,
   },
   {
     title: "Bookmarks",
-    url: "#",
+    url: "/bookmarks",
     icon: Bookmark,
   },
 ];
 
+// TODO: Setup new playground button /playground/new will create the new playground.. make it a route
 // TODO: NEW logo or logo styling
-// TODO: Avatar image should be user's or first name and last name first character
-// TODO: Avatar dropdown > settings, logout
 // TODO: New playground at the under of bookmarks.. a different group
-// TODO: Add theme toggle... Make a custom shadcn / tailwind theme for my page, both dark and white mode, edit the css vars in shadcn theme
+// TODO: Make a custom theme for my webpage. starry bg??
+// TODO: GIve option to change profile pic.. now tell them to add url, later we could add cloudflare r2 or something
 export default function Layout() {
+  const { user } = useAuth();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getAvatarFallback = (name: string | null | undefined) =>
+    name
+      ? name
+          .split(" ")
+          .map((part) => part[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase()
+      : "U";
+
+  const handleSignOut = async () => {
+    navigate("/", { replace: true });
+    await doSignOut();
+  };
+
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <SidebarMenuButton size={"lg"}>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <PenWeaveIcon />
-            </div>
+          <div className="ml-1 mt-5 flex items-center gap-2">
+            <PenWeaveIcon />
             <span className="text-lg font-semibold">PenWeave</span>
-          </SidebarMenuButton>
+          </div>
+          <Separator className="mx-auto mb-2 mt-4 w-[90%]" />
         </SidebarHeader>
+        <SidebarMenuButton
+          size={"lg"}
+          className="pw-button mx-auto w-[90%] justify-center"
+        >
+          <Code />
+          <span>New Playground</span>
+        </SidebarMenuButton>
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
@@ -81,11 +114,15 @@ export default function Layout() {
               <SidebarMenu>
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild size={"lg"}>
-                      <a href={item.url}>
+                    <SidebarMenuButton
+                      asChild
+                      size={"lg"}
+                      isActive={location.pathname === item.url}
+                    >
+                      <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -95,14 +132,43 @@ export default function Layout() {
         </SidebarContent>
       </Sidebar>
       <main className="w-full">
-        <header className="flex h-16 w-full shrink-0 items-center gap-2 border-b px-2">
-          <SidebarTrigger />
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <BellDot />
-          <ThemeToggle />
+        <header className="flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b px-2 md:pr-6">
+          <div className="flex items-center">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="ml-2 h-6" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant={"outline"} size={"icon"}>
+              <BellDot />
+            </Button>
+            <ThemeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="hover:cursor-pointer">
+                  {user?.photoURL ? (
+                    <AvatarImage
+                      src={user.photoURL}
+                      alt={user.displayName || "User"}
+                    />
+                  ) : (
+                    <AvatarFallback>
+                      {getAvatarFallback(user?.displayName)}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Settings />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
         <Outlet />
       </main>

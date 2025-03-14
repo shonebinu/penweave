@@ -23,7 +23,7 @@ export default function Login() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user && user.emailVerified) navigate("/dashboard", { replace: true });
+    if (user && user.emailVerified) navigate("/home", { replace: true });
   }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,7 +31,7 @@ export default function Login() {
     setLoading(true);
     try {
       await doSignInWithEmailAndPassword(email.trim(), password);
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       if (error instanceof Error) {
         const message =
@@ -52,7 +52,7 @@ export default function Login() {
     setGoogleLoading(true);
     try {
       await doSignInWithGoogle();
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       if (error instanceof Error) {
         const message =

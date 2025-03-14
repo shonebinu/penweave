@@ -22,7 +22,7 @@ export default function SignUp() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user && user.emailVerified) navigate("/dashboard", { replace: true });
+    if (user && user.emailVerified) navigate("/home", { replace: true });
   }, [user, navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -62,7 +62,7 @@ export default function SignUp() {
     setGoogleLoading(true);
     try {
       await doSignInWithGoogle();
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error: unknown) {
       if (error instanceof Error) {
         const message =
