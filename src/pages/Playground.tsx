@@ -108,6 +108,7 @@ function PlaygroundContent() {
   // TODO: USE lucide icon for html, css, js
 
   // TODO: OPtion to change theme, font, etc, add cdn links
+  // TODO: author name and icon in playground. if public and not owned. only clone button
 
   return (
     <main>
@@ -116,6 +117,9 @@ function PlaygroundContent() {
           <PenWeaveIcon />
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={handlePrettify}>
+            Prettify
+          </Button>
           <Button
             variant="outline"
             className="pw-button"
@@ -125,10 +129,6 @@ function PlaygroundContent() {
             {isSaving ? <Loader2 className="animate-spin" /> : <Cloud />}
             {isSaving ? "Saving..." : "Save"}
           </Button>
-          <Button variant="outline" onClick={handlePrettify}>
-            Prettify
-          </Button>
-          <Button variant="secondary">Sign In</Button>
         </div>
       </nav>
       <Separator className="my-2" />

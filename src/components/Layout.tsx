@@ -64,9 +64,8 @@ const items = [
   },
 ];
 
-// TODO: Setup new playground button /playground/new will create the new playground.. make it a route
-// TODO: NEW logo or logo styling
-// TODO: New playground at the under of bookmarks.. a different group
+// TODO: New logo or logo styling
+// TODO: when clicking on new playground. instead of showing loading page. show the editor .. then load in the bg
 // TODO: Make a custom theme for my webpage. starry bg??
 // TODO: GIve option to change profile pic.. now tell them to add url, later we could add cloudflare r2 or something
 export default function Layout() {
@@ -96,16 +95,19 @@ export default function Layout() {
         <SidebarHeader>
           <div className="ml-1 mt-5 flex items-center gap-2">
             <PenWeaveIcon />
-            <span className="text-lg font-semibold">PenWeave</span>
+            <span className="text-base font-semibold">PenWeave</span>
           </div>
           <Separator className="mx-auto mb-2 mt-4 w-[90%]" />
         </SidebarHeader>
         <SidebarMenuButton
           size={"lg"}
           className="pw-button mx-auto w-[90%] justify-center"
+          asChild
         >
-          <Code />
-          <span>New Playground</span>
+          <Link to={"/playground/new"}>
+            <Code />
+            <span>New Playground</span>
+          </Link>
         </SidebarMenuButton>
         <SidebarContent>
           <SidebarGroup>
