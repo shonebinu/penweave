@@ -7,6 +7,7 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from "@radix-ui/react-alert-dialog";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 import {
   AlertDialog,
@@ -17,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,7 +41,16 @@ export default function PlaygroundCard({
 }: PlaygroundCardProps) {
   const navigate = useNavigate();
   const [newTitle, setNewTitle] = useState(playground.title);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleRename = async (id: string, newTitle: string) => {
+    setIsRenaming(true);
+    await onRename(id, newTitle);
+    setIsRenaming(false);
+    setOpenPopover(false);
+  };
 
   const handleDelete = async (id: string) => {
     setIsDeleting(true);
@@ -78,16 +88,16 @@ export default function PlaygroundCard({
         </Button>
 
         <div className="flex items-center space-x-2">
-          <Popover>
+          <Popover open={openPopover} onOpenChange={setOpenPopover}>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
                 <Pencil />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-4">
-              <div className="space-y-2">
+              <div>
                 <h4 className="font-medium">Rename</h4>
-                <p className="pt-0 text-sm text-muted-foreground">
+                <p className="pb-3 text-sm text-muted-foreground">
                   Rename your playground's title
                 </p>
               </div>
@@ -95,25 +105,44 @@ export default function PlaygroundCard({
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Enter new title"
+                onKeyDown={(e) => {
+                  if (
+                    e.key === "Enter" &&
+                    !isRenaming &&
+                    newTitle.trim().length !== 0
+                  ) {
+                    handleRename(playground.id, newTitle.trim());
+                  }
+                }}
               />
-              <div className="mt-2 flex justify-end space-x-2">
-                <Button variant="ghost" size="icon">
-                  Cancel
-                </Button>
+              <div className="mt-3 flex justify-end gap-1">
+                <PopoverClose asChild>
+                  <Button variant="ghost" size="sm">
+                    Cancel
+                  </Button>
+                </PopoverClose>
                 <Button
                   size="sm"
+                  disabled={isRenaming}
                   onClick={() => {
-                    onRename(playground.id, newTitle);
+                    handleRename(playground.id, newTitle.trim());
                   }}
                 >
-                  Save
+                  {isRenaming ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
               </div>
             </PopoverContent>
           </Popover>
 
           <AlertDialog>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
               <Button size="icon" variant="ghost">
                 <Trash2 />
               </Button>
@@ -132,23 +161,19 @@ export default function PlaygroundCard({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction asChild>
-                  <>
-                    <Button
-                      variant="destructive"
-                      disabled={isDeleting}
-                      onClick={() => handleDelete(playground.id)}
-                    >
-                      {isDeleting ? (
-                        <>
-                          <Loader2 className="animate-spin" />
-                          Deleting...
-                        </>
-                      ) : (
-                        "Delete"
-                      )}
-                    </Button>
-                  </>
+                <AlertDialogAction
+                  onClick={() => handleDelete(playground.id)}
+                  disabled={isDeleting}
+                  className={buttonVariants({ variant: "destructive" })}
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

@@ -37,9 +37,10 @@ export default function Home() {
 
   const handleRename = async (id: string, newTitle: string) => {
     try {
+      if (newTitle.length === 0) throw new Error("Title shouldn't be empty.");
       await updatePlayground(id, { title: newTitle });
       setPlaygrounds((prev) =>
-        prev.map((p) => (p.id !== id ? { ...p, title: newTitle } : p)),
+        prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p)),
       );
       toast.success("Playground renamed successfully");
     } catch (error) {
@@ -93,7 +94,7 @@ export default function Home() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {playgrounds.map((playground) => (
             <PlaygroundCard
               key={playground.id}
