@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -53,8 +54,7 @@ export const createPlayground = async (title: string) => {
   const newPlayground: Omit<Playground, "id"> = {
     userId: user.uid,
     title,
-    // TODO: Add a boiler plate here... in html. add a comment that everything inside body goes there
-    html: "",
+    html: "<!-- Everything inside <body> tag goes here -->",
     css: "",
     js: "",
     isPublic: false,
@@ -81,4 +81,15 @@ export const updatePlayground = async (
   return await updateDoc(docRef, { ...updates, updatedAt: Timestamp.now() });
 };
 
-// TODO: Caching possible??
+export const deletePlayground = async (id: string) => {
+  const user = getUser();
+  const docRef = doc(db, "playgrounds", id);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) throw new Error("Playground not found");
+
+  const playground = docSnap.data() as Playground;
+  if (playground.userId !== user.uid) throw new Error("Unauthorized deletion");
+
+  return await deleteDoc(docRef);
+};

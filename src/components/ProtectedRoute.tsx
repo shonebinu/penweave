@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/useAuth.ts";
 export default function ProtectedLayout() {
   const { user, loading } = useAuth();
   const [timeoutReached, setTimeoutReached] = useState(false);
-  // TODO: Show dialog if timeoutReached == true
 
   useEffect(() => {
     const timer = setTimeout(() => setTimeoutReached(true), 5000);

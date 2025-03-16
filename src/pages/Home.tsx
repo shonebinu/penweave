@@ -1,20 +1,18 @@
-import { MoreVertical, Pencil, Play, Trash } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// For notifications
+import PlaygroundCard from "@/components/home/PlaygroundCard";
+import PlaygroundSkeleton from "@/components/home/PlaygroundSkeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Toaster } from "@/components/ui/sonner.tsx";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getUserPlaygrounds } from "@/services/firebase/firestore";
+  deletePlayground,
+  getUserPlaygrounds,
+  updatePlayground,
+} from "@/services/firebase/firestore";
 import { Playground } from "@/types/firestore";
 
 export default function Home() {
@@ -29,82 +27,84 @@ export default function Home() {
         setPlaygrounds(userPlaygrounds);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load your playgrounds");
       } finally {
         setLoading(false);
       }
     };
-
     getPlaygrounds();
   }, []);
+
+  const handleRename = async (id: string, newTitle: string) => {
+    try {
+      await updatePlayground(id, { title: newTitle });
+      setPlaygrounds((prev) =>
+        prev.map((p) => (p.id !== id ? { ...p, title: newTitle } : p)),
+      );
+      toast.success("Playground renamed successfully");
+    } catch (error) {
+      toast.error("Failed to rename playground", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      });
+    }
+  };
 
   const handleDelete = async (id: string) => {
     try {
       await deletePlayground(id);
-      setPlaygrounds(playgrounds.filter((p) => p.id !== id));
-      toast.success("Playground deleted");
+      setPlaygrounds((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Playground deleted successfully");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete playground");
-    }
-  };
-
-  const handleRename = async (id: string) => {
-    const newName = prompt("Enter new name:");
-    if (!newName) return;
-
-    try {
-      await renamePlayground(id, newName);
-      setPlaygrounds(
-        playgrounds.map((p) => (p.id === id ? { ...p, title: newName } : p)),
-      );
-      toast.success("Playground renamed");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to rename playground");
+      toast.error("Failed to delete playground", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      });
     }
   };
 
   return (
-    <main className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {loading
-        ? Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-[120px] w-full rounded-lg" />
-          ))
-        : playgrounds.map((playground) => (
-            <Card key={playground.id} className="relative">
-              <CardHeader>
-                <CardTitle>{playground.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex justify-between">
-                <Button
-                  size="sm"
-                  onClick={() => navigate(`/playground/${playground.id}`)}
-                >
-                  <Play className="mr-1 h-4 w-4" /> Open
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button size="sm" variant="ghost">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => handleRename(playground.id)}
-                    >
-                      <Pencil className="mr-2 h-4 w-4" /> Rename
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleDelete(playground.id)}
-                      className="text-red-500"
-                    >
-                      <Trash className="mr-2 h-4 w-4" /> Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardContent>
-            </Card>
+    <main className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">My Playgrounds</h1>
+        <p className="text-sm text-muted-foreground">
+          Create, manage and run your code playgrounds
+        </p>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <PlaygroundSkeleton key={i} />
           ))}
+        </div>
+      ) : playgrounds.length === 0 ? (
+        <div className="flex h-80 flex-col items-center justify-center">
+          <h3 className="text-lg font-medium">No playgrounds yet</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Create your first playground to get started
+          </p>
+          <Button className="mt-4" onClick={() => navigate("/playground/new")}>
+            <Plus /> Create Playground
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+          {playgrounds.map((playground) => (
+            <PlaygroundCard
+              key={playground.id}
+              playground={playground}
+              onRename={handleRename}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+      <Toaster richColors />
     </main>
   );
 }

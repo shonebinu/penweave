@@ -27,7 +27,6 @@ function PlaygroundContent() {
   const [isSaving, setIsSaving] = useState(false);
   const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
 
-  // TODO: Some kind of feedback when code loading from firestore
   useEffect(() => {
     const fetchPlayground = async () => {
       if (!playgroundId) return;
@@ -49,7 +48,6 @@ function PlaygroundContent() {
   }, [playgroundId, setHtmlCode, setCssCode, setJsCode]);
 
   const handlePrettify = () => {
-    // TODO: Save when prettify
     setHtmlCode(beautifyHTML(htmlCode));
     setCssCode(beautifyCSS(cssCode));
     setJsCode(beautifyJS(jsCode));
@@ -73,7 +71,6 @@ function PlaygroundContent() {
       setIsSaving(false);
     }
   };
-  // TODO: Only saved toast if clicked manually. or toast is not required
 
   handleSaveRef.current = handleSave;
 
@@ -105,10 +102,6 @@ function PlaygroundContent() {
       </body>
     </html>
   `;
-  // TODO: USE lucide icon for html, css, js
-
-  // TODO: OPtion to change theme, font, etc, add cdn links
-  // TODO: author name and icon in playground. if public and not owned. only clone button
 
   return (
     <main>

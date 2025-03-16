@@ -28,5 +28,3 @@ export default function NewPlayground() {
     </div>
   );
 }
-
-// TODO: Instead of waiting for createPlayground. instantly forward to playground by generating a crypt id and use that id in firestore

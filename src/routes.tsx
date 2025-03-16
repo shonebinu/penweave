@@ -39,5 +39,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
-// TODO: Assets route ? to manage assets? r2? firebase storage?
