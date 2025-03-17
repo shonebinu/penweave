@@ -29,7 +29,7 @@ function CodePlayground() {
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger
           value="html"
-          className="flex items-center gap-1 border border-transparent font-bold data-[state=active]:border-red-500"
+          className="flex items-center gap-1 border-2 border-transparent font-bold data-[state=active]:border-red-500"
         >
           <span>HTML</span>
           <svg className="aspect-square w-5 fill-red-500" viewBox="0 0 128 128">
@@ -38,7 +38,7 @@ function CodePlayground() {
         </TabsTrigger>
         <TabsTrigger
           value="css"
-          className="flex items-center gap-1 border border-transparent font-bold data-[state=active]:border-blue-500"
+          className="flex items-center gap-1 border-2 border-transparent font-bold data-[state=active]:border-blue-500"
         >
           <span>CSS</span>
           <svg
@@ -50,7 +50,7 @@ function CodePlayground() {
         </TabsTrigger>
         <TabsTrigger
           value="js"
-          className="flex items-center gap-1 border border-transparent font-bold data-[state=active]:border-yellow-500"
+          className="flex items-center gap-1 border-2 border-transparent font-bold data-[state=active]:border-yellow-500"
         >
           <span>JS</span>
           <svg

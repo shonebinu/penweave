@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import PenWeaveIcon from "@/components/PenWeaveIcon";
 import RenamePopover from "@/components/RenamePopover.tsx";
+import { ThemeToggle } from "@/components/ThemeToggle.tsx";
 import CodeEditorGroup from "@/components/playground/CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -166,6 +167,7 @@ function PlaygroundContent() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="outline" onClick={handlePrettify}>
             Prettify
           </Button>
@@ -176,7 +178,7 @@ function PlaygroundContent() {
             disabled={isSaving}
           >
             {isSaving ? <Loader2 className="animate-spin" /> : <Cloud />}
-            {isSaving ? "Saving..." : "Save"}
+            <span>{isSaving ? "Saving..." : "Save"}</span>
           </Button>
         </div>
       </nav>
