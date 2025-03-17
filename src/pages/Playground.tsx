@@ -86,9 +86,9 @@ function PlaygroundContent() {
   };
 
   const handlePrettify = () => {
-    setHtmlCode(beautifyHTML(htmlCode));
-    setCssCode(beautifyCSS(cssCode));
-    setJsCode(beautifyJS(jsCode));
+    setHtmlCode(beautifyHTML(htmlCode, { indent_size: 2 }));
+    setCssCode(beautifyCSS(cssCode, { indent_size: 2 }));
+    setJsCode(beautifyJS(jsCode, { indent_size: 2 }));
     handleSave();
   };
 
