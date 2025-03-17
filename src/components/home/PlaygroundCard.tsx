@@ -1,4 +1,4 @@
-import { Loader2, Play, Trash2 } from "lucide-react";
+import { Globe, Link, Loader2, Lock, Play, Trash2 } from "lucide-react";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,15 +27,26 @@ interface PlaygroundCardProps {
   playground: Playground;
   onRename: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
+  onTogglePublic: (id: string, isPublic: boolean) => void;
+  onCopyLink: (link: string) => void;
 }
 
 export default function PlaygroundCard({
   playground,
   onRename,
   onDelete,
+  onTogglePublic,
+  onCopyLink,
 }: PlaygroundCardProps) {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isToggling, setIsToggling] = useState(false);
+
+  const handleTogglePublic = async () => {
+    setIsToggling(true);
+    await onTogglePublic(playground.id, !playground.isPublic);
+    setIsToggling(false);
+  };
 
   const handleDelete = async (id: string) => {
     setIsDeleting(true);
@@ -73,6 +84,35 @@ export default function PlaygroundCard({
         </Button>
 
         <div className="flex items-center space-x-2">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleTogglePublic}
+            disabled={isToggling}
+          >
+            {isToggling ? (
+              <Loader2 className="animate-spin" />
+            ) : playground.isPublic ? (
+              <Globe className="text-blue-500" />
+            ) : (
+              <Lock />
+            )}
+          </Button>
+
+          {playground.isPublic && (
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() =>
+                onCopyLink(
+                  `${window.location.origin}/playground/${playground.id}`,
+                )
+              }
+            >
+              <Link />
+            </Button>
+          )}
+
           <RenamePopover
             initialTitle={playground.title}
             onRename={(newTitle) => onRename(playground.id, newTitle)}

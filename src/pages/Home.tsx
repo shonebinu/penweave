@@ -82,6 +82,37 @@ export default function Home() {
     }
   };
 
+  const handlePublicStatus = async (id: string, isPublic: boolean) => {
+    try {
+      await updatePlayground(id, { isPublic });
+      setPlaygrounds((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, isPublic } : p)),
+      );
+      toast.success(`Playground is now ${isPublic ? "public" : "private"}`);
+    } catch (error) {
+      toast.error("Failed to update playground visibility", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      });
+    }
+  };
+
+  const handleCopyLink = async (playgroundLink: string) => {
+    try {
+      await navigator.clipboard.writeText(playgroundLink);
+      toast.success("Link copied successfully!");
+    } catch (error) {
+      toast.error("Failed to copy link", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      });
+    }
+  };
+
   return (
     <main className="space-y-6 p-6">
       <div>
@@ -115,6 +146,8 @@ export default function Home() {
               playground={playground}
               onRename={handleRename}
               onDelete={handleDelete}
+              onTogglePublic={handlePublicStatus}
+              onCopyLink={handleCopyLink}
             />
           ))}
         </div>
