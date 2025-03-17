@@ -39,29 +39,34 @@ function PlaygroundContent() {
   useEffect(() => {
     const fetchPlayground = async () => {
       if (!playgroundId) {
-        navigate("/home", { replace: true });
+        navigate("/home");
         return;
       }
 
       try {
         const playground = await getPlayground(playgroundId);
-        if (playground) {
-          setHtmlCode(playground.html);
-          setCssCode(playground.css);
-          setJsCode(playground.js);
-          setPlaygroundTitle(playground.title);
-        }
-      } catch (error) {
-        toast.error("Failed to load playground");
-        console.error(error);
-        navigate("/home", { replace: true });
-      } finally {
+
+        setHtmlCode(playground.html);
+        setCssCode(playground.css);
+        setJsCode(playground.js);
+        setPlaygroundTitle(playground.title);
         setLoading(false);
+      } catch (error) {
+        navigate("/home", {
+          replace: true,
+          state: {
+            error: "Failed to load playground",
+            details:
+              error instanceof Error
+                ? error.message
+                : "An unexpected error occured",
+          },
+        });
       }
     };
 
     fetchPlayground();
-  }, [playgroundId, setHtmlCode, setCssCode, setJsCode, navigate]);
+  }, [playgroundId, navigate, setHtmlCode, setCssCode, setJsCode]);
 
   const handleRename = async (id: string, newTitle: string) => {
     try {

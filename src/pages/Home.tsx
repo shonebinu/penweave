@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import PlaygroundCard from "@/components/home/PlaygroundCard";
 import PlaygroundSkeleton from "@/components/home/PlaygroundSkeleton";
@@ -19,6 +19,7 @@ export default function Home() {
   const [playgrounds, setPlaygrounds] = useState<Playground[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const getPlaygrounds = async () => {
@@ -34,6 +35,19 @@ export default function Home() {
     };
     getPlaygrounds();
   }, []);
+
+  useEffect(() => {
+    if (location.state?.error) {
+      toast.error(
+        location.state.error,
+        location.state?.details
+          ? {
+              description: location.state?.details,
+            }
+          : {},
+      );
+    }
+  }, [location.state]);
 
   const handleRename = async (id: string, newTitle: string) => {
     try {
