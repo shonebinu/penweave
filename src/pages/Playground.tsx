@@ -4,11 +4,12 @@ import {
   js as beautifyJS,
 } from "js-beautify";
 import {
-  Cloud,
   ExternalLink,
+  GitFork,
   House,
   Loader2,
   LoaderCircle,
+  Save,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { useDebounce } from "use-debounce";
@@ -40,6 +41,7 @@ function PlaygroundContent() {
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
     useCode();
   const [isSaving, setIsSaving] = useState(false);
+  const [isForking, setIsForking] = useState(false);
   const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState({ id: "", name: "", photoURL: "" });
   const [isPublic, setIsPublic] = useState(false);
@@ -107,6 +109,7 @@ function PlaygroundContent() {
   };
 
   const handleFork = async () => {
+    setIsForking(true);
     try {
       const forkedId = await forkPlayground(playgroundId || "");
       toast.success("Playground forked successfully!", {
@@ -122,6 +125,8 @@ function PlaygroundContent() {
             ? error.message
             : "An unexpected error occured",
       });
+    } finally {
+      setIsForking(false);
     }
   };
 
@@ -253,13 +258,18 @@ function PlaygroundContent() {
                 onClick={() => handleSave(true)}
                 disabled={isSaving}
               >
-                {isSaving ? <Loader2 className="animate-spin" /> : <Cloud />}
+                {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
                 <span>{isSaving ? "Saving..." : "Save"}</span>
               </Button>
             </>
           ) : isPublic ? (
-            <Button variant="outline" onClick={handleFork}>
-              Fork Playground
+            <Button
+              className="pw-button"
+              onClick={handleFork}
+              disabled={isForking}
+            >
+              {isForking ? <Loader2 className="animate-spin" /> : <GitFork />}
+              <span>{isForking ? "Forking..." : "Fork"}</span>
             </Button>
           ) : null}
         </div>
