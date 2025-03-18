@@ -73,8 +73,6 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundWithUser[]> => {
 export const getPlayground = async (
   id: string,
 ): Promise<PlaygroundWithUser> => {
-  const user = getUser();
-
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -82,8 +80,11 @@ export const getPlayground = async (
 
   const playground = docSnap.data() as Playground;
 
-  if (!playground.isPublic && (!user || playground.userId !== user.uid))
-    throw new Error("Unauthorized access");
+  if (!playground.isPublic) {
+    const user = getUser();
+    if (!user || playground.userId !== user.uid)
+      throw new Error("Unauthorized access");
+  }
 
   const { name, photoURL } = await getUserData(playground.userId);
 

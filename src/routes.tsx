@@ -32,10 +32,10 @@ const router = createBrowserRouter([
         ],
       },
       { path: "playground/new", element: <NewPlayground /> },
-      { path: "playground/:playgroundId", element: <Playground /> },
       { path: "*", element: <Navigate to="/home" replace /> },
     ],
   },
+  { path: "playground/:playgroundId", element: <Playground /> },
   { path: "*", element: <Navigate to="/" replace /> },
 ]);
 

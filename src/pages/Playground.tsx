@@ -9,6 +9,7 @@ import {
   House,
   Loader2,
   LoaderCircle,
+  LogIn,
   Save,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
@@ -53,6 +54,7 @@ function PlaygroundContent() {
   const [debouncedJs] = useDebounce(jsCode, 3000);
 
   const isAuthor = user?.uid === author.id;
+  const isSignedIn = !!user;
 
   useEffect(() => {
     const fetchPlayground = async () => {
@@ -205,13 +207,15 @@ function PlaygroundContent() {
         <div className="flex items-center gap-5">
           <PenWeaveIcon />
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate("/home")}
-            >
-              <House />
-            </Button>
+            {isSignedIn && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigate("/home")}
+              >
+                <House />
+              </Button>
+            )}
             {author.id && (
               <Button
                 variant="ghost"
@@ -247,31 +251,38 @@ function PlaygroundContent() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          {isAuthor ? (
-            <>
-              <Button variant="outline" onClick={handlePrettify}>
-                Prettify
-              </Button>
+          {isSignedIn ? (
+            isAuthor ? (
+              <>
+                <Button variant="outline" onClick={handlePrettify}>
+                  Prettify
+                </Button>
+                <Button
+                  variant="outline"
+                  className="pw-button w-[7rem]"
+                  onClick={() => handleSave(true)}
+                  disabled={isSaving}
+                >
+                  {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
+                  <span>{isSaving ? "Saving..." : "Save"}</span>
+                </Button>
+              </>
+            ) : isPublic ? (
               <Button
-                variant="outline"
-                className="pw-button w-[7rem]"
-                onClick={() => handleSave(true)}
-                disabled={isSaving}
+                className="pw-button"
+                onClick={handleFork}
+                disabled={isForking}
               >
-                {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
-                <span>{isSaving ? "Saving..." : "Save"}</span>
+                {isForking ? <Loader2 className="animate-spin" /> : <GitFork />}
+                <span>{isForking ? "Forking..." : "Fork"}</span>
               </Button>
-            </>
-          ) : isPublic ? (
-            <Button
-              className="pw-button"
-              onClick={handleFork}
-              disabled={isForking}
-            >
-              {isForking ? <Loader2 className="animate-spin" /> : <GitFork />}
-              <span>{isForking ? "Forking..." : "Fork"}</span>
+            ) : null
+          ) : (
+            <Button className="pw-button" onClick={() => navigate("/login")}>
+              <LogIn />
+              Sign in to Fork
             </Button>
-          ) : null}
+          )}
         </div>
       </nav>
       <Separator className="my-2" />
