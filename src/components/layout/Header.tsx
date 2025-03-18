@@ -32,10 +32,13 @@ export default function Header({ user, handleLogout }: HeaderProps) {
         <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <AvatarIcon
-              photoURL={user?.photoURL}
-              userName={user?.displayName}
-            />
+            <span>
+              <AvatarIcon
+                className="cursor-pointer"
+                photoURL={user?.photoURL}
+                userName={user?.displayName}
+              />
+            </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>

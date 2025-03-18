@@ -3,17 +3,25 @@ import {
   html as beautifyHTML,
   js as beautifyJS,
 } from "js-beautify";
-import { Cloud, House, Loader2, LoaderCircle } from "lucide-react";
+import {
+  Cloud,
+  ExternalLink,
+  House,
+  Loader2,
+  LoaderCircle,
+} from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import AvatarIcon from "@/components/AvatarIcon.tsx";
 import PenWeaveIcon from "@/components/PenWeaveIcon";
 import RenamePopover from "@/components/RenamePopover.tsx";
 import { ThemeToggle } from "@/components/ThemeToggle.tsx";
 import CodeEditorGroup from "@/components/playground/CodeEditorGroup";
+import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
@@ -33,7 +41,7 @@ function PlaygroundContent() {
     useCode();
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [author, setAuthor] = useState({ id: "", name: "" });
+  const [author, setAuthor] = useState({ id: "", name: "", photoURL: "" });
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
   const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
@@ -58,7 +66,11 @@ function PlaygroundContent() {
         setCssCode(playground.css);
         setJsCode(playground.js);
         setPlaygroundTitle(playground.title);
-        setAuthor({ id: playground.userId, name: playground.userName });
+        setAuthor({
+          id: playground.userId,
+          name: playground.userName,
+          photoURL: playground.userPhotoURL ?? "",
+        });
         setIsPublic(playground.isPublic);
         setLoading(false);
       } catch (error) {
@@ -187,13 +199,31 @@ function PlaygroundContent() {
       <nav className="flex items-center justify-between px-4 pt-2">
         <div className="flex items-center gap-5">
           <PenWeaveIcon />
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navigate("/home")}
-          >
-            <House />
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigate("/home")}
+            >
+              <House />
+            </Button>
+            {author.id && (
+              <Button
+                variant="ghost"
+                onClick={() => window.open(`/user/${author.id}`, "_blank")}
+              >
+                <div className="flex items-center gap-2">
+                  <AvatarIcon
+                    photoURL={author.photoURL}
+                    userName={author.name}
+                    className="h-7 w-7"
+                  />
+                  <Badge variant="secondary">Author</Badge>
+                  <ExternalLink />
+                </div>
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-center gap-2">

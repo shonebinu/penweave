@@ -1,12 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { forwardRef } from "react";
 
-export default function AvatarIcon({
-  photoURL,
-  userName,
-}: {
-  photoURL: string | null | undefined;
-  userName: string | null | undefined;
-}) {
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+
+const AvatarIcon = forwardRef<
+  HTMLSpanElement,
+  {
+    photoURL: string | null | undefined;
+    userName: string | null | undefined;
+    className?: string;
+  }
+>(({ photoURL, userName, className }, ref) => {
   const getAvatarFallback = (name: string | null | undefined) =>
     name
       ? name
@@ -18,7 +22,7 @@ export default function AvatarIcon({
       : "U";
 
   return (
-    <Avatar className="hover:cursor-pointer">
+    <Avatar ref={ref} className={cn("h-10 w-10", className)}>
       {photoURL ? (
         <AvatarImage src={photoURL} alt={userName || "User"} />
       ) : (
@@ -26,4 +30,8 @@ export default function AvatarIcon({
       )}
     </Avatar>
   );
-}
+});
+
+AvatarIcon.displayName = "AvatarIcon";
+
+export default AvatarIcon;
