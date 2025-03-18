@@ -3,7 +3,7 @@ import {
   html as beautifyHTML,
   js as beautifyJS,
 } from "js-beautify";
-import { ArrowLeft, Cloud, Loader2, LoaderCircle } from "lucide-react";
+import { Cloud, House, Loader2, LoaderCircle } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
@@ -17,6 +17,7 @@ import CodeEditorGroup from "@/components/playground/CodeEditorGroup";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { useCode } from "@/hooks/useCode.ts";
 import {
   getPlayground,
@@ -25,13 +26,15 @@ import {
 
 function PlaygroundContent() {
   const { playgroundId } = useParams();
+  const { user } = useAuth();
   const [playgroundTitle, setPlaygroundTitle] = useState("");
   const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
     useCode();
   const [isSaving, setIsSaving] = useState(false);
-  const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [author, setAuthor] = useState({ id: "", name: "" });
   const navigate = useNavigate();
+  const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
 
   const [debouncedHtml] = useDebounce(htmlCode, 3000);
   const [debouncedCss] = useDebounce(cssCode, 3000);
@@ -51,6 +54,7 @@ function PlaygroundContent() {
         setCssCode(playground.css);
         setJsCode(playground.js);
         setPlaygroundTitle(playground.title);
+        setAuthor({ id: playground.userId, name: playground.userName });
         setLoading(false);
       } catch (error) {
         navigate("/home", {
@@ -81,6 +85,25 @@ function PlaygroundContent() {
           error instanceof Error
             ? error.message
             : "An unexpected error occurred",
+      });
+    }
+  };
+
+  const handelFork = async () => {
+    try {
+      const forkedId = await forkPlayground(playgroundId, user);
+      toast.success("Playground forked successfully!", {
+        action: {
+          label: "Open Fork",
+          onClick: () => navigate(`/playground/${forkedId}`),
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to fork playground", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured",
       });
     }
   };
@@ -148,12 +171,16 @@ function PlaygroundContent() {
     </div>
   ) : (
     <main>
-      <nav className="flex items-center justify-between px-2 pt-2">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/home")}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+      <nav className="flex items-center justify-between px-4 pt-2">
+        <div className="flex items-center gap-5">
           <PenWeaveIcon />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigate("/home")}
+          >
+            <House />
+          </Button>
         </div>
 
         <div className="flex items-center justify-center gap-2">

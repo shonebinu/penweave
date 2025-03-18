@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "./firebaseConfig.ts";
+import { addUserToFirestore } from "./firestore.ts";
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,
@@ -43,6 +44,8 @@ export const doSignInWithEmailAndPassword = async (
   if (!user.emailVerified)
     throw new Error("Please verify your email before signing in");
 
+  await addUserToFirestore();
+
   return userCredential;
 };
 
@@ -53,6 +56,9 @@ export const doPasswordReset = async (email: string) => {
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
+
+  await addUserToFirestore();
+
   return result;
 };
 

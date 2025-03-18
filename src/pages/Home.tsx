@@ -13,10 +13,10 @@ import {
   getUserPlaygrounds,
   updatePlayground,
 } from "@/services/firebase/firestore";
-import { Playground } from "@/types/firestore";
+import { PlaygroundWithUser } from "@/types/firestore";
 
 export default function Home() {
-  const [playgrounds, setPlaygrounds] = useState<Playground[]>([]);
+  const [playgrounds, setPlaygrounds] = useState<PlaygroundWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();

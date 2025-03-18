@@ -1,5 +1,5 @@
-import { User } from "firebase/auth";
-import { BellDot, LogOut, Settings } from "lucide-react";
+import { User as UserType } from "firebase/auth";
+import { BellDot, CircleUserRound, LogOut, Settings } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -15,7 +15,7 @@ import { Separator } from "../ui/separator.tsx";
 import { SidebarTrigger } from "../ui/sidebar.tsx";
 
 type HeaderProps = {
-  user: User | null;
+  user: UserType | null;
   handleLogout: () => Promise<void>;
 };
 
@@ -57,6 +57,10 @@ export default function Header({ user, handleLogout }: HeaderProps) {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuItem>
+              <CircleUserRound />
+              My Profile
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings />
               Settings

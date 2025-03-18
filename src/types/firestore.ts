@@ -11,3 +11,8 @@ export interface Playground {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
+
+export interface PlaygroundWithUser extends Playground {
+  userName: string;
+  userPhotoURL: string | null;
+}
