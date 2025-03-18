@@ -8,6 +8,8 @@ export interface Playground {
   css: string;
   js: string;
   isPublic: boolean;
+  isForked: boolean;
+  forkedFrom: string | null;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

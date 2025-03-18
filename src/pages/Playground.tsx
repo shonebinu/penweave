@@ -20,6 +20,7 @@ import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import { useCode } from "@/hooks/useCode.ts";
 import {
+  forkPlayground,
   getPlayground,
   updatePlayground,
 } from "@/services/firebase/firestore.ts";
@@ -33,12 +34,15 @@ function PlaygroundContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState({ id: "", name: "" });
+  const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
   const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
 
   const [debouncedHtml] = useDebounce(htmlCode, 3000);
   const [debouncedCss] = useDebounce(cssCode, 3000);
   const [debouncedJs] = useDebounce(jsCode, 3000);
+
+  const isAuthor = user?.uid === author.id;
 
   useEffect(() => {
     const fetchPlayground = async () => {
@@ -55,6 +59,7 @@ function PlaygroundContent() {
         setJsCode(playground.js);
         setPlaygroundTitle(playground.title);
         setAuthor({ id: playground.userId, name: playground.userName });
+        setIsPublic(playground.isPublic);
         setLoading(false);
       } catch (error) {
         navigate("/home", {
@@ -89,9 +94,9 @@ function PlaygroundContent() {
     }
   };
 
-  const handelFork = async () => {
+  const handleFork = async () => {
     try {
-      const forkedId = await forkPlayground(playgroundId, user);
+      const forkedId = await forkPlayground(playgroundId || "");
       toast.success("Playground forked successfully!", {
         action: {
           label: "Open Fork",
@@ -140,10 +145,18 @@ function PlaygroundContent() {
   handleSaveRef.current = handleSave;
 
   useEffect(() => {
-    if (playgroundId) {
+    if (playgroundId && user?.uid === author.id) {
       handleSave();
     }
-  }, [debouncedHtml, debouncedCss, debouncedJs, playgroundId, handleSave]);
+  }, [
+    debouncedHtml,
+    debouncedCss,
+    debouncedJs,
+    playgroundId,
+    handleSave,
+    author,
+    user,
+  ]);
 
   const combinedCode = `
     <!DOCTYPE html>
@@ -187,26 +200,38 @@ function PlaygroundContent() {
           <h1 className="truncate text-base font-semibold">
             {playgroundTitle}
           </h1>
-          <RenamePopover
-            initialTitle={playgroundTitle}
-            onRename={(newTitle) => handleRename(playgroundId || "", newTitle)}
-          />
+          {isAuthor && (
+            <RenamePopover
+              initialTitle={playgroundTitle}
+              onRename={(newTitle) =>
+                handleRename(playgroundId || "", newTitle)
+              }
+            />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button variant="outline" onClick={handlePrettify}>
-            Prettify
-          </Button>
-          <Button
-            variant="outline"
-            className="pw-button w-[7rem]"
-            onClick={() => handleSave(true)}
-            disabled={isSaving}
-          >
-            {isSaving ? <Loader2 className="animate-spin" /> : <Cloud />}
-            <span>{isSaving ? "Saving..." : "Save"}</span>
-          </Button>
+          {isAuthor ? (
+            <>
+              <Button variant="outline" onClick={handlePrettify}>
+                Prettify
+              </Button>
+              <Button
+                variant="outline"
+                className="pw-button w-[7rem]"
+                onClick={() => handleSave(true)}
+                disabled={isSaving}
+              >
+                {isSaving ? <Loader2 className="animate-spin" /> : <Cloud />}
+                <span>{isSaving ? "Saving..." : "Save"}</span>
+              </Button>
+            </>
+          ) : isPublic ? (
+            <Button variant="outline" onClick={handleFork}>
+              Fork Playground
+            </Button>
+          ) : null}
         </div>
       </nav>
       <Separator className="my-2" />

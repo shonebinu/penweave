@@ -105,6 +105,8 @@ export const createPlayground = async (title: string) => {
     css: "",
     js: "",
     isPublic: false,
+    isForked: false,
+    forkedFrom: null,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   };
@@ -139,4 +141,36 @@ export const deletePlayground = async (id: string) => {
   if (playground.userId !== user.uid) throw new Error("Unauthorized deletion");
 
   return await deleteDoc(docRef);
+};
+
+export const forkPlayground = async (playgroundId: string) => {
+  const user = getUser();
+
+  const originalPlaygroundRef = doc(db, "playgrounds", playgroundId);
+  const originalPlaygroundSnap = await getDoc(originalPlaygroundRef);
+
+  if (!originalPlaygroundSnap.exists()) {
+    throw new Error("Original playground not found.");
+  }
+
+  const originalPlayground = originalPlaygroundSnap.data();
+
+  if (!originalPlayground.isPublic) {
+    throw new Error("Cannot fork a private playground.");
+  }
+
+  const newPlaygroundData = {
+    ...originalPlayground,
+    title: `${originalPlayground.title} fork`,
+    userId: user.uid,
+    userName: user.displayName,
+    isPublic: false,
+    isForked: true,
+    forkedFrom: playgroundId,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  };
+
+  const docRef = await addDoc(collection(db, "playgrounds"), newPlaygroundData);
+  return docRef.id;
 };
