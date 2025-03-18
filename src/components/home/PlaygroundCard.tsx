@@ -41,6 +41,7 @@ export default function PlaygroundCard({
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleTogglePublic = async () => {
     setIsToggling(true);
@@ -51,6 +52,7 @@ export default function PlaygroundCard({
   const handleDelete = async (id: string) => {
     setIsDeleting(true);
     await onDelete(id);
+    setIsDialogOpen(false);
     setIsDeleting(false);
   };
 
@@ -118,7 +120,7 @@ export default function PlaygroundCard({
             onRename={(newTitle) => onRename(playground.id, newTitle)}
           />
 
-          <AlertDialog>
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialogTrigger asChild>
               <Button size="icon" variant="ghost">
                 <Trash2 />
@@ -126,20 +128,21 @@ export default function PlaygroundCard({
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  <p className="text-lg font-medium">Are you sure?</p>
+                <AlertDialogTitle className="text-lg font-medium">
+                  Are you sure?
                 </AlertDialogTitle>
-                <AlertDialogDescription>
-                  <p className="text-sm text-muted-foreground">
-                    This action cannot be undone. Your playground will be
-                    permanently deleted.
-                  </p>
+                <AlertDialogDescription className="text-sm text-muted-foreground">
+                  This action cannot be undone. Your playground will be
+                  permanently deleted.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => handleDelete(playground.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(playground.id);
+                  }}
                   disabled={isDeleting}
                   className={buttonVariants({ variant: "destructive" })}
                 >
