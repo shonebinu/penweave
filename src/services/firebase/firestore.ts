@@ -175,3 +175,33 @@ export const forkPlayground = async (playgroundId: string) => {
   const docRef = await addDoc(collection(db, "playgrounds"), newPlaygroundData);
   return docRef.id;
 };
+
+export const getPublicPlaygrounds = async (
+  searchString: string = "",
+): Promise<PlaygroundWithUser[]> => {
+  const q = query(playgroundsCollection, where("isPublic", "==", true));
+  const snapshot = await getDocs(q);
+
+  const playgrounds = await Promise.all(
+    snapshot.docs.map(async (docSnap) => {
+      const playground = docSnap.data() as Omit<Playground, "id">;
+      const { name, photoURL } = await getUserData(playground.userId);
+
+      return {
+        id: docSnap.id,
+        ...playground,
+        userName: name,
+        userPhotoURL: photoURL,
+      };
+    }),
+  );
+
+  if (searchString.trim()) {
+    const lowerSearch = searchString.toLowerCase();
+    return playgrounds.filter((pg) =>
+      pg.title.toLowerCase().includes(lowerSearch),
+    );
+  }
+
+  return playgrounds;
+};

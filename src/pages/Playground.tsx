@@ -4,7 +4,6 @@ import {
   js as beautifyJS,
 } from "js-beautify";
 import {
-  ExternalLink,
   GitFork,
   House,
   Loader2,
@@ -16,7 +15,7 @@ import { Toaster, toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import AvatarIcon from "@/components/AvatarIcon.tsx";
 import PenWeaveIcon from "@/components/PenWeaveIcon";
@@ -208,28 +207,24 @@ function PlaygroundContent() {
           <PenWeaveIcon />
           <div className="flex items-center gap-3">
             {isSignedIn && (
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => navigate("/home")}
-              >
-                <House />
+              <Button variant="outline" size="icon" asChild>
+                <Link to="/home">
+                  <House />
+                </Link>
               </Button>
             )}
             {author.id && (
-              <Button
-                variant="ghost"
-                onClick={() => window.open(`/user/${author.id}`, "_blank")}
-              >
-                <div className="flex items-center gap-2">
-                  <AvatarIcon
-                    photoURL={author.photoURL}
-                    userName={author.name}
-                    className="h-7 w-7"
-                  />
-                  <Badge variant="secondary">Author</Badge>
-                  <ExternalLink />
-                </div>
+              <Button variant="ghost" asChild>
+                <Link to={`/user/${author.id}`}>
+                  <div className="flex items-center gap-2">
+                    <AvatarIcon
+                      photoURL={author.photoURL}
+                      userName={author.name}
+                      className="h-7 w-7"
+                    />
+                    <Badge variant="secondary">Author</Badge>
+                  </div>
+                </Link>
               </Button>
             )}
           </div>

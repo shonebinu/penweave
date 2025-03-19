@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import Layout from "./components/Layout.tsx";
 import ProtectedLayout from "./components/ProtectedRoute.tsx";
+import Explore from "./pages/Explore.tsx";
 import Home from "./pages/Home.tsx";
 import Landing from "./pages/Landing.tsx";
 import Login from "./pages/Login.tsx";
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
           { path: "home", element: <Home /> },
-          { path: "explore", element: <h1>Explore</h1> },
+          { path: "explore", element: <Explore /> },
           { path: "following", element: <h1>Following</h1> },
           { path: "bookmarks", element: <h1>Bookmarks</h1> },
         ],

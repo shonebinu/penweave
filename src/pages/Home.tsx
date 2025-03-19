@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import PlaygroundCard from "@/components/home/PlaygroundCard";
-import PlaygroundSkeleton from "@/components/home/PlaygroundSkeleton";
+import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
+import HomePlaygroundCard from "@/components/home/HomePlaygroundCard";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import {
@@ -99,20 +99,6 @@ export default function Home() {
     }
   };
 
-  const handleCopyLink = async (playgroundLink: string) => {
-    try {
-      await navigator.clipboard.writeText(playgroundLink);
-      toast.success("Link copied successfully!");
-    } catch (error) {
-      toast.error("Failed to copy link", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred",
-      });
-    }
-  };
-
   return (
     <main className="space-y-6 p-6">
       <div>
@@ -123,7 +109,7 @@ export default function Home() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <PlaygroundSkeleton key={i} />
           ))}
@@ -141,13 +127,12 @@ export default function Home() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {playgrounds.map((playground) => (
-            <PlaygroundCard
+            <HomePlaygroundCard
               key={playground.id}
               playground={playground}
               onRename={handleRename}
               onDelete={handleDelete}
               onTogglePublic={handlePublicStatus}
-              onCopyLink={handleCopyLink}
             />
           ))}
         </div>
