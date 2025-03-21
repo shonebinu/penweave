@@ -12,11 +12,15 @@ import {
 } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 
-import { Playground, PlaygroundWithUser } from "@/types/firestore";
+import {
+  Playground,
+  PlaygroundWithUserAndBookmarkCount,
+} from "@/types/firestore";
 
 import { auth, db } from "./firebaseConfig";
 
 const playgroundsCollection = collection(db, "playgrounds");
+const bookmarksCollection = collection(db, "bookmarks");
 
 const getUser = () => {
   const user = auth.currentUser;
@@ -48,7 +52,9 @@ export const addUserToFirestore = async () => {
   );
 };
 
-export const getUserPlaygrounds = async (): Promise<PlaygroundWithUser[]> => {
+export const getUserPlaygrounds = async (): Promise<
+  PlaygroundWithUserAndBookmarkCount[]
+> => {
   const user = getUser();
 
   const q = query(playgroundsCollection, where("userId", "==", user.uid));
@@ -57,6 +63,7 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundWithUser[]> => {
   return await Promise.all(
     snapshot.docs.map(async (docSnap) => {
       const playground = docSnap.data() as Omit<Playground, "id">;
+      const bookmarkCount = await getBookmarkCount(docSnap.id);
 
       const { name, photoURL } = await getUserData(playground.userId);
 
@@ -65,6 +72,7 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundWithUser[]> => {
         ...playground,
         userName: name,
         userPhotoURL: photoURL,
+        bookmarkCount,
       };
     }),
   );
@@ -72,7 +80,9 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundWithUser[]> => {
 
 export const getPlayground = async (
   id: string,
-): Promise<PlaygroundWithUser> => {
+): Promise<PlaygroundWithUserAndBookmarkCount> => {
+  let user;
+
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -81,18 +91,27 @@ export const getPlayground = async (
   const playground = docSnap.data() as Playground;
 
   if (!playground.isPublic) {
-    const user = getUser();
+    user = getUser();
     if (!user || playground.userId !== user.uid)
       throw new Error("Unauthorized access");
   }
 
   const { name, photoURL } = await getUserData(playground.userId);
+  const bookmarkCount = await getBookmarkCount(id);
+
+  let isBookmarkedValue: boolean | undefined = undefined;
+
+  if (user) {
+    isBookmarkedValue = await isBookmarked(id);
+  }
 
   return {
     id: docSnap.id,
     ...(playground as Omit<Playground, "id">),
     userName: name,
     userPhotoURL: photoURL,
+    bookmarkCount,
+    ...(user ? { isBookmarkedValue } : {}),
   };
 };
 
@@ -172,13 +191,13 @@ export const forkPlayground = async (playgroundId: string) => {
     updatedAt: Timestamp.now(),
   };
 
-  const docRef = await addDoc(collection(db, "playgrounds"), newPlaygroundData);
+  const docRef = await addDoc(playgroundsCollection, newPlaygroundData);
   return docRef.id;
 };
 
 export const getPublicPlaygrounds = async (
   searchString: string = "",
-): Promise<PlaygroundWithUser[]> => {
+): Promise<PlaygroundWithUserAndBookmarkCount[]> => {
   const q = query(playgroundsCollection, where("isPublic", "==", true));
   const snapshot = await getDocs(q);
 
@@ -186,12 +205,14 @@ export const getPublicPlaygrounds = async (
     snapshot.docs.map(async (docSnap) => {
       const playground = docSnap.data() as Omit<Playground, "id">;
       const { name, photoURL } = await getUserData(playground.userId);
+      const bookmarkCount = await getBookmarkCount(docSnap.id);
 
       return {
         id: docSnap.id,
         ...playground,
         userName: name,
         userPhotoURL: photoURL,
+        bookmarkCount,
       };
     }),
   );
@@ -204,4 +225,68 @@ export const getPublicPlaygrounds = async (
   }
 
   return playgrounds;
+};
+
+export const addBookmark = async (playgroundId: string) => {
+  const user = getUser();
+
+  const playgroundRef = doc(db, "playgrounds", playgroundId);
+  const playgroundSnap = await getDoc(playgroundRef);
+  if (!playgroundSnap.exists()) throw new Error("Playgorund not found");
+
+  const playground = playgroundSnap.data() as Playground;
+  if (playground.userId == user.uid) {
+    throw new Error("You can't bookmark your own playground");
+  }
+
+  const q = query(
+    bookmarksCollection,
+    where("userId", "==", user.uid),
+    where("playgroundId", "==", playgroundId),
+  );
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) throw new Error("Playground already bookmarked");
+
+  await addDoc(bookmarksCollection, {
+    userId: user.uid,
+    playgroundId,
+    createdAt: Timestamp.now(),
+  });
+};
+
+export const removeBookmark = async (playgroundId: string) => {
+  const user = getUser();
+
+  const q = query(
+    bookmarksCollection,
+    where("userId", "==", user.uid),
+    where("playgroundId", "==", playgroundId),
+  );
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) throw new Error("Bookmark not found");
+
+  await deleteDoc(snapshot.docs[0].ref);
+};
+
+export const getBookmarkCount = async (
+  playgroundId: string,
+): Promise<number> => {
+  const q = query(
+    bookmarksCollection,
+    where("playgroundId", "==", playgroundId),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.size;
+};
+
+export const isBookmarked = async (playgroundId: string): Promise<boolean> => {
+  const user = getUser();
+
+  const q = query(
+    bookmarksCollection,
+    where("userId", "==", user.uid),
+    where("playgroundId", "==", playgroundId),
+  );
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
 };
