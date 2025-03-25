@@ -28,7 +28,12 @@ export default function Home() {
         setPlaygrounds(userPlaygrounds);
       } catch (error) {
         console.error(error);
-        toast.error("Failed to load your playgrounds");
+        toast.error("Failed to load your playgrounds", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "An unexpected error occurred",
+        });
       } finally {
         setLoading(false);
       }

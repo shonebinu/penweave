@@ -34,7 +34,12 @@ export default function Explore() {
         setPlaygrounds(publicPlaygrounds);
       } catch (error) {
         console.error(error);
-        toast.error("Failed to load public playgrounds");
+        toast.error("Failed to load public playgrounds", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "An unexpected error occurred",
+        });
       } finally {
         setLoading(false);
       }
