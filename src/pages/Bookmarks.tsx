@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import PlaygroundSkeleton from "@/components/PlaygroundSkeleton.tsx";
 import PublicPlaygroundCard from "@/components/PublicPlaygroundCard.tsx";
+import UnavailablePlaygroundCard from "@/components/UnavailablePlaygroundCard.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import {
@@ -60,7 +61,7 @@ export default function Bookmarks() {
         prev.filter((pg) => pg.id !== playgroundId),
       );
 
-      toast.success(`Successfully removed the bookmark!`);
+      toast.success(`Successfully removed the bookmark.`);
     } catch (error) {
       console.error(error);
       toast.error("Failed to remove bookmark.");
@@ -82,7 +83,7 @@ export default function Bookmarks() {
         ),
       );
 
-      toast.success("Playground forked successfully!", {
+      toast.success("Playground forked successfully.", {
         action: {
           label: "Open Fork",
           onClick: () => navigate(`/playground/${forkedId}`),
@@ -122,15 +123,23 @@ export default function Bookmarks() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {bookmarkedPlaygrounds.map((playground) => (
-            <PublicPlaygroundCard
-              key={playground.id}
-              playground={playground}
-              onToggleBookmark={handleToggleBookmark}
-              onFork={handleForking}
-              isOwner={user?.uid === playground.userId}
-            />
-          ))}
+          {bookmarkedPlaygrounds.map((playground) =>
+            playground.isUnavailable ? (
+              <UnavailablePlaygroundCard
+                key={playground.id}
+                playgroundId={playground.id}
+                onRemoveBookmark={handleToggleBookmark}
+              />
+            ) : (
+              <PublicPlaygroundCard
+                key={playground.id}
+                playground={playground}
+                onToggleBookmark={handleToggleBookmark}
+                onFork={handleForking}
+                isOwner={user?.uid === playground.userId}
+              />
+            ),
+          )}
         </div>
       )}
       <Toaster richColors />

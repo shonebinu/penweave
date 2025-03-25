@@ -20,4 +20,5 @@ export interface PlaygroundMeta extends Playground {
   bookmarkCount: number;
   forkCount: number;
   isBookmarked?: boolean;
+  isUnavailable?: boolean;
 }

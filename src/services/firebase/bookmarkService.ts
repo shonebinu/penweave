@@ -114,9 +114,17 @@ export const getBookmarkedPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
     const docRef = doc(playgroundsCollection, playgroundId);
     const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) continue;
+    if (!docSnap.exists()) {
+      playgroundMetas.push(createUnavailablePlayground(playgroundId));
+      continue;
+    }
 
     const playground = docSnap.data() as Playground;
+
+    if (!playground.isPublic) {
+      playgroundMetas.push(createUnavailablePlayground(playgroundId));
+      continue;
+    }
 
     const [bookmarkCount, forkCount] = await Promise.all([
       getBookmarkCount(playgroundId),
@@ -138,3 +146,23 @@ export const getBookmarkedPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
 
   return playgroundMetas;
 };
+
+const createUnavailablePlayground = (id: string): PlaygroundMeta => ({
+  id,
+  userId: "",
+  title: "Unavailable",
+  html: "",
+  css: "",
+  js: "",
+  isPublic: false,
+  isForked: false,
+  forkedFrom: null,
+  createdAt: Timestamp.now(),
+  updatedAt: Timestamp.now(),
+  userName: "Unknown",
+  userPhotoURL: "",
+  bookmarkCount: 0,
+  forkCount: 0,
+  isBookmarked: true,
+  isUnavailable: true,
+});
