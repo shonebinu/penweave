@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "./firebaseConfig.ts";
-import { addUserToFirestore } from "./firestore.ts";
+import { addUserToFirestore } from "./userService.ts";
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,

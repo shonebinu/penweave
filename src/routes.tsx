@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import Layout from "./components/Layout.tsx";
 import ProtectedLayout from "./components/ProtectedRoute.tsx";
+import Bookmarks from "./pages/Bookmarks.tsx";
 import Explore from "./pages/Explore.tsx";
 import Home from "./pages/Home.tsx";
 import Landing from "./pages/Landing.tsx";
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
           { path: "home", element: <Home /> },
           { path: "explore", element: <Explore /> },
           { path: "following", element: <h1>Following</h1> },
-          { path: "bookmarks", element: <h1>Bookmarks</h1> },
+          { path: "bookmarks", element: <Bookmarks /> },
         ],
       },
       { path: "playground/new", element: <NewPlayground /> },

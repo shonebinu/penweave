@@ -11,12 +11,14 @@ import {
   where,
 } from "firebase/firestore";
 
-import { Playground } from "@/types/firestore.ts";
+import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { db } from "./firebaseConfig";
-import { getAuthenticatedUserOrThrow } from "./firebaseService";
+import { getAuthenticatedUserOrThrow, getUserData } from "./firebaseService";
+import { getForkCount } from "./playgroundService.ts";
 
 const bookmarksCollection = collection(db, "bookmarks");
+const playgroundsCollection = collection(db, "playgrounds");
 
 const addBookmark = async (playgroundId: string) => {
   const user = getAuthenticatedUserOrThrow();
@@ -96,4 +98,43 @@ export const toggleBookmark = async (
     await addBookmark(playgroundId);
     return true;
   }
+};
+
+export const getBookmarkedPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
+  const user = getAuthenticatedUserOrThrow();
+
+  const q = query(bookmarksCollection, where("userId", "==", user.uid));
+  const bookmarksSnap = await getDocs(q);
+
+  const playgroundMetas: PlaygroundMeta[] = [];
+
+  for (const bookmarkDoc of bookmarksSnap.docs) {
+    const { playgroundId } = bookmarkDoc.data();
+
+    const docRef = doc(playgroundsCollection, playgroundId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) continue;
+
+    const playground = docSnap.data() as Playground;
+
+    const [bookmarkCount, forkCount] = await Promise.all([
+      getBookmarkCount(playgroundId),
+      getForkCount(playgroundId),
+    ]);
+
+    const { name, photoURL } = await getUserData(playground.userId);
+
+    playgroundMetas.push({
+      id: docSnap.id,
+      ...(playground as Omit<Playground, "id">),
+      userName: name,
+      userPhotoURL: photoURL,
+      bookmarkCount,
+      forkCount,
+      isBookmarked: true,
+    });
+  }
+
+  return playgroundMetas;
 };

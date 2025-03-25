@@ -191,23 +191,33 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
       throw new Error("Unauthorized access");
   }
 
-  const { name, photoURL } = await getUserData(playground.userId);
-  const bookmarkCount = await getBookmarkCount(id);
-  const forkCount = await getForkCount(id);
-
-  let isBookmarked: boolean | undefined = undefined;
-
-  if (user) {
-    isBookmarked = await isBookmarkedByUser(id);
-  }
-
   return {
     id: docSnap.id,
     ...(playground as Omit<Playground, "id">),
+    ...getPlaygroundMeta(id, playground.userId),
+  };
+};
+
+export const getPlaygroundMeta = async (
+  playgroundId: string,
+  userId: string,
+  skipBookmarks: boolean = false,
+): Promise<Omit<PlaygroundMeta, keyof Playground>> => {
+  const { name, photoURL } = await getUserData(userId);
+  const bookmarkCount = await getBookmarkCount(playgroundId);
+  const forkCount = await getForkCount(playgroundId);
+
+  let isBookmarked: boolean | undefined = undefined;
+
+  if (!skipBookmarks) {
+    isBookmarked = await isBookmarkedByUser(playgroundId);
+  }
+
+  return {
     userName: name,
     userPhotoURL: photoURL,
     bookmarkCount,
     forkCount,
-    isBookmarked,
+    ...(!skipBookmarks ? { isBookmarked } : {}),
   };
 };
