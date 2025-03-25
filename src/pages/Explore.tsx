@@ -8,14 +8,19 @@ import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
 import ExplorePlayground from "@/components/explore/ExplorePlaygroundCard.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
-import { getPublicPlaygrounds } from "@/services/firebase/firestore";
-import { PlaygroundWithUser } from "@/types/firestore";
+import { useAuth } from "@/hooks/useAuth.ts";
+import {
+  getPublicPlaygrounds,
+  toggleBookmark,
+} from "@/services/firebase/firestore";
+import { PlaygroundMeta } from "@/types/firestore";
 
 export default function Explore() {
-  const [playgrounds, setPlaygrounds] = useState<PlaygroundWithUser[]>([]);
+  const [playgrounds, setPlaygrounds] = useState<PlaygroundMeta[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const { user } = useAuth();
 
   const searchQuery = searchParams.get("search") || "";
   const [debouncedSearch] = useDebounce(searchQuery, 500); // 500ms delay
@@ -55,6 +60,41 @@ export default function Explore() {
     }
   };
 
+  const handleToggleBookmark = async (
+    playgroundId: string,
+    isBookmarked: boolean,
+  ) => {
+    if (!user) {
+      toast.error("You need to sign in to bookmark playgrounds.");
+      return;
+    }
+
+    try {
+      const newState = await toggleBookmark(playgroundId, isBookmarked);
+
+      setPlaygrounds((prev) =>
+        prev.map((pg) =>
+          pg.id === playgroundId
+            ? {
+                ...pg,
+                isBookmarked: newState,
+                bookmarkCount: newState
+                  ? pg.bookmarkCount + 1
+                  : pg.bookmarkCount - 1,
+              }
+            : pg,
+        ),
+      );
+
+      toast.success(
+        `Successfully ${newState ? "added" : "removed"} the bookmark!`,
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to toggle bookmark.");
+    }
+  };
+
   return (
     <main className="space-y-6 p-6">
       <div>
@@ -90,7 +130,12 @@ export default function Explore() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {playgrounds.map((playground) => (
-            <ExplorePlayground key={playground.id} playground={playground} />
+            <ExplorePlayground
+              key={playground.id}
+              playground={playground}
+              onToggleBookmark={handleToggleBookmark}
+              isOwner={user?.uid === playground.userId}
+            />
           ))}
         </div>
       )}

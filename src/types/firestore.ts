@@ -14,11 +14,9 @@ export interface Playground {
   updatedAt: Timestamp;
 }
 
-export interface PlaygroundWithUser extends Playground {
+export interface PlaygroundMeta extends Playground {
   userName: string;
   userPhotoURL: string | null;
-}
-
-export interface PlaygroundWithUserAndBookmarkCount extends PlaygroundWithUser {
   bookmarkCount: number;
+  isBookmarked?: boolean;
 }

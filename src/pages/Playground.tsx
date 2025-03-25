@@ -4,6 +4,7 @@ import {
   js as beautifyJS,
 } from "js-beautify";
 import {
+  Bookmark,
   GitFork,
   House,
   Loader2,
@@ -31,28 +32,31 @@ import { useCode } from "@/hooks/useCode.ts";
 import {
   forkPlayground,
   getPlayground,
+  toggleBookmark,
   updatePlayground,
 } from "@/services/firebase/firestore.ts";
+import { PlaygroundMeta } from "@/types/firestore.ts";
 
 function PlaygroundContent() {
   const { playgroundId } = useParams();
   const { user } = useAuth();
-  const [playgroundTitle, setPlaygroundTitle] = useState("");
-  const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
-    useCode();
-  const [isSaving, setIsSaving] = useState(false);
-  const [isForking, setIsForking] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [author, setAuthor] = useState({ id: "", name: "", photoURL: "" });
-  const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
   const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
 
+  const [playground, setPlayground] = useState<PlaygroundMeta | null>(null);
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [isForking, setIsForking] = useState(false);
+  const [isBookmarking, setIsBookmarking] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const { htmlCode, cssCode, jsCode, setHtmlCode, setCssCode, setJsCode } =
+    useCode();
   const [debouncedHtml] = useDebounce(htmlCode, 3000);
   const [debouncedCss] = useDebounce(cssCode, 3000);
   const [debouncedJs] = useDebounce(jsCode, 3000);
 
-  const isAuthor = user?.uid === author.id;
+  const isAuthor = user?.uid === playground?.userId;
   const isSignedIn = !!user;
 
   useEffect(() => {
@@ -63,18 +67,11 @@ function PlaygroundContent() {
       }
 
       try {
-        const playground = await getPlayground(playgroundId);
-
-        setHtmlCode(playground.html);
-        setCssCode(playground.css);
-        setJsCode(playground.js);
-        setPlaygroundTitle(playground.title);
-        setAuthor({
-          id: playground.userId,
-          name: playground.userName,
-          photoURL: playground.userPhotoURL ?? "",
-        });
-        setIsPublic(playground.isPublic);
+        const fetchedPlayground = await getPlayground(playgroundId);
+        setPlayground(fetchedPlayground);
+        setHtmlCode(fetchedPlayground.html);
+        setCssCode(fetchedPlayground.css);
+        setJsCode(fetchedPlayground.js);
         setLoading(false);
       } catch (error) {
         navigate("/home", {
@@ -97,7 +94,7 @@ function PlaygroundContent() {
     try {
       if (newTitle.length === 0) throw new Error("Title shouldn't be empty.");
       await updatePlayground(id, { title: newTitle });
-      setPlaygroundTitle(newTitle);
+      setPlayground((prev) => (prev ? { ...prev, title: newTitle } : prev));
       toast.success("Playground renamed successfully");
     } catch (error) {
       toast.error("Failed to rename playground", {
@@ -106,6 +103,29 @@ function PlaygroundContent() {
             ? error.message
             : "An unexpected error occurred",
       });
+    }
+  };
+
+  const handleToggleBookmark = async () => {
+    if (!user) {
+      toast.error("You need to sign in to bookmark playgrounds.");
+      return;
+    }
+
+    setIsBookmarking(true);
+    try {
+      const newState = await toggleBookmark(
+        playground?.id || "",
+        Boolean(playground?.isBookmarked),
+      );
+      toast.success(
+        `Successfully ${newState ? "added" : "removed"} the bookmark!`,
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to toggle bookmark.");
+    } finally {
+      setIsBookmarking(false);
     }
   };
 
@@ -163,7 +183,7 @@ function PlaygroundContent() {
   handleSaveRef.current = handleSave;
 
   useEffect(() => {
-    if (playgroundId && user?.uid === author.id) {
+    if (playgroundId && isAuthor) {
       handleSave();
     }
   }, [
@@ -171,9 +191,8 @@ function PlaygroundContent() {
     debouncedCss,
     debouncedJs,
     playgroundId,
+    isAuthor,
     handleSave,
-    author,
-    user,
   ]);
 
   const combinedCode = `
@@ -213,13 +232,13 @@ function PlaygroundContent() {
                 </Link>
               </Button>
             )}
-            {author.id && (
+            {playground?.userId && (
               <Button variant="ghost" asChild>
-                <Link to={`/user/${author.id}`}>
+                <Link to={`/user/${playground.userId}`}>
                   <div className="flex items-center gap-2">
                     <AvatarIcon
-                      photoURL={author.photoURL}
-                      userName={author.name}
+                      photoURL={playground.userPhotoURL}
+                      userName={playground.userName}
                       className="h-7 w-7"
                     />
                     <Badge variant="secondary">Author</Badge>
@@ -232,11 +251,11 @@ function PlaygroundContent() {
 
         <div className="flex items-center justify-center gap-2">
           <h1 className="truncate text-base font-semibold">
-            {playgroundTitle}
+            {playground?.title}
           </h1>
           {isAuthor && (
             <RenamePopover
-              initialTitle={playgroundTitle}
+              initialTitle={playground?.title || ""}
               onRename={(newTitle) =>
                 handleRename(playgroundId || "", newTitle)
               }
@@ -246,6 +265,22 @@ function PlaygroundContent() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          {isSignedIn && !isAuthor && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleToggleBookmark}
+              disabled={isBookmarking}
+            >
+              {isBookmarking ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <Bookmark
+                  className={playground?.isBookmarked ? "text-green-500" : ""}
+                />
+              )}
+            </Button>
+          )}
           {isSignedIn ? (
             isAuthor ? (
               <>
@@ -262,7 +297,7 @@ function PlaygroundContent() {
                   <span>{isSaving ? "Saving..." : "Save"}</span>
                 </Button>
               </>
-            ) : isPublic ? (
+            ) : playground?.isPublic ? (
               <Button
                 className="pw-button"
                 onClick={handleFork}

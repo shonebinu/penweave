@@ -15,12 +15,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Playground } from "@/types/firestore";
+import { PlaygroundMeta } from "@/types/firestore";
 
 import RenamePopover from "../RenamePopover.tsx";
 
 interface HomePlaygroundCardProps {
-  playground: Playground;
+  playground: PlaygroundMeta;
   onRename: (id: string, newTitle: string) => void;
   onDelete: (id: string) => void;
   onTogglePublic: (id: string, isPublic: boolean) => void;
@@ -50,7 +50,10 @@ export default function HomePlaygroundCard({
   };
 
   return (
-    <BasePlaygroundCard playground={playground}>
+    <BasePlaygroundCard
+      playground={playground}
+      bookmarkCount={playground.bookmarkCount}
+    >
       <div className="flex items-center space-x-2">
         <Button
           size="icon"

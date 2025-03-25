@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   setDoc,
   updateDoc,
@@ -12,10 +13,7 @@ import {
 } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 
-import {
-  Playground,
-  PlaygroundWithUserAndBookmarkCount,
-} from "@/types/firestore";
+import { Playground, PlaygroundMeta } from "@/types/firestore";
 
 import { auth, db } from "./firebaseConfig";
 
@@ -52,9 +50,7 @@ export const addUserToFirestore = async () => {
   );
 };
 
-export const getUserPlaygrounds = async (): Promise<
-  PlaygroundWithUserAndBookmarkCount[]
-> => {
+export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
   const user = getUser();
 
   const q = query(playgroundsCollection, where("userId", "==", user.uid));
@@ -78,10 +74,8 @@ export const getUserPlaygrounds = async (): Promise<
   );
 };
 
-export const getPlayground = async (
-  id: string,
-): Promise<PlaygroundWithUserAndBookmarkCount> => {
-  let user;
+export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
+  const user = auth.currentUser;
 
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
@@ -91,7 +85,6 @@ export const getPlayground = async (
   const playground = docSnap.data() as Playground;
 
   if (!playground.isPublic) {
-    user = getUser();
     if (!user || playground.userId !== user.uid)
       throw new Error("Unauthorized access");
   }
@@ -99,10 +92,10 @@ export const getPlayground = async (
   const { name, photoURL } = await getUserData(playground.userId);
   const bookmarkCount = await getBookmarkCount(id);
 
-  let isBookmarkedValue: boolean | undefined = undefined;
+  let isBookmarked: boolean | undefined = undefined;
 
   if (user) {
-    isBookmarkedValue = await isBookmarked(id);
+    isBookmarked = await isBookmarkedByUser(id);
   }
 
   return {
@@ -111,7 +104,7 @@ export const getPlayground = async (
     userName: name,
     userPhotoURL: photoURL,
     bookmarkCount,
-    ...(user ? { isBookmarkedValue } : {}),
+    isBookmarked,
   };
 };
 
@@ -197,7 +190,9 @@ export const forkPlayground = async (playgroundId: string) => {
 
 export const getPublicPlaygrounds = async (
   searchString: string = "",
-): Promise<PlaygroundWithUserAndBookmarkCount[]> => {
+): Promise<PlaygroundMeta[]> => {
+  const user = auth.currentUser;
+
   const q = query(playgroundsCollection, where("isPublic", "==", true));
   const snapshot = await getDocs(q);
 
@@ -207,12 +202,18 @@ export const getPublicPlaygrounds = async (
       const { name, photoURL } = await getUserData(playground.userId);
       const bookmarkCount = await getBookmarkCount(docSnap.id);
 
+      let isBookmarked: boolean | undefined = undefined;
+
+      if (user && playground.userId !== user.uid)
+        isBookmarked = await isBookmarkedByUser(docSnap.id);
+
       return {
         id: docSnap.id,
         ...playground,
         userName: name,
         userPhotoURL: photoURL,
         bookmarkCount,
+        isBookmarked,
       };
     }),
   );
@@ -232,7 +233,7 @@ export const addBookmark = async (playgroundId: string) => {
 
   const playgroundRef = doc(db, "playgrounds", playgroundId);
   const playgroundSnap = await getDoc(playgroundRef);
-  if (!playgroundSnap.exists()) throw new Error("Playgorund not found");
+  if (!playgroundSnap.exists()) throw new Error("Playground not found");
 
   const playground = playgroundSnap.data() as Playground;
   if (playground.userId == user.uid) {
@@ -279,14 +280,30 @@ export const getBookmarkCount = async (
   return snapshot.size;
 };
 
-export const isBookmarked = async (playgroundId: string): Promise<boolean> => {
+export const isBookmarkedByUser = async (
+  playgroundId: string,
+): Promise<boolean> => {
   const user = getUser();
 
   const q = query(
     bookmarksCollection,
     where("userId", "==", user.uid),
     where("playgroundId", "==", playgroundId),
+    limit(1),
   );
   const snapshot = await getDocs(q);
   return !snapshot.empty;
+};
+
+export const toggleBookmark = async (
+  playgroundId: string,
+  isBookmarked: boolean,
+) => {
+  if (isBookmarked) {
+    await removeBookmark(playgroundId);
+    return false;
+  } else {
+    await addBookmark(playgroundId);
+    return true;
+  }
 };
