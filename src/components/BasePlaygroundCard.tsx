@@ -5,17 +5,15 @@ import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import { Playground } from "@/types/firestore";
+import { PlaygroundMeta } from "@/types/firestore";
 
 interface BasePlaygroundCardProps {
-  playground: Playground;
-  bookmarkCount: number;
+  playground: PlaygroundMeta;
   children?: React.ReactNode;
 }
 
 export default function BasePlaygroundCard({
   playground,
-  bookmarkCount,
   children,
 }: BasePlaygroundCardProps) {
   return (
@@ -43,12 +41,20 @@ export default function BasePlaygroundCard({
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <GitFork size={12} />
-              <span>{numbro(4).format({ average: true, mantissa: 1 })}</span>
+              <span>
+                {numbro(playground.forkCount).format({
+                  average: true,
+                  mantissa: 1,
+                })}
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <Bookmark size={12} />
               <span>
-                {numbro(bookmarkCount).format({ average: true, mantissa: 1 })}
+                {numbro(playground.bookmarkCount).format({
+                  average: true,
+                  mantissa: 1,
+                })}
               </span>
             </div>
           </div>

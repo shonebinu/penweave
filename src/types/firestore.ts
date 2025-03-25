@@ -18,5 +18,6 @@ export interface PlaygroundMeta extends Playground {
   userName: string;
   userPhotoURL: string | null;
   bookmarkCount: number;
+  forkCount: number;
   isBookmarked?: boolean;
 }

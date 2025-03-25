@@ -50,10 +50,7 @@ export default function HomePlaygroundCard({
   };
 
   return (
-    <BasePlaygroundCard
-      playground={playground}
-      bookmarkCount={playground.bookmarkCount}
-    >
+    <BasePlaygroundCard playground={playground}>
       <div className="flex items-center gap-2">
         <Button
           size="icon"

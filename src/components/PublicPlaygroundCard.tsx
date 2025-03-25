@@ -38,10 +38,7 @@ export default function PublicPlaygroundCard({
   };
 
   return (
-    <BasePlaygroundCard
-      playground={playground}
-      bookmarkCount={playground.bookmarkCount}
-    >
+    <BasePlaygroundCard playground={playground}>
       <div className="flex items-center gap-1">
         {!isOwner && (
           <Button

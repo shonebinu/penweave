@@ -105,6 +105,13 @@ export default function Explore() {
 
     try {
       const forkedId = await forkPlayground(playgroundId || "");
+
+      setPlaygrounds((prev) =>
+        prev.map((pg) =>
+          pg.id === playgroundId ? { ...pg, forkCount: pg.forkCount + 1 } : pg,
+        ),
+      );
+
       toast.success("Playground forked successfully!", {
         action: {
           label: "Open Fork",

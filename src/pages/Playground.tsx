@@ -121,7 +121,15 @@ function PlaygroundContent() {
       );
 
       setPlayground((prev) =>
-        prev ? { ...prev, isBookmarked: newState } : prev,
+        prev
+          ? {
+              ...prev,
+              isBookmarked: newState,
+              bookmarkCount: newState
+                ? prev.bookmarkCount + 1
+                : prev.bookmarkCount - 1,
+            }
+          : prev,
       );
 
       toast.success(
@@ -139,6 +147,11 @@ function PlaygroundContent() {
     setIsForking(true);
     try {
       const forkedId = await forkPlayground(playgroundId || "");
+
+      setPlayground((prev) =>
+        prev ? { ...prev, forkCount: prev.forkCount + 1 } : prev,
+      );
+
       toast.success("Playground forked successfully!", {
         action: {
           label: "Open Fork",
@@ -167,6 +180,7 @@ function PlaygroundContent() {
   const handleSave = useCallback(
     async (isManual = false) => {
       if (!playgroundId) return;
+      if (!user || !isAuthor) return;
 
       setIsSaving(true);
       try {
@@ -183,7 +197,7 @@ function PlaygroundContent() {
         setIsSaving(false);
       }
     },
-    [playgroundId, htmlCode, cssCode, jsCode],
+    [htmlCode, cssCode, jsCode, playgroundId, user, isAuthor],
   );
 
   handleSaveRef.current = handleSave;
@@ -263,11 +277,21 @@ function PlaygroundContent() {
             <div className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
               <div className="flex items-center gap-1">
                 <GitFork size={12} />
-                <span>{numbro(4).format({ average: true, mantissa: 1 })}</span>
+                <span>
+                  {numbro(playground?.forkCount).format({
+                    average: true,
+                    mantissa: 1,
+                  })}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <Bookmark size={12} />
-                <span>{numbro(5).format({ average: true, mantissa: 1 })}</span>
+                <span>
+                  {numbro(playground?.bookmarkCount).format({
+                    average: true,
+                    mantissa: 1,
+                  })}
+                </span>
               </div>
             </div>
           </div>
@@ -317,7 +341,7 @@ function PlaygroundContent() {
               </>
             ) : playground?.isPublic ? (
               <Button
-                className="pw-button"
+                className="pw-button w-[7rem]"
                 onClick={handleFork}
                 disabled={isForking}
               >

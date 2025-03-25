@@ -60,6 +60,7 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
     snapshot.docs.map(async (docSnap) => {
       const playground = docSnap.data() as Omit<Playground, "id">;
       const bookmarkCount = await getBookmarkCount(docSnap.id);
+      const forkCount = await getForkCount(docSnap.id);
 
       const { name, photoURL } = await getUserData(playground.userId);
 
@@ -69,6 +70,7 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
         userName: name,
         userPhotoURL: photoURL,
         bookmarkCount,
+        forkCount,
       };
     }),
   );
@@ -91,6 +93,7 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
 
   const { name, photoURL } = await getUserData(playground.userId);
   const bookmarkCount = await getBookmarkCount(id);
+  const forkCount = await getForkCount(id);
 
   let isBookmarked: boolean | undefined = undefined;
 
@@ -104,6 +107,7 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
     userName: name,
     userPhotoURL: photoURL,
     bookmarkCount,
+    forkCount,
     isBookmarked,
   };
 };
@@ -201,6 +205,7 @@ export const getPublicPlaygrounds = async (
       const playground = docSnap.data() as Omit<Playground, "id">;
       const { name, photoURL } = await getUserData(playground.userId);
       const bookmarkCount = await getBookmarkCount(docSnap.id);
+      const forkCount = await getForkCount(docSnap.id);
 
       let isBookmarked: boolean | undefined = undefined;
 
@@ -213,6 +218,7 @@ export const getPublicPlaygrounds = async (
         userName: name,
         userPhotoURL: photoURL,
         bookmarkCount,
+        forkCount,
         isBookmarked,
       };
     }),
@@ -306,4 +312,13 @@ export const toggleBookmark = async (
     await addBookmark(playgroundId);
     return true;
   }
+};
+
+export const getForkCount = async (playgroundId: string): Promise<number> => {
+  const q = query(
+    playgroundsCollection,
+    where("forkedFrom", "==", playgroundId),
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.size;
 };
