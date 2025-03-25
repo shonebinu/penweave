@@ -2,14 +2,15 @@ import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
-import ExplorePlayground from "@/components/explore/ExplorePlaygroundCard.tsx";
+import PublicPlaygroundCard from "@/components/PublicPlaygroundCard";
 import { Input } from "@/components/ui/input.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import {
+  forkPlayground,
   getPublicPlaygrounds,
   toggleBookmark,
 } from "@/services/firebase/firestore";
@@ -20,6 +21,7 @@ export default function Explore() {
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const searchQuery = searchParams.get("search") || "";
@@ -95,6 +97,30 @@ export default function Explore() {
     }
   };
 
+  const handleForking = async (playgroundId: string) => {
+    if (!user) {
+      toast.error("You need to sign in to bookmark playgrounds.");
+      return;
+    }
+
+    try {
+      const forkedId = await forkPlayground(playgroundId || "");
+      toast.success("Playground forked successfully!", {
+        action: {
+          label: "Open Fork",
+          onClick: () => navigate(`/playground/${forkedId}`),
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to fork playground", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured",
+      });
+    }
+  };
+
   return (
     <main className="space-y-6 p-6">
       <div>
@@ -115,7 +141,7 @@ export default function Explore() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <PlaygroundSkeleton key={i} />
           ))}
@@ -130,10 +156,11 @@ export default function Explore() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {playgrounds.map((playground) => (
-            <ExplorePlayground
+            <PublicPlaygroundCard
               key={playground.id}
               playground={playground}
               onToggleBookmark={handleToggleBookmark}
+              onFork={handleForking}
               isOwner={user?.uid === playground.userId}
             />
           ))}

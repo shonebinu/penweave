@@ -54,7 +54,7 @@ export default function HomePlaygroundCard({
       playground={playground}
       bookmarkCount={playground.bookmarkCount}
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <Button
           size="icon"
           variant="ghost"

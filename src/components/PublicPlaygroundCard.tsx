@@ -1,4 +1,4 @@
-import { Bookmark, Loader2 } from "lucide-react";
+import { Bookmark, GitFork, Loader2 } from "lucide-react";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -6,26 +6,35 @@ import { Link } from "react-router-dom";
 import BasePlaygroundCard from "@/components/BasePlaygroundCard.tsx";
 import { PlaygroundMeta } from "@/types/firestore";
 
-import AvatarIcon from "../AvatarIcon.tsx";
-import { Button } from "../ui/button.tsx";
+import AvatarIcon from "./AvatarIcon.tsx";
+import { Button } from "./ui/button.tsx";
 
 interface ExplorePlaygroundProps {
   playground: PlaygroundMeta;
   onToggleBookmark: (playgroundId: string, isBookmarked: boolean) => void;
+  onFork: (playgroundId: string) => void;
   isOwner: boolean;
 }
 
-export default function ExplorePlayground({
+export default function PublicPlaygroundCard({
   playground,
   onToggleBookmark,
+  onFork,
   isOwner,
 }: ExplorePlaygroundProps) {
-  const [loading, setLoading] = useState(false);
+  const [isForking, setIsForking] = useState(false);
+  const [isBookmarking, setisBookmarking] = useState(false);
 
   const handleToggleBookmark = async () => {
-    setLoading(true);
+    setisBookmarking(true);
     await onToggleBookmark(playground.id, !!playground.isBookmarked);
-    setLoading(false);
+    setisBookmarking(false);
+  };
+
+  const handleFork = async () => {
+    setIsForking(true);
+    await onFork(playground.id);
+    setIsForking(false);
   };
 
   return (
@@ -33,15 +42,25 @@ export default function ExplorePlayground({
       playground={playground}
       bookmarkCount={playground.bookmarkCount}
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-1">
         {!isOwner && (
           <Button
-            size="sm"
+            size="icon"
+            variant="ghost"
+            onClick={handleFork}
+            disabled={isForking}
+          >
+            {isForking ? <Loader2 className="animate-spin" /> : <GitFork />}
+          </Button>
+        )}
+        {!isOwner && (
+          <Button
+            size="icon"
             variant="ghost"
             onClick={handleToggleBookmark}
-            disabled={loading}
+            disabled={isBookmarking}
           >
-            {loading ? (
+            {isBookmarking ? (
               <Loader2 className="animate-spin" />
             ) : (
               <Bookmark

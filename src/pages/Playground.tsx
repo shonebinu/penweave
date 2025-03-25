@@ -12,6 +12,7 @@ import {
   LogIn,
   Save,
 } from "lucide-react";
+import numbro from "numbro";
 import { Toaster, toast } from "sonner";
 import { useDebounce } from "use-debounce";
 
@@ -116,8 +117,13 @@ function PlaygroundContent() {
     try {
       const newState = await toggleBookmark(
         playground?.id || "",
-        Boolean(playground?.isBookmarked),
+        playground?.isBookmarked || false,
       );
+
+      setPlayground((prev) =>
+        prev ? { ...prev, isBookmarked: newState } : prev,
+      );
+
       toast.success(
         `Successfully ${newState ? "added" : "removed"} the bookmark!`,
       );
@@ -250,9 +256,21 @@ function PlaygroundContent() {
         </div>
 
         <div className="flex items-center justify-center gap-2">
-          <h1 className="truncate text-base font-semibold">
-            {playground?.title}
-          </h1>
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="truncate text-base font-semibold">
+              {playground?.title}
+            </h1>
+            <div className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <GitFork size={12} />
+                <span>{numbro(4).format({ average: true, mantissa: 1 })}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Bookmark size={12} />
+                <span>{numbro(5).format({ average: true, mantissa: 1 })}</span>
+              </div>
+            </div>
+          </div>
           {isAuthor && (
             <RenamePopover
               initialTitle={playground?.title || ""}
