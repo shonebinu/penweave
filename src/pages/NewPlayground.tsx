@@ -3,7 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createPlayground } from "@/services/firebase/firestore.ts";
+import { createPlayground } from "@/services/firebase/playgroundService.ts";
 
 export default function NewPlayground() {
   const navigate = useNavigate();

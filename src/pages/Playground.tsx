@@ -30,12 +30,12 @@ import { Separator } from "@/components/ui/separator";
 import { CodeProvider } from "@/contexts/code/CodeProvider.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import { useCode } from "@/hooks/useCode.ts";
+import { toggleBookmark } from "@/services/firebase/bookmarkService.ts";
 import {
   forkPlayground,
   getPlayground,
-  toggleBookmark,
   updatePlayground,
-} from "@/services/firebase/firestore.ts";
+} from "@/services/firebase/playgroundService.ts";
 import { PlaygroundMeta } from "@/types/firestore.ts";
 
 function PlaygroundContent() {

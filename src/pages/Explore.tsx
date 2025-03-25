@@ -9,11 +9,11 @@ import PublicPlaygroundCard from "@/components/PublicPlaygroundCard";
 import { Input } from "@/components/ui/input.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
+import { toggleBookmark } from "@/services/firebase/bookmarkService.ts";
 import {
   forkPlayground,
   getPublicPlaygrounds,
-  toggleBookmark,
-} from "@/services/firebase/firestore";
+} from "@/services/firebase/playgroundService.ts";
 import { PlaygroundMeta } from "@/types/firestore";
 
 export default function Explore() {
@@ -26,7 +26,6 @@ export default function Explore() {
 
   const searchQuery = searchParams.get("search") || "";
   const [debouncedSearch] = useDebounce(searchQuery, 500); // 500ms delay
-
   useEffect(() => {
     const fetchPublicPlaygrounds = async () => {
       try {

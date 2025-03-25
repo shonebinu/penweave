@@ -12,7 +12,7 @@ import {
   deletePlayground,
   getUserPlaygrounds,
   updatePlayground,
-} from "@/services/firebase/firestore";
+} from "@/services/firebase/playgroundService.ts";
 import { PlaygroundMeta } from "@/types/firestore";
 
 export default function Home() {
