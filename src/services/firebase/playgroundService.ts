@@ -20,7 +20,7 @@ import { getAuthenticatedUserOrThrow, getUserData } from "./firebaseService.ts";
 const playgroundsCollection = collection(db, "playgrounds");
 
 export const createPlayground = async (title: string) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const newPlayground: Omit<Playground, "id"> = {
     userId: user.uid,
@@ -42,7 +42,7 @@ export const updatePlayground = async (
   id: string,
   updates: Partial<Omit<Playground, "id" | "userId" | "createdAt">>,
 ) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -55,7 +55,7 @@ export const updatePlayground = async (
 };
 
 export const deletePlayground = async (id: string) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -68,7 +68,7 @@ export const deletePlayground = async (id: string) => {
 };
 
 export const forkPlayground = async (playgroundId: string) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const originalPlaygroundRef = doc(db, "playgrounds", playgroundId);
   const originalPlaygroundSnap = await getDoc(originalPlaygroundRef);
@@ -111,6 +111,7 @@ export const getForkCount = async (playgroundId: string): Promise<number> => {
 export const getPublicPlaygrounds = async (
   searchString: string = "",
 ): Promise<PlaygroundMeta[]> => {
+  await auth.authStateReady();
   const user = auth.currentUser;
 
   const q = query(playgroundsCollection, where("isPublic", "==", true));
@@ -151,7 +152,7 @@ export const getPublicPlaygrounds = async (
 };
 
 export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const q = query(playgroundsCollection, where("userId", "==", user.uid));
   const snapshot = await getDocs(q);
@@ -177,6 +178,7 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
 };
 
 export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
+  await auth.authStateReady();
   const user = auth.currentUser;
 
   const docRef = doc(db, "playgrounds", id);

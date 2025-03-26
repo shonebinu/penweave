@@ -1,14 +1,18 @@
 import { LoaderCircle } from "lucide-react";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { createPlayground } from "@/services/firebase/playgroundService.ts";
 
 export default function NewPlayground() {
   const navigate = useNavigate();
+  const hasCreated = useRef(false);
 
   useEffect(() => {
+    if (hasCreated.current) return;
+    hasCreated.current = true;
+
     async function createAndRedirect() {
       const docRef = await createPlayground("Untitled Playground");
       navigate(`/playground/${docRef.id}`, { replace: true });

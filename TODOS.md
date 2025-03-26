@@ -1,9 +1,11 @@
 ### PRIORITY
 
-- explore public
 - /user page
 - /following page
 - / landing page
+- bug (when opening privated src of a fork.. on its owner itself.. shows unauthorized)
+- what to do if the src is privated.. on unsigned and signed
+- playground /new making two playgrounds
 
 ### TO DO
 

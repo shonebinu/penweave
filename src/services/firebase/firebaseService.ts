@@ -2,7 +2,8 @@ import { doc, getDoc } from "firebase/firestore";
 
 import { auth, db } from "./firebaseConfig.ts";
 
-export const getAuthenticatedUserOrThrow = () => {
+export const getAuthenticatedUserOrThrow = async () => {
+  await auth.authStateReady();
   const user = auth.currentUser;
   if (!user) throw new Error("User must be authenticated");
   return user;

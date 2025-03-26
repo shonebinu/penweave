@@ -4,7 +4,7 @@ import { db } from "./firebaseConfig.ts";
 import { getAuthenticatedUserOrThrow } from "./firebaseService.ts";
 
 export const addUserToFirestore = async () => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const userRef = doc(db, "users", user.uid);
   await setDoc(

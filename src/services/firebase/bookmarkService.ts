@@ -21,7 +21,7 @@ const bookmarksCollection = collection(db, "bookmarks");
 const playgroundsCollection = collection(db, "playgrounds");
 
 const addBookmark = async (playgroundId: string) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const playgroundRef = doc(db, "playgrounds", playgroundId);
   const playgroundSnap = await getDoc(playgroundRef);
@@ -48,7 +48,7 @@ const addBookmark = async (playgroundId: string) => {
 };
 
 const removeBookmark = async (playgroundId: string) => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const q = query(
     bookmarksCollection,
@@ -75,7 +75,7 @@ export const getBookmarkCount = async (
 export const isBookmarkedByUser = async (
   playgroundId: string,
 ): Promise<boolean> => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const q = query(
     bookmarksCollection,
@@ -101,7 +101,7 @@ export const toggleBookmark = async (
 };
 
 export const getBookmarkedPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
-  const user = getAuthenticatedUserOrThrow();
+  const user = await getAuthenticatedUserOrThrow();
 
   const q = query(bookmarksCollection, where("userId", "==", user.uid));
   const bookmarksSnap = await getDocs(q);
