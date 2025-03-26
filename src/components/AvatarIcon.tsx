@@ -37,6 +37,7 @@ const AvatarIcon = forwardRef<
             onLoad={handleLoad}
             onError={handleError}
             className={loaded ? "block" : "hidden"}
+            referrerPolicy="no-referrer"
           />
           {!loaded && (
             <AvatarFallback>{getAvatarFallback(userName)}</AvatarFallback>

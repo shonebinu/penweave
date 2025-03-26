@@ -5,6 +5,7 @@ import {
 } from "js-beautify";
 import {
   Bookmark,
+  ExternalLink,
   GitFork,
   House,
   Loader2,
@@ -293,6 +294,17 @@ function PlaygroundContent() {
                   })}
                 </span>
               </div>
+              {playground?.isForked && (
+                <a
+                  href={`/playground/${playground.forkedFrom}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 hover:underline"
+                >
+                  src
+                  <ExternalLink size={12} />
+                </a>
+              )}
             </div>
           </div>
           {isAuthor && (
