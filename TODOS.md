@@ -3,10 +3,12 @@
 - /user page
 - /following page
 - / landing page
-- loading skeleton in /user
 
 ### TO DO
 
+- clicking on following, followers in /user should show a dialog showing them
+- reorganize and rename fns under /service/firebase
+- loading skeleton in /user and /following
 - option to edit displayName and bio (add bio to user) (option to add twitter, linkedin , github links etc) in settings
 - public unsigned /explore /user like /playground (try changing layout from outlet to children based individually)(or another sidebar with a big sign in button below... only explore button in sidebar)
 - add tooltip on icon buttons
@@ -14,6 +16,7 @@
 - notification for following and forking
 - editing still possible on public different user and unsigned. give a toast info
 - why handlesaveref is used?
+- why firebase slow ? try passing userid in the fns from react context instead of calling firebase auth.currentUser
 - follow and fork notifications
 - some buttons need alert dialogs - add them (change to public, private in /home)
 - firebase security rules

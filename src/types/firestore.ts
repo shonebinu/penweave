@@ -29,3 +29,7 @@ export interface UserType {
   email: string;
   photoURL: string;
 }
+
+export interface UserMeta extends UserType {
+  publicPlaygrounds: PlaygroundMeta[];
+}

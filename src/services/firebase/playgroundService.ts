@@ -213,3 +213,44 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
     isBookmarked,
   };
 };
+
+export const getUserPublicPlaygrounds = async (
+  userId: string,
+): Promise<PlaygroundMeta[]> => {
+  await auth.authStateReady();
+  const currentUser = auth.currentUser;
+
+  const q = query(
+    playgroundsCollection,
+    where("isPublic", "==", true),
+    where("userId", "==", userId),
+  );
+
+  const snapshot = await getDocs(q);
+
+  const playgrounds = await Promise.all(
+    snapshot.docs.map(async (docSnap) => {
+      const playground = docSnap.data() as Omit<Playground, "id">;
+      const { name, photoURL } = await getUserData(playground.userId);
+      const bookmarkCount = await getBookmarkCount(docSnap.id);
+      const forkCount = await getForkCount(docSnap.id);
+
+      let isBookmarked: boolean | undefined = undefined;
+
+      if (currentUser && playground.userId !== currentUser.uid)
+        isBookmarked = await isBookmarkedByUser(docSnap.id);
+
+      return {
+        id: docSnap.id,
+        ...playground,
+        userName: name,
+        userPhotoURL: photoURL,
+        bookmarkCount,
+        forkCount,
+        isBookmarked,
+      };
+    }),
+  );
+
+  return playgrounds;
+};
