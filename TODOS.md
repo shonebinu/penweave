@@ -3,14 +3,12 @@
 - /user page
 - /following page
 - / landing page
-- bug (when opening privated src of a fork.. on its owner itself.. shows unauthorized)
-- what to do if the src is privated.. on unsigned and signed
-- playground /new making two playgrounds
+- loading skeleton in /user
 
 ### TO DO
 
-- option to edit displayName and bio (add bio to user) (option to add twitter, linkedin , github links etc)
-- public unsigned /explore /user like /playground
+- option to edit displayName and bio (add bio to user) (option to add twitter, linkedin , github links etc) in settings
+- public unsigned /explore /user like /playground (try changing layout from outlet to children based individually)(or another sidebar with a big sign in button below... only explore button in sidebar)
 - add tooltip on icon buttons
 - sort based on forkCount && bookmarkCount | show trending (weekly, daily, monthly - option to select) on /explore page
 - notification for following and forking

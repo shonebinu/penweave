@@ -22,3 +22,10 @@ export interface PlaygroundMeta extends Playground {
   isBookmarked?: boolean;
   isUnavailable?: boolean;
 }
+
+export interface UserType {
+  id: string;
+  name: string;
+  email: string;
+  photoURL: string;
+}

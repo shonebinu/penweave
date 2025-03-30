@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { LoginForm } from "@/components/login/LoginForm";
 import { Toaster } from "@/components/ui/sonner.tsx";
@@ -20,11 +20,25 @@ export default function Login() {
   const [resetEmail, setResetEmail] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
 
   useEffect(() => {
     if (user && user.emailVerified) navigate("/home", { replace: true });
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (location.state?.error) {
+      toast.error(
+        location.state.error,
+        location.state?.details
+          ? {
+              description: location.state?.details,
+            }
+          : {},
+      );
+    }
+  }, [location.state]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

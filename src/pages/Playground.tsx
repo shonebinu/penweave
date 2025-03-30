@@ -76,7 +76,7 @@ function PlaygroundContent() {
         setJsCode(fetchedPlayground.js);
         setLoading(false);
       } catch (error) {
-        navigate("/home", {
+        const errorState = {
           replace: true,
           state: {
             error: "Failed to load playground",
@@ -85,12 +85,14 @@ function PlaygroundContent() {
                 ? error.message
                 : "An unexpected error occured",
           },
-        });
+        };
+        if (user) navigate("/home", errorState);
+        else navigate("/login", errorState);
       }
     };
 
     fetchPlayground();
-  }, [playgroundId, navigate, setHtmlCode, setCssCode, setJsCode]);
+  }, [playgroundId, navigate, setHtmlCode, setCssCode, setJsCode, user]);
 
   const handleRename = async (id: string, newTitle: string) => {
     try {
