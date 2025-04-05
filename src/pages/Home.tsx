@@ -8,6 +8,7 @@ import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
 import HomePlaygroundCard from "@/components/home/HomePlaygroundCard";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import {
   deletePlayground,
   getUserPlaygrounds,
@@ -18,13 +19,15 @@ import { PlaygroundMeta } from "@/types/firestore";
 export default function Home() {
   const [playgrounds, setPlaygrounds] = useState<PlaygroundMeta[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const getPlaygrounds = async () => {
       try {
-        const userPlaygrounds = await getUserPlaygrounds();
+        if (!user) throw new Error("User should be signed in.");
+        const userPlaygrounds = await getUserPlaygrounds(user);
         setPlaygrounds(userPlaygrounds);
       } catch (error) {
         console.error(error);
@@ -39,7 +42,7 @@ export default function Home() {
       }
     };
     getPlaygrounds();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (location.state?.error) {
@@ -57,7 +60,8 @@ export default function Home() {
   const handleRename = async (id: string, newTitle: string) => {
     try {
       if (newTitle.length === 0) throw new Error("Title shouldn't be empty.");
-      await updatePlayground(id, { title: newTitle });
+      if (!user) throw new Error("User should be signed in.");
+      await updatePlayground(user, id, { title: newTitle });
       setPlaygrounds((prev) =>
         prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p)),
       );
@@ -74,7 +78,8 @@ export default function Home() {
 
   const handleDelete = async (id: string) => {
     try {
-      await deletePlayground(id);
+      if (!user) throw new Error("User should be signed in.");
+      await deletePlayground(user, id);
       setPlaygrounds((prev) => prev.filter((p) => p.id !== id));
       toast.success("Playground deleted successfully");
     } catch (error) {
@@ -89,7 +94,8 @@ export default function Home() {
 
   const handlePublicStatus = async (id: string, isPublic: boolean) => {
     try {
-      await updatePlayground(id, { isPublic });
+      if (!user) throw new Error("User should be signed in.");
+      await updatePlayground(user, id, { isPublic });
       setPlaygrounds((prev) =>
         prev.map((p) => (p.id === id ? { ...p, isPublic } : p)),
       );

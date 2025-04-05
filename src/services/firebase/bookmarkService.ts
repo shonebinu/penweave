@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 import {
   Timestamp,
   addDoc,
@@ -14,15 +15,13 @@ import {
 import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { db } from "./firebaseConfig";
-import { getAuthenticatedUserOrThrow, getUserData } from "./firebaseService";
+import { getUserData } from "./firebaseService";
 import { getForkCount } from "./playgroundService.ts";
 
 const bookmarksCollection = collection(db, "bookmarks");
 const playgroundsCollection = collection(db, "playgrounds");
 
-const addBookmark = async (playgroundId: string) => {
-  const user = await getAuthenticatedUserOrThrow();
-
+const addBookmark = async (user: User, playgroundId: string) => {
   const playgroundRef = doc(db, "playgrounds", playgroundId);
   const playgroundSnap = await getDoc(playgroundRef);
   if (!playgroundSnap.exists()) throw new Error("Playground not found");
@@ -47,9 +46,7 @@ const addBookmark = async (playgroundId: string) => {
   });
 };
 
-const removeBookmark = async (playgroundId: string) => {
-  const user = await getAuthenticatedUserOrThrow();
-
+const removeBookmark = async (user: User, playgroundId: string) => {
   const q = query(
     bookmarksCollection,
     where("userId", "==", user.uid),
@@ -73,10 +70,9 @@ export const getBookmarkCount = async (
 };
 
 export const isBookmarkedByUser = async (
+  user: User,
   playgroundId: string,
 ): Promise<boolean> => {
-  const user = await getAuthenticatedUserOrThrow();
-
   const q = query(
     bookmarksCollection,
     where("userId", "==", user.uid),
@@ -88,21 +84,22 @@ export const isBookmarkedByUser = async (
 };
 
 export const toggleBookmark = async (
+  user: User,
   playgroundId: string,
   isBookmarked: boolean,
 ) => {
   if (isBookmarked) {
-    await removeBookmark(playgroundId);
+    await removeBookmark(user, playgroundId);
     return false;
   } else {
-    await addBookmark(playgroundId);
+    await addBookmark(user, playgroundId);
     return true;
   }
 };
 
-export const getBookmarkedPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
-  const user = await getAuthenticatedUserOrThrow();
-
+export const getBookmarkedPlaygrounds = async (
+  user: User,
+): Promise<PlaygroundMeta[]> => {
   const q = query(bookmarksCollection, where("userId", "==", user.uid));
   const bookmarksSnap = await getDocs(q);
 

@@ -30,7 +30,10 @@ export default function Explore() {
     const fetchPublicPlaygrounds = async () => {
       try {
         setLoading(true);
-        const publicPlaygrounds = await getPublicPlaygrounds(debouncedSearch);
+        const publicPlaygrounds = await getPublicPlaygrounds(
+          user,
+          debouncedSearch,
+        );
         setPlaygrounds(publicPlaygrounds);
       } catch (error) {
         console.error(error);
@@ -46,7 +49,7 @@ export default function Explore() {
     };
 
     fetchPublicPlaygrounds();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, user]);
 
   useEffect(() => {
     if (location.state?.error) {
@@ -76,7 +79,7 @@ export default function Explore() {
     }
 
     try {
-      const newState = await toggleBookmark(playgroundId, isBookmarked);
+      const newState = await toggleBookmark(user, playgroundId, isBookmarked);
 
       setPlaygrounds((prev) =>
         prev.map((pg) =>
@@ -108,7 +111,7 @@ export default function Explore() {
     }
 
     try {
-      const forkedId = await forkPlayground(playgroundId || "");
+      const forkedId = await forkPlayground(user, playgroundId || "");
 
       setPlaygrounds((prev) =>
         prev.map((pg) =>

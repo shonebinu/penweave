@@ -3,9 +3,11 @@ import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "@/hooks/useAuth.ts";
 import { createPlayground } from "@/services/firebase/playgroundService.ts";
 
 export default function NewPlayground() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const hasCreated = useRef(false);
 
@@ -14,12 +16,16 @@ export default function NewPlayground() {
     hasCreated.current = true;
 
     async function createAndRedirect() {
-      const docRef = await createPlayground("Untitled Playground");
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      const docRef = await createPlayground(user, "Untitled Playground");
       navigate(`/playground/${docRef.id}`, { replace: true });
     }
 
     createAndRedirect();
-  }, [navigate]);
+  }, [navigate, user]);
 
   return (
     <div

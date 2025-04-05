@@ -69,7 +69,8 @@ function PlaygroundContent() {
       }
 
       try {
-        const fetchedPlayground = await getPlayground(playgroundId);
+        if (!user) throw new Error("User should be signed in.");
+        const fetchedPlayground = await getPlayground(user, playgroundId);
         setPlayground(fetchedPlayground);
         setHtmlCode(fetchedPlayground.html);
         setCssCode(fetchedPlayground.css);
@@ -97,7 +98,8 @@ function PlaygroundContent() {
   const handleRename = async (id: string, newTitle: string) => {
     try {
       if (newTitle.length === 0) throw new Error("Title shouldn't be empty.");
-      await updatePlayground(id, { title: newTitle });
+      if (!user) throw new Error("User should be signed in.");
+      await updatePlayground(user, id, { title: newTitle });
       setPlayground((prev) => (prev ? { ...prev, title: newTitle } : prev));
       toast.success("Playground renamed successfully");
     } catch (error) {
@@ -119,6 +121,7 @@ function PlaygroundContent() {
     setIsBookmarking(true);
     try {
       const newState = await toggleBookmark(
+        user,
         playground?.id || "",
         playground?.isBookmarked || false,
       );
@@ -149,7 +152,8 @@ function PlaygroundContent() {
   const handleFork = async () => {
     setIsForking(true);
     try {
-      const forkedId = await forkPlayground(playgroundId || "");
+      if (!user) throw new Error("User should be signed in.");
+      const forkedId = await forkPlayground(user, playgroundId || "");
 
       setPlayground((prev) =>
         prev ? { ...prev, forkCount: prev.forkCount + 1 } : prev,
@@ -187,7 +191,8 @@ function PlaygroundContent() {
 
       setIsSaving(true);
       try {
-        await updatePlayground(playgroundId, {
+        if (!user) throw new Error("User should be signed in.");
+        await updatePlayground(user, playgroundId, {
           html: htmlCode,
           css: cssCode,
           js: jsCode,

@@ -26,8 +26,13 @@ export default function Bookmarks() {
   useEffect(() => {
     const fetchBookmarkedPlaygrounds = async () => {
       try {
+        if (!user) {
+          toast.error("You need to be signed in");
+          return;
+        }
+
         setLoading(true);
-        const bookmarkedPlaygrounds = await getBookmarkedPlaygrounds();
+        const bookmarkedPlaygrounds = await getBookmarkedPlaygrounds(user);
         setBookmarkedPlaygrounds(bookmarkedPlaygrounds);
       } catch (error) {
         console.error(error);
@@ -43,7 +48,7 @@ export default function Bookmarks() {
     };
 
     fetchBookmarkedPlaygrounds();
-  }, []);
+  }, [user]);
 
   const handleToggleBookmark = async (
     playgroundId: string,
@@ -55,7 +60,7 @@ export default function Bookmarks() {
     }
 
     try {
-      await toggleBookmark(playgroundId, isBookmarked);
+      await toggleBookmark(user, playgroundId, isBookmarked);
 
       setBookmarkedPlaygrounds((prev) =>
         prev.filter((pg) => pg.id !== playgroundId),
@@ -75,7 +80,7 @@ export default function Bookmarks() {
     }
 
     try {
-      const forkedId = await forkPlayground(playgroundId || "");
+      const forkedId = await forkPlayground(user, playgroundId || "");
 
       setBookmarkedPlaygrounds((prev) =>
         prev.map((pg) =>

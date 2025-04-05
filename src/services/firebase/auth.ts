@@ -44,7 +44,7 @@ export const doSignInWithEmailAndPassword = async (
   if (!user.emailVerified)
     throw new Error("Please verify your email before signing in");
 
-  await addUserToFirestore();
+  await addUserToFirestore(user);
 
   return userCredential;
 };
@@ -55,11 +55,13 @@ export const doPasswordReset = async (email: string) => {
 
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
+  const userCredential = await signInWithPopup(auth, provider);
 
-  await addUserToFirestore();
+  const user = userCredential.user;
 
-  return result;
+  await addUserToFirestore(user);
+
+  return userCredential;
 };
 
 export const doSignOut = async () => {

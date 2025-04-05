@@ -1,14 +1,12 @@
+import { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { UserMeta, UserType } from "@/types/firestore.ts";
 
 import { db } from "./firebaseConfig.ts";
-import { getAuthenticatedUserOrThrow } from "./firebaseService.ts";
 import { getUserPublicPlaygrounds } from "./playgroundService.ts";
 
-export const addUserToFirestore = async () => {
-  const user = await getAuthenticatedUserOrThrow();
-
+export const addUserToFirestore = async (user: User) => {
   const userRef = doc(db, "users", user.uid);
   await setDoc(
     userRef,
@@ -21,7 +19,10 @@ export const addUserToFirestore = async () => {
   );
 };
 
-export const getUserById = async (userId: string): Promise<UserMeta> => {
+export const getUserById = async (
+  user: User | null,
+  userId: string,
+): Promise<UserMeta> => {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
 
@@ -29,7 +30,7 @@ export const getUserById = async (userId: string): Promise<UserMeta> => {
 
   const userData = userSnap.data() as Omit<UserType, "id">;
 
-  const publicPlaygrounds = await getUserPublicPlaygrounds(userId);
+  const publicPlaygrounds = await getUserPublicPlaygrounds(user, userId);
 
   return {
     id: userSnap.id,

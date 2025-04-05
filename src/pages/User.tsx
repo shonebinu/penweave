@@ -20,7 +20,7 @@ export default function User() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const fetchedUser = await getUserById(userId || "");
+        const fetchedUser = await getUserById(authenticatedUser, userId || "");
         setUser(fetchedUser);
       } catch (error) {
         toast.error("Failed to fetch the user", {
@@ -33,7 +33,7 @@ export default function User() {
     };
 
     fetchUser();
-  }, [userId]);
+  }, [userId, authenticatedUser]);
 
   return (
     <main className="space-y-6 p-6">

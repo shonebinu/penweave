@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 import {
   Timestamp,
   addDoc,
@@ -14,14 +15,12 @@ import {
 import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { getBookmarkCount, isBookmarkedByUser } from "./bookmarkService.ts";
-import { auth, db } from "./firebaseConfig.ts";
-import { getAuthenticatedUserOrThrow, getUserData } from "./firebaseService.ts";
+import { db } from "./firebaseConfig.ts";
+import { getUserData } from "./firebaseService.ts";
 
 const playgroundsCollection = collection(db, "playgrounds");
 
-export const createPlayground = async (title: string) => {
-  const user = await getAuthenticatedUserOrThrow();
-
+export const createPlayground = async (user: User, title: string) => {
   const newPlayground: Omit<Playground, "id"> = {
     userId: user.uid,
     title,
@@ -39,10 +38,10 @@ export const createPlayground = async (title: string) => {
 };
 
 export const updatePlayground = async (
+  user: User,
   id: string,
   updates: Partial<Omit<Playground, "id" | "userId" | "createdAt">>,
 ) => {
-  const user = await getAuthenticatedUserOrThrow();
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -54,8 +53,7 @@ export const updatePlayground = async (
   return await updateDoc(docRef, { ...updates, updatedAt: Timestamp.now() });
 };
 
-export const deletePlayground = async (id: string) => {
-  const user = await getAuthenticatedUserOrThrow();
+export const deletePlayground = async (user: User, id: string) => {
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -67,9 +65,7 @@ export const deletePlayground = async (id: string) => {
   return await deleteDoc(docRef);
 };
 
-export const forkPlayground = async (playgroundId: string) => {
-  const user = await getAuthenticatedUserOrThrow();
-
+export const forkPlayground = async (user: User, playgroundId: string) => {
   const originalPlaygroundRef = doc(db, "playgrounds", playgroundId);
   const originalPlaygroundSnap = await getDoc(originalPlaygroundRef);
 
@@ -109,11 +105,9 @@ export const getForkCount = async (playgroundId: string): Promise<number> => {
 };
 
 export const getPublicPlaygrounds = async (
+  user: User | null,
   searchString: string = "",
 ): Promise<PlaygroundMeta[]> => {
-  await auth.authStateReady();
-  const user = auth.currentUser;
-
   const q = query(playgroundsCollection, where("isPublic", "==", true));
   const snapshot = await getDocs(q);
 
@@ -127,7 +121,7 @@ export const getPublicPlaygrounds = async (
       let isBookmarked: boolean | undefined = undefined;
 
       if (user && playground.userId !== user.uid)
-        isBookmarked = await isBookmarkedByUser(docSnap.id);
+        isBookmarked = await isBookmarkedByUser(user, docSnap.id);
 
       return {
         id: docSnap.id,
@@ -151,9 +145,9 @@ export const getPublicPlaygrounds = async (
   return playgrounds;
 };
 
-export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
-  const user = await getAuthenticatedUserOrThrow();
-
+export const getUserPlaygrounds = async (
+  user: User,
+): Promise<PlaygroundMeta[]> => {
   const q = query(playgroundsCollection, where("userId", "==", user.uid));
   const snapshot = await getDocs(q);
 
@@ -177,10 +171,10 @@ export const getUserPlaygrounds = async (): Promise<PlaygroundMeta[]> => {
   );
 };
 
-export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
-  await auth.authStateReady();
-  const user = auth.currentUser;
-
+export const getPlayground = async (
+  user: User,
+  id: string,
+): Promise<PlaygroundMeta> => {
   const docRef = doc(db, "playgrounds", id);
   const docSnap = await getDoc(docRef);
 
@@ -200,7 +194,7 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
   let isBookmarked: boolean | undefined = undefined;
 
   if (user) {
-    isBookmarked = await isBookmarkedByUser(id);
+    isBookmarked = await isBookmarkedByUser(user, id);
   }
 
   return {
@@ -215,11 +209,9 @@ export const getPlayground = async (id: string): Promise<PlaygroundMeta> => {
 };
 
 export const getUserPublicPlaygrounds = async (
+  currentUser: User | null,
   userId: string,
 ): Promise<PlaygroundMeta[]> => {
-  await auth.authStateReady();
-  const currentUser = auth.currentUser;
-
   const q = query(
     playgroundsCollection,
     where("isPublic", "==", true),
@@ -238,7 +230,7 @@ export const getUserPublicPlaygrounds = async (
       let isBookmarked: boolean | undefined = undefined;
 
       if (currentUser && playground.userId !== currentUser.uid)
-        isBookmarked = await isBookmarkedByUser(docSnap.id);
+        isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
 
       return {
         id: docSnap.id,
