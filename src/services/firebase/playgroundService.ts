@@ -172,7 +172,7 @@ export const getUserPlaygrounds = async (
 };
 
 export const getPlayground = async (
-  user: User,
+  user: User | null,
   id: string,
 ): Promise<PlaygroundMeta> => {
   const docRef = doc(db, "playgrounds", id);

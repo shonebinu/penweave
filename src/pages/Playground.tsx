@@ -41,7 +41,7 @@ import { PlaygroundMeta } from "@/types/firestore.ts";
 
 function PlaygroundContent() {
   const { playgroundId } = useParams();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const handleSaveRef = useRef<(() => Promise<void>) | null>(null);
 
@@ -69,7 +69,6 @@ function PlaygroundContent() {
       }
 
       try {
-        if (!user) throw new Error("User should be signed in.");
         const fetchedPlayground = await getPlayground(user, playgroundId);
         setPlayground(fetchedPlayground);
         setHtmlCode(fetchedPlayground.html);
@@ -92,8 +91,16 @@ function PlaygroundContent() {
       }
     };
 
-    fetchPlayground();
-  }, [playgroundId, navigate, setHtmlCode, setCssCode, setJsCode, user]);
+    if (!authLoading) fetchPlayground();
+  }, [
+    playgroundId,
+    authLoading,
+    navigate,
+    setHtmlCode,
+    setCssCode,
+    setJsCode,
+    user,
+  ]);
 
   const handleRename = async (id: string, newTitle: string) => {
     try {
