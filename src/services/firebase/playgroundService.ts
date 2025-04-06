@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
 import {
+  DocumentSnapshot,
   Timestamp,
   addDoc,
   collection,
@@ -104,6 +105,32 @@ export const getForkCount = async (playgroundId: string): Promise<number> => {
   return snapshot.size;
 };
 
+export const enrichPlaygroundMeta = async (
+  docSnap: DocumentSnapshot,
+  currentUser: User | null = null,
+): Promise<PlaygroundMeta> => {
+  const playground = docSnap.data() as Omit<Playground, "id">;
+  const { name, photoURL } = await getBasicUserInfo(playground.userId);
+  const bookmarkCount = await getBookmarkCount(docSnap.id);
+  const forkCount = await getForkCount(docSnap.id);
+
+  let isBookmarked: boolean | undefined = undefined;
+
+  if (currentUser && playground.userId !== currentUser.uid) {
+    isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
+  }
+
+  return {
+    id: docSnap.id,
+    ...playground,
+    userName: name,
+    userPhotoURL: photoURL,
+    bookmarkCount,
+    forkCount,
+    isBookmarked,
+  };
+};
+
 export const getPublicPlaygrounds = async (
   currentUser: User | null,
   searchString: string = "",
@@ -112,27 +139,7 @@ export const getPublicPlaygrounds = async (
   const snapshot = await getDocs(q);
 
   const playgrounds = await Promise.all(
-    snapshot.docs.map(async (docSnap) => {
-      const playground = docSnap.data() as Omit<Playground, "id">;
-      const { name, photoURL } = await getBasicUserInfo(playground.userId);
-      const bookmarkCount = await getBookmarkCount(docSnap.id);
-      const forkCount = await getForkCount(docSnap.id);
-
-      let isBookmarked: boolean | undefined = undefined;
-
-      if (currentUser && playground.userId !== currentUser.uid)
-        isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
-
-      return {
-        id: docSnap.id,
-        ...playground,
-        userName: name,
-        userPhotoURL: photoURL,
-        bookmarkCount,
-        forkCount,
-        isBookmarked,
-      };
-    }),
+    snapshot.docs.map((docSnap) => enrichPlaygroundMeta(docSnap, currentUser)),
   );
 
   if (searchString.trim()) {
@@ -152,22 +159,7 @@ export const getUserPlaygrounds = async (
   const snapshot = await getDocs(q);
 
   return await Promise.all(
-    snapshot.docs.map(async (docSnap) => {
-      const playground = docSnap.data() as Omit<Playground, "id">;
-      const bookmarkCount = await getBookmarkCount(docSnap.id);
-      const forkCount = await getForkCount(docSnap.id);
-
-      const { name, photoURL } = await getBasicUserInfo(playground.userId);
-
-      return {
-        id: docSnap.id,
-        ...playground,
-        userName: name,
-        userPhotoURL: photoURL,
-        bookmarkCount,
-        forkCount,
-      };
-    }),
+    snapshot.docs.map((docSnap) => enrichPlaygroundMeta(docSnap, user)),
   );
 };
 
@@ -187,25 +179,7 @@ export const getPlayground = async (
       throw new Error("Unauthorized access");
   }
 
-  const { name, photoURL } = await getBasicUserInfo(playground.userId);
-  const bookmarkCount = await getBookmarkCount(id);
-  const forkCount = await getForkCount(id);
-
-  let isBookmarked: boolean | undefined = undefined;
-
-  if (user) {
-    isBookmarked = await isBookmarkedByUser(user, id);
-  }
-
-  return {
-    id: docSnap.id,
-    ...(playground as Omit<Playground, "id">),
-    userName: name,
-    userPhotoURL: photoURL,
-    bookmarkCount,
-    forkCount,
-    isBookmarked,
-  };
+  return await enrichPlaygroundMeta(docSnap, user);
 };
 
 export const getUserPublicPlaygrounds = async (
@@ -221,27 +195,7 @@ export const getUserPublicPlaygrounds = async (
   const snapshot = await getDocs(q);
 
   const playgrounds = await Promise.all(
-    snapshot.docs.map(async (docSnap) => {
-      const playground = docSnap.data() as Omit<Playground, "id">;
-      const { name, photoURL } = await getBasicUserInfo(playground.userId);
-      const bookmarkCount = await getBookmarkCount(docSnap.id);
-      const forkCount = await getForkCount(docSnap.id);
-
-      let isBookmarked: boolean | undefined = undefined;
-
-      if (currentUser && playground.userId !== currentUser.uid)
-        isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
-
-      return {
-        id: docSnap.id,
-        ...playground,
-        userName: name,
-        userPhotoURL: photoURL,
-        bookmarkCount,
-        forkCount,
-        isBookmarked,
-      };
-    }),
+    snapshot.docs.map((docSnap) => enrichPlaygroundMeta(docSnap, currentUser)),
   );
 
   return playgrounds;
