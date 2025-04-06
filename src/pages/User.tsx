@@ -9,7 +9,7 @@ import PublicPlaygroundCard from "@/components/PublicPlaygroundCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
-import { getUserById } from "@/services/firebase/userService.ts";
+import { getFulluserProfile } from "@/services/firebase/userService.ts";
 import { UserMeta } from "@/types/firestore.ts";
 
 export default function User() {
@@ -20,7 +20,10 @@ export default function User() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const fetchedUser = await getUserById(authenticatedUser, userId || "");
+        const fetchedUser = await getFulluserProfile(
+          authenticatedUser,
+          userId || "",
+        );
         setUser(fetchedUser);
       } catch (error) {
         toast.error("Failed to fetch the user", {

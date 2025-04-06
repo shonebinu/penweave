@@ -16,7 +16,7 @@ import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { getBookmarkCount, isBookmarkedByUser } from "./bookmarkService.ts";
 import { db } from "./firebaseConfig.ts";
-import { getUserData } from "./firebaseService.ts";
+import { getBasicUserInfo } from "./userService.ts";
 
 const playgroundsCollection = collection(db, "playgrounds");
 
@@ -105,7 +105,7 @@ export const getForkCount = async (playgroundId: string): Promise<number> => {
 };
 
 export const getPublicPlaygrounds = async (
-  user: User | null,
+  currentUser: User | null,
   searchString: string = "",
 ): Promise<PlaygroundMeta[]> => {
   const q = query(playgroundsCollection, where("isPublic", "==", true));
@@ -114,14 +114,14 @@ export const getPublicPlaygrounds = async (
   const playgrounds = await Promise.all(
     snapshot.docs.map(async (docSnap) => {
       const playground = docSnap.data() as Omit<Playground, "id">;
-      const { name, photoURL } = await getUserData(playground.userId);
+      const { name, photoURL } = await getBasicUserInfo(playground.userId);
       const bookmarkCount = await getBookmarkCount(docSnap.id);
       const forkCount = await getForkCount(docSnap.id);
 
       let isBookmarked: boolean | undefined = undefined;
 
-      if (user && playground.userId !== user.uid)
-        isBookmarked = await isBookmarkedByUser(user, docSnap.id);
+      if (currentUser && playground.userId !== currentUser.uid)
+        isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
 
       return {
         id: docSnap.id,
@@ -157,7 +157,7 @@ export const getUserPlaygrounds = async (
       const bookmarkCount = await getBookmarkCount(docSnap.id);
       const forkCount = await getForkCount(docSnap.id);
 
-      const { name, photoURL } = await getUserData(playground.userId);
+      const { name, photoURL } = await getBasicUserInfo(playground.userId);
 
       return {
         id: docSnap.id,
@@ -187,7 +187,7 @@ export const getPlayground = async (
       throw new Error("Unauthorized access");
   }
 
-  const { name, photoURL } = await getUserData(playground.userId);
+  const { name, photoURL } = await getBasicUserInfo(playground.userId);
   const bookmarkCount = await getBookmarkCount(id);
   const forkCount = await getForkCount(id);
 
@@ -223,7 +223,7 @@ export const getUserPublicPlaygrounds = async (
   const playgrounds = await Promise.all(
     snapshot.docs.map(async (docSnap) => {
       const playground = docSnap.data() as Omit<Playground, "id">;
-      const { name, photoURL } = await getUserData(playground.userId);
+      const { name, photoURL } = await getBasicUserInfo(playground.userId);
       const bookmarkCount = await getBookmarkCount(docSnap.id);
       const forkCount = await getForkCount(docSnap.id);
 

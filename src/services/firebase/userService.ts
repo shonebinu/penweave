@@ -19,8 +19,19 @@ export const addUserToFirestore = async (user: User) => {
   );
 };
 
-export const getUserById = async (
-  user: User | null,
+export const getBasicUserInfo = async (userId: string) => {
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) return { name: "Unknown User", photoURL: null };
+
+  const data = userSnap.data() as { name: string; photoURL: string | null };
+
+  return data;
+};
+
+export const getFulluserProfile = async (
+  currentUser: User | null,
   userId: string,
 ): Promise<UserMeta> => {
   const userRef = doc(db, "users", userId);
@@ -30,7 +41,7 @@ export const getUserById = async (
 
   const userData = userSnap.data() as Omit<UserType, "id">;
 
-  const publicPlaygrounds = await getUserPublicPlaygrounds(user, userId);
+  const publicPlaygrounds = await getUserPublicPlaygrounds(currentUser, userId);
 
   return {
     id: userSnap.id,

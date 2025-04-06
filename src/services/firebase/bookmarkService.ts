@@ -15,8 +15,8 @@ import {
 import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { db } from "./firebaseConfig";
-import { getUserData } from "./firebaseService";
 import { getForkCount } from "./playgroundService.ts";
+import { getBasicUserInfo } from "./userService.ts";
 
 const bookmarksCollection = collection(db, "bookmarks");
 const playgroundsCollection = collection(db, "playgrounds");
@@ -128,7 +128,7 @@ export const getBookmarkedPlaygrounds = async (
       getForkCount(playgroundId),
     ]);
 
-    const { name, photoURL } = await getUserData(playground.userId);
+    const { name, photoURL } = await getBasicUserInfo(playground.userId);
 
     playgroundMetas.push({
       id: docSnap.id,
