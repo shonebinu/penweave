@@ -32,4 +32,7 @@ export interface UserType {
 
 export interface UserMeta extends UserType {
   publicPlaygrounds: PlaygroundMeta[];
+  followerCount: number;
+  followingCount: number;
+  currentUserFollowing: boolean;
 }

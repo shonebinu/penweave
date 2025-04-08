@@ -110,21 +110,24 @@ export const enrichPlaygroundMeta = async (
   currentUser: User | null = null,
 ): Promise<PlaygroundMeta> => {
   const playground = docSnap.data() as Omit<Playground, "id">;
-  const { name, photoURL } = await getBasicUserInfo(playground.userId);
-  const bookmarkCount = await getBookmarkCount(docSnap.id);
-  const forkCount = await getForkCount(docSnap.id);
 
-  let isBookmarked: boolean | undefined = undefined;
+  const isBookmarkedPromise =
+    currentUser && playground.userId !== currentUser.uid
+      ? isBookmarkedByUser(currentUser, docSnap.id)
+      : Promise.resolve(undefined);
 
-  if (currentUser && playground.userId !== currentUser.uid) {
-    isBookmarked = await isBookmarkedByUser(currentUser, docSnap.id);
-  }
+  const [userInfo, bookmarkCount, forkCount, isBookmarked] = await Promise.all([
+    getBasicUserInfo(playground.userId),
+    getBookmarkCount(docSnap.id),
+    getForkCount(docSnap.id),
+    isBookmarkedPromise,
+  ]);
 
   return {
     id: docSnap.id,
     ...playground,
-    userName: name,
-    userPhotoURL: photoURL,
+    userName: userInfo.name,
+    userPhotoURL: userInfo.photoURL,
     bookmarkCount,
     forkCount,
     isBookmarked,

@@ -30,7 +30,6 @@ export default function Home() {
         const userPlaygrounds = await getUserPlaygrounds(user);
         setPlaygrounds(userPlaygrounds);
       } catch (error) {
-        console.error(error);
         toast.error("Failed to load your playgrounds", {
           description:
             error instanceof Error

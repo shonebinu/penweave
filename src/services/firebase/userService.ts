@@ -4,6 +4,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { UserMeta, UserType } from "@/types/firestore.ts";
 
 import { db } from "./firebaseConfig.ts";
+import {
+  getFollowerCount,
+  getFollowingCount,
+  isFollowing,
+} from "./followsService.ts";
 import { getUserPublicPlaygrounds } from "./playgroundService.ts";
 
 export const addUserToFirestore = async (user: User) => {
@@ -31,7 +36,7 @@ export const getBasicUserInfo = async (userId: string) => {
 };
 
 export const getFulluserProfile = async (
-  currentUser: User | null,
+  currentUser: User,
   userId: string,
 ): Promise<UserMeta> => {
   const userRef = doc(db, "users", userId);
@@ -41,11 +46,24 @@ export const getFulluserProfile = async (
 
   const userData = userSnap.data() as Omit<UserType, "id">;
 
-  const publicPlaygrounds = await getUserPublicPlaygrounds(currentUser, userId);
+  const [
+    publicPlaygrounds,
+    followerCount,
+    followingCount,
+    currentUserFollowing,
+  ] = await Promise.all([
+    getUserPublicPlaygrounds(currentUser, userId),
+    getFollowerCount(userId),
+    getFollowingCount(userId),
+    isFollowing(currentUser, userId),
+  ]);
 
   return {
     id: userSnap.id,
     ...userData,
     publicPlaygrounds,
+    followerCount,
+    followingCount,
+    currentUserFollowing,
   };
 };

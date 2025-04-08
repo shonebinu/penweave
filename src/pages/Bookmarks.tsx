@@ -35,7 +35,6 @@ export default function Bookmarks() {
         const bookmarkedPlaygrounds = await getBookmarkedPlaygrounds(user);
         setBookmarkedPlaygrounds(bookmarkedPlaygrounds);
       } catch (error) {
-        console.error(error);
         toast.error("Failed to load bookmarked playgrounds", {
           description:
             error instanceof Error
@@ -66,10 +65,14 @@ export default function Bookmarks() {
         prev.filter((pg) => pg.id !== playgroundId),
       );
 
-      toast.success(`Successfully removed the bookmark.`);
+      toast.success(`Successfully toggled the bookmark.`);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to remove bookmark.");
+      toast.error("Failed to toggle the bookmark", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured",
+      });
     }
   };
 

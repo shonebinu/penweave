@@ -36,7 +36,6 @@ export default function Explore() {
         );
         setPlaygrounds(publicPlaygrounds);
       } catch (error) {
-        console.error(error);
         toast.error("Failed to load public playgrounds", {
           description:
             error instanceof Error
@@ -99,8 +98,12 @@ export default function Explore() {
         `Successfully ${newState ? "added" : "removed"} the bookmark!`,
       );
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to toggle bookmark.");
+      toast.error("Failed to toggle bookmark", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured",
+      });
     }
   };
 
@@ -111,7 +114,7 @@ export default function Explore() {
     }
 
     try {
-      const forkedId = await forkPlayground(user, playgroundId || "");
+      const forkedId = await forkPlayground(user, playgroundId);
 
       setPlaygrounds((prev) =>
         prev.map((pg) =>

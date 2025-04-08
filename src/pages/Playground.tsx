@@ -149,8 +149,12 @@ function PlaygroundContent() {
         `Successfully ${newState ? "added" : "removed"} the bookmark!`,
       );
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to toggle bookmark.");
+      toast.error("Failed to toggle bookmark", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occured",
+      });
     } finally {
       setIsBookmarking(false);
     }
@@ -206,8 +210,12 @@ function PlaygroundContent() {
         });
         if (isManual) toast.success("Playground saved!");
       } catch (error) {
-        toast.error("Failed to save playground");
-        console.error(error);
+        toast.error("Failed to save playground", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "An unexpected error occured",
+        });
       } finally {
         setIsSaving(false);
       }

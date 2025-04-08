@@ -1,11 +1,13 @@
 ### PRIORITY
 
-- /user page
 - /following page
 - / landing page
+- notification ( follow and fork notifications )
+  (should i add notification from firebase fns??? then how to update notification state?)
 
 ### TO DO
 
+- use enrichPlaygroundMeta on getBookmarkedPlaygrounds() and use promise.all in every place to fasten queries
 - clicking on following, followers in /user should show a dialog showing them
 - reorganize and rename fns under /service/firebase
 - loading skeleton in /user and /following
@@ -13,11 +15,9 @@
 - public unsigned /explore /user like /playground (try changing layout from outlet to children based individually)(or another sidebar with a big sign in button below... only explore button in sidebar)
 - add tooltip on icon buttons
 - sort based on forkCount && bookmarkCount | show trending (weekly, daily, monthly - option to select) on /explore page
-- notification for following and forking
 - editing still possible on public different user and unsigned. give a toast info
 - why handlesaveref is used?
 - why firebase slow ? try passing userid in the fns from react context instead of calling firebase auth.currentUser
-- follow and fork notifications
 - some buttons need alert dialogs - add them (change to public, private in /home)
 - firebase security rules
 - new logo / edit existing logo
