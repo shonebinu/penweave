@@ -1,12 +1,11 @@
 ### PRIORITY
 
-- /following page
-- / landing page
 - notification ( follow and fork notifications )
-  (should i add notification from firebase fns??? then how to update notification state?)
+- /following page
 
 ### TO DO
 
+- / landing page
 - use enrichPlaygroundMeta on getBookmarkedPlaygrounds() and use promise.all in every place to fasten queries
 - clicking on following, followers in /user should show a dialog showing them
 - reorganize and rename fns under /service/firebase

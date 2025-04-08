@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "./firebaseConfig.ts";
+import { createNotification } from "./notification.ts";
 
 const followsCollection = collection(db, "follows");
 
@@ -28,6 +29,12 @@ export const followUser = async (followerId: string, followingId: string) => {
     followerId,
     followingId,
     createdAt: Timestamp.now(),
+  });
+
+  await createNotification({
+    userId: followingId,
+    fromUserId: followerId,
+    type: "follow",
   });
 };
 

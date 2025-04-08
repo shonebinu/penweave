@@ -17,6 +17,7 @@ import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { getBookmarkCount, isBookmarkedByUser } from "./bookmarkService.ts";
 import { db } from "./firebaseConfig.ts";
+import { createNotification } from "./notification.ts";
 import { getBasicUserInfo } from "./userService.ts";
 
 const playgroundsCollection = collection(db, "playgrounds");
@@ -80,6 +81,10 @@ export const forkPlayground = async (user: User, playgroundId: string) => {
     throw new Error("Cannot fork a private playground.");
   }
 
+  if (originalPlayground.userId === user.uid) {
+    throw new Error("You can't fork your own playground.");
+  }
+
   const newPlaygroundData = {
     ...originalPlayground,
     title: originalPlayground.title,
@@ -93,6 +98,14 @@ export const forkPlayground = async (user: User, playgroundId: string) => {
   };
 
   const docRef = await addDoc(playgroundsCollection, newPlaygroundData);
+
+  await createNotification({
+    userId: originalPlayground.userId,
+    fromUserId: user.uid,
+    type: "fork",
+    playgroundId,
+  });
+
   return docRef.id;
 };
 
