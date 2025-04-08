@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "./firebaseConfig.ts";
-import { createNotification } from "./notification.ts";
+import { createNotification } from "./notificationService.ts";
 
 const followsCollection = collection(db, "follows");
 

@@ -1,11 +1,12 @@
 ### PRIORITY
 
-- notification ( follow and fork notifications )
 - /following page
 
 ### TO DO
 
 - / landing page
+- header avatar dropdown (my profile, settings)
+- now in the services, sometimes we are passing userId and sometimes we are passing the user auth object... only pass one... don't mix both of them
 - use enrichPlaygroundMeta on getBookmarkedPlaygrounds() and use promise.all in every place to fasten queries
 - clicking on following, followers in /user should show a dialog showing them
 - reorganize and rename fns under /service/firebase

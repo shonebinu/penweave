@@ -6,16 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import AvatarIcon from "@/components/AvatarIcon.tsx";
 import PublicPlaygroundCard from "@/components/PublicPlaygroundCard.tsx";
+import UserSkeleton from "@/components/skeleton/UserSkeleton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import { toggleBookmark } from "@/services/firebase/bookmarkService.ts";
-import { toggleFollow } from "@/services/firebase/followsService.ts";
+import { toggleFollow } from "@/services/firebase/followService";
 import { forkPlayground } from "@/services/firebase/playgroundService.ts";
 import { getFulluserProfile } from "@/services/firebase/userService.ts";
 import { UserMeta } from "@/types/firestore.ts";
-
-// TODO: Add loading skeleton
 
 export default function User() {
   const { userId } = useParams();
@@ -23,6 +22,7 @@ export default function User() {
   const { user: authenticatedUser } = useAuth();
   const navigate = useNavigate();
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -44,6 +44,8 @@ export default function User() {
               ? error.message
               : "An unexpected error occurred",
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -175,6 +177,13 @@ export default function User() {
       setIsFollowLoading(false);
     }
   };
+
+  if (isLoading)
+    return (
+      <main className="space-y-6 p-6">
+        <UserSkeleton />
+      </main>
+    );
 
   return (
     <main className="space-y-6 p-6">

@@ -4,8 +4,8 @@ import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
 import PublicPlaygroundCard from "@/components/PublicPlaygroundCard";
+import PlaygroundSkeleton from "@/components/skeleton/PlaygroundSkeleton";
 import { Input } from "@/components/ui/input.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";

@@ -17,7 +17,7 @@ import { Playground, PlaygroundMeta } from "@/types/firestore.ts";
 
 import { getBookmarkCount, isBookmarkedByUser } from "./bookmarkService.ts";
 import { db } from "./firebaseConfig.ts";
-import { createNotification } from "./notification.ts";
+import { createNotification } from "./notificationService.ts";
 import { getBasicUserInfo } from "./userService.ts";
 
 const playgroundsCollection = collection(db, "playgrounds");

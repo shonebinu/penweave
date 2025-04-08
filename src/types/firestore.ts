@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 
 export interface Playground {
@@ -35,4 +36,39 @@ export interface UserMeta extends UserType {
   followerCount: number;
   followingCount: number;
   currentUserFollowing: boolean;
+}
+
+export interface Notification {
+  id: string;
+  userId: string;
+  fromUserId: string;
+  type: "follow" | "fork";
+  playgroundId: string | null;
+  createdAt: Timestamp;
+  read: boolean;
+  viewedAt: Timestamp;
+}
+
+export interface NotificationMeta extends Notification {
+  fromUserName: string;
+  fromUserPhotoURL: string | null;
+}
+
+export interface NotificationContextType {
+  notifications: NotificationMeta[];
+  isLoading: boolean;
+}
+
+export interface CodeStateType {
+  htmlCode: string;
+  cssCode: string;
+  jsCode: string;
+  setHtmlCode: (code: string) => void;
+  setCssCode: (code: string) => void;
+  setJsCode: (code: string) => void;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  loading: boolean;
 }

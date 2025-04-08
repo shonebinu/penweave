@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import PlaygroundSkeleton from "@/components/PlaygroundSkeleton";
 import HomePlaygroundCard from "@/components/home/HomePlaygroundCard";
+import PlaygroundSkeleton from "@/components/skeleton/PlaygroundSkeleton";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";

@@ -3,9 +3,9 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import PlaygroundSkeleton from "@/components/PlaygroundSkeleton.tsx";
 import PublicPlaygroundCard from "@/components/PublicPlaygroundCard.tsx";
 import UnavailablePlaygroundCard from "@/components/UnavailablePlaygroundCard.tsx";
+import PlaygroundSkeleton from "@/components/skeleton/PlaygroundSkeleton";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import {

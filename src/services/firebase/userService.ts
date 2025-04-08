@@ -8,7 +8,7 @@ import {
   getFollowerCount,
   getFollowingCount,
   isFollowing,
-} from "./followsService.ts";
+} from "./followService.ts";
 import { getUserPublicPlaygrounds } from "./playgroundService.ts";
 
 export const addUserToFirestore = async (user: User) => {
