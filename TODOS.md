@@ -17,7 +17,6 @@
 - sort based on forkCount && bookmarkCount | show trending (weekly, daily, monthly - option to select) on /explore page
 - editing still possible on public different user and unsigned. give a toast info
 - why handlesaveref is used?
-- why firebase slow ? try passing userid in the fns from react context instead of calling firebase auth.currentUser
 - some buttons need alert dialogs - add them (change to public, private in /home)
 - firebase security rules
 - new logo / edit existing logo
