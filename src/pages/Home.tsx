@@ -114,7 +114,7 @@ export default function Home() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">My Playgrounds</h1>
         <p className="text-sm text-muted-foreground">
-          Create, manage and run your code playgrounds
+          Create, manage and run your code playgrounds.
         </p>
       </div>
 

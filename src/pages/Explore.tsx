@@ -145,7 +145,7 @@ export default function Explore() {
           Explore Playgrounds
         </h1>
         <p className="text-sm text-muted-foreground">
-          Discover public playgrounds created by other users
+          Discover public playgrounds created by other users.
         </p>
       </div>
 

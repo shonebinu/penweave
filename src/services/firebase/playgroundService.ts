@@ -89,7 +89,6 @@ export const forkPlayground = async (user: User, playgroundId: string) => {
     ...originalPlayground,
     title: originalPlayground.title,
     userId: user.uid,
-    userName: user.displayName,
     isPublic: false,
     isForked: true,
     forkedFrom: playgroundId,

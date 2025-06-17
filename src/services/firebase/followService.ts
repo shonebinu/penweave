@@ -9,8 +9,11 @@ import {
   where,
 } from "firebase/firestore";
 
+import { PlaygroundMeta } from "@/types/firestore.ts";
+
 import { db } from "./firebaseConfig.ts";
 import { createNotification } from "./notificationService.ts";
+import { getUserPublicPlaygrounds } from "./playgroundService.ts";
 
 const followsCollection = collection(db, "follows");
 
@@ -93,4 +96,24 @@ export const getFollowingCount = async (userId: string): Promise<number> => {
   const q = query(followsCollection, where("followerId", "==", userId));
   const snapshot = await getDocs(q);
   return snapshot.size;
+};
+
+export const getFollowingUserPlaygrounds = async (
+  currentUser: User,
+): Promise<PlaygroundMeta[]> => {
+  const q = query(
+    followsCollection,
+    where("followerId", "==", currentUser.uid),
+  );
+
+  const snapshot = await getDocs(q);
+  const followingIds = snapshot.docs.map((doc) => doc.data().followingId);
+
+  const allPlaygrounds = await Promise.all(
+    followingIds.map((uid) => getUserPublicPlaygrounds(currentUser, uid)),
+  );
+
+  return allPlaygrounds
+    .flat()
+    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
 };

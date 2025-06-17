@@ -25,12 +25,12 @@ export default function Bookmarks() {
 
   useEffect(() => {
     const fetchBookmarkedPlaygrounds = async () => {
-      try {
-        if (!user) {
-          toast.error("You need to be signed in");
-          return;
-        }
+      if (!user) {
+        toast.error("You need to be signed in");
+        return;
+      }
 
+      try {
         setLoading(true);
         const bookmarkedPlaygrounds = await getBookmarkedPlaygrounds(user);
         setBookmarkedPlaygrounds(bookmarkedPlaygrounds);

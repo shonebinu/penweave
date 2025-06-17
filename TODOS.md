@@ -1,14 +1,18 @@
 ### PRIORITY
 
+- reword the types... generalize the types... some places... some of the properties are not needed.. extend properly and organize... instead of enriching in a single fn.. maybe use multiple fns with promise.all
+- don't return email to the frontend for multiple users
 - /following page
 
 ### TO DO
 
 - / landing page
+- make mobile responsive
 - header avatar dropdown (my profile, settings)
 - now in the services, sometimes we are passing userId and sometimes we are passing the user auth object... only pass one... don't mix both of them
 - use enrichPlaygroundMeta on getBookmarkedPlaygrounds() and use promise.all in every place to fasten queries
 - clicking on following, followers in /user should show a dialog showing them
+- in explore, search following playgrounds
 - reorganize and rename fns under /service/firebase
 - loading skeleton in /user and /following
 - option to edit displayName and bio (add bio to user) (option to add twitter, linkedin , github links etc) in settings
@@ -26,6 +30,10 @@
 - debounce iframe so that flashes don't appear
 - change firebase verification email and change password email template and also add returnUrl
 - reset password, change email, unlink auth provider, delete account options
+- how deletion , private operation of playground affects on forked and bookmarked.
+- how acc deletion affects, following, bookmarked, playgrounds etc
+- /explore, search user, search playgrounds based on our follow
+- don't include email in the user type, since we don't want to send it to frontend
 
 ### LATER
 

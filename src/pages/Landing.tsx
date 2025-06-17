@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-black px-4 text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-foreground">
       <div className="text-center">
         <h1 className="mb-6 text-4xl font-extrabold tracking-tight md:text-6xl">
           Penweave
