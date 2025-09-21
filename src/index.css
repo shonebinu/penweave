@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: halloween --default;
+}
+
+@theme {
+  --font-sans: "Outfit", sans-serif;
+}
