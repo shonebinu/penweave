@@ -1,16 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { type FormEvent, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, Navigate } from "react-router";
 
 import PenweaveLogo from "@/assets/penweave.svg";
 
+import { useAuth } from "../useAuth.ts";
+
 export function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleForgotPassword = () => {};
+  const { session, sendResetPassword } = useAuth();
+
+  if (session) {
+    return <Navigate to="/projects" />;
+  }
+
+  const handleForgotPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await sendResetPassword(email);
+
+      if (response.error) {
+        toast.error("Operation failed: " + response.error.message);
+      } else {
+        toast.success("Password reset link has been sent to your email.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again later.");
+      console.error("Unexpected error during signup:", err);
+    } finally {
+      setEmail("");
+      setLoading(false);
+    }
+  };
 
   return (
-    <main className="flex h-[calc(100svh-var(--header-height))] items-center justify-center">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+    <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
+      <div className="card bg-base-100 m-5 w-full max-w-sm shrink-0 shadow-2xl">
         <div className="card-body">
           <img
             src={PenweaveLogo}
@@ -34,7 +63,14 @@ export function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button className="btn btn-neutral mt-4">Reset Password</button>
+              <button className="btn btn-neutral mt-4" disabled={loading}>
+                {loading ? (
+                  <span className="loading loading-dots loading-md"></span>
+                ) : (
+                  ""
+                )}
+                Send Link
+              </button>
             </fieldset>
           </form>
           <p className="text-center text-sm">

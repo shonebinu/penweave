@@ -8,7 +8,7 @@ import PenweaveLogo from "@/assets/penweave.svg";
 import { useAuth } from "../useAuth.ts";
 
 export function Signup() {
-  const { session, signUpUser } = useAuth();
+  const { session, signUpUser, signInWithGoogle } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,9 +17,26 @@ export function Signup() {
 
   const navigate = useNavigate();
 
-  if (session) return <Navigate to="/dashboard" />;
+  if (session) return <Navigate to="/projects" />;
 
-  const handleSignUp = async (e: FormEvent) => {
+  const handleSignInWithGoogle = async () => {
+    setLoading(true);
+
+    try {
+      const response = await signInWithGoogle();
+
+      if (response.error) {
+        toast.error("Signup failed: " + response.error.message);
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again later.");
+      console.error("Unexpected error during signup:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEmailSignUp = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -43,8 +60,8 @@ export function Signup() {
   };
 
   return (
-    <main className="flex h-[calc(100svh-var(--header-height))] items-center justify-center">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+    <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
+      <div className="card bg-base-100 m-5 w-full max-w-sm shrink-0 shadow-2xl">
         <div className="card-body">
           <img
             src={PenweaveLogo}
@@ -54,15 +71,23 @@ export function Signup() {
           <h2 className="text-xl font-bold">Welcome to PenWeave</h2>
           <p>Create a free account to inspire others with your creations.</p>
 
-          <form onSubmit={handleSignUp}>
+          <button
+            className="btn"
+            disabled={loading}
+            onClick={handleSignInWithGoogle}
+          >
+            {loading ? (
+              <span className="loading loading-dots loading-md"></span>
+            ) : (
+              ""
+            )}
+            <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
+            Continue with Google
+          </button>
+
+          <form onSubmit={handleEmailSignUp}>
             <fieldset className="fieldset">
-              <button className="btn">
-                <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
-                Continue with Google
-              </button>
-
-              <div className="divider m-0 mt-1">or</div>
-
+              <div className="divider m-0">or</div>
               <label htmlFor="name" className="label text-sm">
                 Name
               </label>
@@ -76,7 +101,6 @@ export function Signup() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-
               <label htmlFor="email" className="label text-sm">
                 Email
               </label>
@@ -90,7 +114,6 @@ export function Signup() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-
               <label htmlFor="password" className="label text-sm">
                 Password
               </label>

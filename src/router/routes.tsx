@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import { AuthLayout } from "@/features/auth/AuthLayout.tsx";
 import { ForgotPassword } from "@/features/auth/pages/ForgotPassword.tsx";
 import { Login } from "@/features/auth/pages/Login";
+import { ResetPassword } from "@/features/auth/pages/ResetPassword.tsx";
 import { Signup } from "@/features/auth/pages/Signup.tsx";
 import { VerifyEmail } from "@/features/auth/pages/VerifyEmail.tsx";
 
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
   {
     path: "*",
     element: <ProtectedRoute />,
-    children: [{ path: "dashboard", element: <h1>Protected</h1> }],
+    children: [{ path: "projects", element: <h1>Protected</h1> }],
   },
   {
     path: "*",
@@ -34,7 +35,10 @@ export const router = createBrowserRouter([
         path: "verify-email",
         element: <VerifyEmail />,
       },
-      { path: "reset-password", element: <h1>Reset Pass</h1> },
+      {
+        path: "reset-password",
+        element: <ResetPassword />,
+      },
     ],
   },
 ]);

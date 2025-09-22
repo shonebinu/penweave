@@ -1,7 +1,8 @@
 import { supabase } from "@/supabaseClient.ts";
 
-const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/dashboard`;
-// const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-password`;
+const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/projects`;
+const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-password`;
+const googleSignInRedirectUrl = emailVerificationRedirectUrl;
 
 const signUpUser = async (email: string, password: string, name: string) => {
   return await supabase.auth.signUp({
@@ -22,10 +23,32 @@ const signOutUser = async () => {
   return await supabase.auth.signOut();
 };
 
-// const sendResetPassword = async (email: string) => {
-//   return await supabase.auth.resetPasswordForEmail(email, {
-//     redirectTo: forgotPassRedirectUrl,
-//   });
-// };
+const sendResetPassword = async (email: string) => {
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: forgotPassRedirectUrl,
+  });
+};
 
-export { signInUser, signOutUser, signUpUser };
+const updatePassword = async (newPassword: string) => {
+  return await supabase.auth.updateUser({
+    password: newPassword,
+  });
+};
+
+const signInWithGoogle = async () => {
+  return await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: googleSignInRedirectUrl,
+    },
+  });
+};
+
+export {
+  signInUser,
+  signOutUser,
+  signUpUser,
+  sendResetPassword,
+  updatePassword,
+  signInWithGoogle,
+};

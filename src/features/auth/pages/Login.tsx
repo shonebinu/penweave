@@ -5,6 +5,7 @@ import { Link, Navigate, useNavigate } from "react-router";
 import GoogleLogo from "@/assets/google.svg";
 import PenweaveLogo from "@/assets/penweave.svg";
 
+import { signInWithGoogle } from "../authService.ts";
 import { useAuth } from "../useAuth.ts";
 
 export function Login() {
@@ -16,9 +17,26 @@ export function Login() {
 
   const navigate = useNavigate();
 
-  if (session) return <Navigate to="/dashboard" />;
+  if (session) return <Navigate to="/projects" />;
 
-  const handleLogIn = async (e: FormEvent) => {
+  const handleSignInWithGoogle = async () => {
+    setLoading(true);
+
+    try {
+      const response = await signInWithGoogle();
+
+      if (response.error) {
+        toast.error("Login failed: " + response.error.message);
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again later.");
+      console.error("Unexpected error during signup:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEmailLogIn = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -26,9 +44,9 @@ export function Login() {
       const response = await signInUser(email, password);
 
       if (response.error) {
-        toast.error("Signup failed: " + response.error.message);
+        toast.error("Login failed: " + response.error.message);
       } else {
-        return navigate("/dashboard");
+        return navigate("/projects");
       }
     } catch (err) {
       toast.error("Something went wrong. Please try again later.");
@@ -41,8 +59,8 @@ export function Login() {
   };
 
   return (
-    <main className="flex h-[calc(100svh-var(--header-height))] items-center justify-center">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+    <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
+      <div className="card bg-base-100 m-5 w-full max-w-sm shrink-0 shadow-2xl">
         <div className="card-body">
           <img
             src={PenweaveLogo}
@@ -52,13 +70,23 @@ export function Login() {
           <h2 className="text-xl font-bold">Login to PenWeave</h2>
           <p>Let’s pick up where you left off.</p>
 
-          <form onSubmit={handleLogIn}>
+          <button
+            className="btn"
+            disabled={loading}
+            onClick={handleSignInWithGoogle}
+          >
+            {loading ? (
+              <span className="loading loading-dots loading-md"></span>
+            ) : (
+              ""
+            )}
+            <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
+            Continue with Google
+          </button>
+
+          <form onSubmit={handleEmailLogIn}>
             <fieldset className="fieldset">
-              <button className="btn">
-                <img src={GoogleLogo} alt="Google logo" className="h-5 w-5" />
-                Continue with Google
-              </button>
-              <div className="divider m-0 mt-1">or</div>
+              <div className="divider m-0">or</div>
               <label htmlFor="email" className="label text-sm">
                 Email
               </label>
@@ -72,6 +100,10 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+
+              <label htmlFor="password" className="label text-sm">
+                Password
+              </label>
               <input
                 id="password"
                 type="password"

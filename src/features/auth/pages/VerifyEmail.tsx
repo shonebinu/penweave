@@ -8,13 +8,17 @@ export function VerifyEmail() {
   const { state } = useLocation();
   const { session } = useAuth();
 
-  if (!state?.email || session) {
+  if (session) {
+    return <Navigate to="/projects" />;
+  }
+
+  if (!state?.email) {
     return <Navigate to="/signup" />;
   }
 
   return (
-    <main className="flex h-[calc(100svh-var(--header-height))] items-center justify-center">
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+    <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
+      <div className="card bg-base-100 m-5 w-full max-w-sm shrink-0 shadow-2xl">
         <div className="card-body">
           <img
             src={PenweaveLogo}
