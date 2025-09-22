@@ -2,8 +2,9 @@ import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router";
 
-import PenweaveLogo from "@/assets/penweave.svg";
-
+import { AuthCard } from "../components/AuthCard.tsx";
+import { InputField } from "../components/InputField.tsx";
+import { SubmitButton } from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
 
 export function ResetPassword() {
@@ -47,47 +48,27 @@ export function ResetPassword() {
   };
 
   return (
-    <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
-      <div className="card bg-base-100 m-5 w-full max-w-sm shrink-0 shadow-2xl">
-        <div className="card-body">
-          <img
-            src={PenweaveLogo}
-            alt="PenWeave Logo"
-            className="mb-1 h-10 w-10"
+    <AuthCard
+      title="Reset Password"
+      message="Type in your new super secure password."
+    >
+      <form onSubmit={handleResetPassword}>
+        <fieldset className="fieldset">
+          <InputField
+            id="password"
+            label="Password"
+            type="password"
+            placeholder="Atleast 6 characters"
+            autoComplete="new-password"
+            minLength={6}
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <h2 className="text-xl font-bold">Reset Password</h2>
-          <p>Type in your new super secure password.</p>
-          <form onSubmit={handleResetPassword}>
-            <fieldset>
-              <label htmlFor="password" className="label text-sm">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                className="input w-full"
-                placeholder="Atleast 6 characters"
-                autoComplete="new-password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                className="btn btn-neutral mt-4 w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="loading loading-dots loading-md"></span>
-                ) : (
-                  ""
-                )}
-                Reset Password
-              </button>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </main>
+
+          <SubmitButton loading={loading} text="Reset Password" />
+        </fieldset>
+      </form>
+    </AuthCard>
   );
 }

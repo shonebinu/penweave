@@ -11,7 +11,9 @@ export function AuthLayout() {
           <h1 className="ml-1">PenWeave</h1>
         </Link>
       </header>
-      <Outlet />
+      <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center">
+        <Outlet />
+      </main>
     </>
   );
 }
