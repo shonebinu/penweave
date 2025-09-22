@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: halloween --default;
+  themes: dim --default;
 }
 
 @theme {
   --font-sans: "Outfit", sans-serif;
+  --header-height: 4rem;
 }
