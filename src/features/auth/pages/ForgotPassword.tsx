@@ -2,6 +2,8 @@ import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate } from "react-router";
 
+import { handleError } from "@/utils/error.ts";
+
 import { AuthCard } from "../components/AuthCard.tsx";
 import { AuthRedirect } from "../components/AuthRedirect.tsx";
 import { InputField } from "../components/InputField.tsx";
@@ -23,16 +25,10 @@ export function ForgotPassword() {
     setLoading(true);
 
     try {
-      const response = await sendResetPassword(email);
-
-      if (response.error) {
-        toast.error("Operation failed: " + response.error.message);
-      } else {
-        toast.success("Password reset link has been sent to your email.");
-      }
+      await sendResetPassword(email);
+      toast.success("Password reset link has been sent to your email.");
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
-      console.error("Unexpected error during signup:", err);
+      handleError(err, "Password reset failed");
     } finally {
       setEmail("");
       setLoading(false);

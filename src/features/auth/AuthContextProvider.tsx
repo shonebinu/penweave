@@ -18,28 +18,23 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+  const signUpUser = (email: string, password: string, name: string) =>
+    supabaseSignUp(email, password, name);
 
-  const signUpUser = async (email: string, password: string, name: string) =>
-    await supabaseSignUp(email, password, name);
-
-  const signInUser = async (email: string, password: string) =>
-    await supabaseSignIn(email, password);
+  const signInUser = (email: string, password: string) =>
+    supabaseSignIn(email, password);
 
   const signOutUser = async () => {
-    const result = await supabaseSignOut();
-    if (result.error) {
-      return result;
-    }
+    await supabaseSignOut();
     setSession(null);
   };
 
-  const sendResetPassword = async (email: string) =>
-    await supabaseSendResetPassword(email);
+  const sendResetPassword = (email: string) => supabaseSendResetPassword(email);
 
-  const updatePassword = async (newPassword: string) =>
-    await supabaseUpdatePassword(newPassword);
+  const updatePassword = (newPassword: string) =>
+    supabaseUpdatePassword(newPassword);
 
-  const signInWithGoogle = async () => await supabaseSignInWithGoogle();
+  const signInWithGoogle = () => supabaseSignInWithGoogle();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

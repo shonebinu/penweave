@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from "react";
-import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router";
+
+import { handleError } from "@/utils/error.ts";
 
 import { AuthCard } from "../components/AuthCard.tsx";
 import { AuthRedirect } from "../components/AuthRedirect.tsx";
@@ -8,7 +9,6 @@ import { GoogleButton } from "../components/GoogleButton.tsx";
 import { InputField } from "../components/InputField.tsx";
 import { SubmitButton } from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
-import { useGoogleAuth } from "../useGoogleAuth.ts";
 
 export function Signup() {
   const { session, signUpUser } = useAuth();
@@ -17,7 +17,6 @@ export function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSignInWithGoogle = useGoogleAuth(setLoading);
 
   const navigate = useNavigate();
 
@@ -28,16 +27,10 @@ export function Signup() {
     setLoading(true);
 
     try {
-      const response = await signUpUser(email, password, name);
-
-      if (response.error) {
-        toast.error("Signup failed: " + response.error.message);
-      } else {
-        return navigate("/verify-email", { state: { email } });
-      }
+      await signUpUser(email, password, name);
+      navigate("/verify-email", { state: { email } });
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
-      console.error("Unexpected error during signup:", err);
+      handleError(err, "Signup failed");
     } finally {
       setName("");
       setEmail("");
@@ -51,7 +44,7 @@ export function Signup() {
       title="Welcome to PenWeave"
       message="Create a free account to inspire others with your creations."
     >
-      <GoogleButton loading={loading} onClick={handleSignInWithGoogle} />
+      <GoogleButton loading={loading} setLoading={setLoading} />
 
       <form onSubmit={handleEmailSignUp}>
         <fieldset className="fieldset">

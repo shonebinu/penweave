@@ -2,6 +2,8 @@ import { type FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router";
 
+import { handleError } from "@/utils/error.ts";
+
 import { AuthCard } from "../components/AuthCard.tsx";
 import { InputField } from "../components/InputField.tsx";
 import { SubmitButton } from "../components/SubmitButton.tsx";
@@ -28,19 +30,13 @@ export function ResetPassword() {
     setLoading(true);
 
     try {
-      const response = await updatePassword(password);
-
-      if (response.error) {
-        toast.error("Password reset failed: " + response.error.message);
-      } else {
-        toast.success("Password updated! Redirecting...");
-        setTimeout(() => {
-          navigate("/projects", { replace: true });
-        }, 2000);
-      }
+      await updatePassword(password);
+      toast.success("Password updated! Redirecting...");
+      setTimeout(() => {
+        navigate("/projects", { replace: true });
+      }, 2000);
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
-      console.error("Unexpected error during signup:", err);
+      handleError(err, "Password reset failed");
     } finally {
       setPassword("");
       setLoading(false);

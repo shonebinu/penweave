@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from "react";
-import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate } from "react-router";
+
+import { handleError } from "@/utils/error.ts";
 
 import { AuthCard } from "../components/AuthCard.tsx";
 import { AuthRedirect } from "../components/AuthRedirect.tsx";
@@ -8,7 +9,6 @@ import { GoogleButton } from "../components/GoogleButton.tsx";
 import { InputField } from "../components/InputField.tsx";
 import { SubmitButton } from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
-import { useGoogleAuth } from "../useGoogleAuth.ts";
 
 export function Login() {
   const { session, signInUser } = useAuth();
@@ -16,7 +16,6 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSignInWithGoogle = useGoogleAuth(setLoading);
 
   const navigate = useNavigate();
 
@@ -27,16 +26,10 @@ export function Login() {
     setLoading(true);
 
     try {
-      const response = await signInUser(email, password);
-
-      if (response.error) {
-        toast.error("Login failed: " + response.error.message);
-      } else {
-        return navigate("/projects");
-      }
+      await signInUser(email, password);
+      navigate("/projects");
     } catch (err) {
-      toast.error("Something went wrong. Please try again later.");
-      console.error("Unexpected error during signup:", err);
+      handleError(err, "Login failed");
     } finally {
       setEmail("");
       setPassword("");
@@ -49,7 +42,7 @@ export function Login() {
       title="Login to PenWeave"
       message="Let’s pick up where you left off."
     >
-      <GoogleButton loading={loading} onClick={handleSignInWithGoogle} />
+      <GoogleButton loading={loading} setLoading={setLoading} />
 
       <form onSubmit={handleEmailLogIn}>
         <fieldset className="fieldset">

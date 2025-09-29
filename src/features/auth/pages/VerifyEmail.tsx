@@ -27,7 +27,7 @@ export function VerifyEmail() {
         </>
       }
     >
-      <Link to="/" className="mt-4">
+      <Link to="/">
         <SubmitButton loading={false} text="Skip, I'll check later" />
       </Link>
 

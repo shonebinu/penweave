@@ -5,7 +5,7 @@ const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-pas
 const googleSignInRedirectUrl = emailVerificationRedirectUrl;
 
 const signUpUser = async (email: string, password: string, name: string) => {
-  return await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -13,35 +13,42 @@ const signUpUser = async (email: string, password: string, name: string) => {
       emailRedirectTo: emailVerificationRedirectUrl,
     },
   });
+
+  if (error) throw new Error(error.message);
 };
 
 const signInUser = async (email: string, password: string) => {
-  return await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw new Error(error.message);
 };
 
 const signOutUser = async () => {
-  return await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
 };
 
 const sendResetPassword = async (email: string) => {
-  return await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: forgotPassRedirectUrl,
   });
+  if (error) throw new Error(error.message);
 };
 
 const updatePassword = async (newPassword: string) => {
-  return await supabase.auth.updateUser({
+  const { error } = await supabase.auth.updateUser({
     password: newPassword,
   });
+  if (error) throw new Error(error.message);
 };
 
 const signInWithGoogle = async () => {
-  return await supabase.auth.signInWithOAuth({
+  const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
       redirectTo: googleSignInRedirectUrl,
     },
   });
+  if (error) throw new Error(error.message);
 };
 
 export {

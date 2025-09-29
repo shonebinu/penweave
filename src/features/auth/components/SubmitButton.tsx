@@ -8,7 +8,7 @@ export function SubmitButton({
   text: string;
 }) {
   return (
-    <button className="btn btn-neutral mt-4" disabled={loading}>
+    <button className="btn btn-neutral mt-4 w-full" disabled={loading}>
       {loading && <LoadingDots />}
       {text}
     </button>
