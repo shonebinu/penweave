@@ -54,7 +54,7 @@ export function Signup() {
             id="name"
             label="Name"
             type="text"
-            placeholder="Display Name"
+            placeholder="Full Name"
             autoComplete="name"
             required
             value={name}

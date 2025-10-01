@@ -10,18 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.10",
+    "@codemirror/lang-javascript": "^6.2.4",
     "@supabase/supabase-js": "^2.57.4",
     "@tailwindcss/vite": "^4.1.13",
+    "@uiw/codemirror-theme-nord": "^4.25.2",
+    "@uiw/react-codemirror": "^4.25.2",
     "daisyui": "^5.1.13",
+    "js-beautify": "^1.15.4",
+    "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
     "react-router": "^7.9.1",
-    "tailwindcss": "^4.1.13"
+    "react-tabs": "^6.1.0",
+    "tailwindcss": "^4.1.13",
+    "use-debounce": "^10.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/js-beautify": "^1.14.3",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",

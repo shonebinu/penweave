@@ -9,7 +9,7 @@ const signUpUser = async (email: string, password: string, name: string) => {
     email,
     password,
     options: {
-      data: { display_name: name },
+      data: { full_name: name },
       emailRedirectTo: emailVerificationRedirectUrl,
     },
   });

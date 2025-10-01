@@ -1,4 +1,4 @@
-import { LoadingDots } from "./LoadingDots.tsx";
+import { LoadingDots } from "../../../shared/components/LoadingDots.tsx";
 
 export function SubmitButton({
   loading,

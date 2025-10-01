@@ -1,8 +1,8 @@
 import GoogleLogo from "@/assets/google.svg";
 import { handleError } from "@/utils/error.ts";
 
+import { LoadingDots } from "../../../shared/components/LoadingDots.tsx";
 import { useAuth } from "../useAuth.ts";
-import { LoadingDots } from "./LoadingDots";
 
 export function GoogleButton({
   loading,
