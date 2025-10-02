@@ -25,4 +25,5 @@
 - [ ] Use [`html2canvas-pro`](https://www.npmjs.com/package/html2canvas-pro) for image generation
 - [ ] Read console messages and display them to the user
 - [ ] if project public and user not logged in, what to show for world
-- [ ] should i implement redirect url? theme switch? code editor settings? auth flashing issues? embed mode???
+- [ ] pagination in explore, projects etc...
+- [ ] should i implement redirect url? theme switch? code editor settings? auth flashing issues? custom email, password fields from daisyui? embed mode???
