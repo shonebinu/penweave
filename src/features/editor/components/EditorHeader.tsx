@@ -1,4 +1,4 @@
-import { ArrowLeft, HardDriveUpload, Link as LinkIcon } from "lucide-react";
+import { HardDriveUpload, Home, Link as LinkIcon } from "lucide-react";
 
 import { Link } from "react-router";
 
@@ -23,7 +23,7 @@ export function EditorHeader({
         <Link to="/projects">
           <div className="tooltip tooltip-right" data-tip="Go to My Works">
             <button className="btn btn-square">
-              <ArrowLeft size="1rem" />
+              <Home size="1rem" />
             </button>
           </div>
         </Link>
@@ -31,7 +31,8 @@ export function EditorHeader({
       <div>
         <Link
           to={`/projects/${projectInfo.id}`}
-          className="link flex items-center gap-1"
+          className="link link-hover tooltip tooltip-right flex items-center gap-1"
+          data-tip="Go to Project page"
         >
           <p className="truncate">{projectInfo.title}</p>
           <LinkIcon size="1rem" />
