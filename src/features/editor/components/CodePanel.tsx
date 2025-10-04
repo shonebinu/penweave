@@ -1,3 +1,4 @@
+import { EditorView } from "@codemirror/view";
 import { nordInit } from "@uiw/codemirror-theme-nord";
 import CodeMirror, { type Extension } from "@uiw/react-codemirror";
 
@@ -14,7 +15,7 @@ export function CodePanel({
     <div className="h-[40svh]">
       <CodeMirror
         value={value}
-        extensions={extensions}
+        extensions={[EditorView.lineWrapping, ...extensions]}
         onChange={onChange}
         theme={nordInit({ settings: { fontSize: ".95rem" } })}
       />

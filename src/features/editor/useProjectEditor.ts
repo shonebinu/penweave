@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import type { SafeProject } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
-import { fetchOwnedProject, updatedOwnedProjectCode } from "./editorService.ts";
+import { fetchOwnedProject, updateOwnedProjectCode } from "./editorService.ts";
 
 export function useProjectEditor(userId?: string, projectId?: string) {
   const [project, setProject] = useState<SafeProject | null>(null);
@@ -23,12 +23,13 @@ export function useProjectEditor(userId?: string, projectId?: string) {
 
     const load = async () => {
       try {
-        const data = await fetchOwnedProject(userId, projectId);
-        if (!data?.[0]) {
+        const proj = await fetchOwnedProject(userId, projectId);
+
+        if (!proj) {
           setProject(null);
           return;
         }
-        const proj = data[0];
+
         setProject({
           ...proj,
           html: proj.html ?? "",
@@ -49,7 +50,7 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     if (!userId || !projectId || !project) return;
     try {
       setSaving(true);
-      await updatedOwnedProjectCode(
+      await updateOwnedProjectCode(
         userId,
         projectId,
         project.html,

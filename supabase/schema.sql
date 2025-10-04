@@ -15,6 +15,8 @@ create table projects (
   css text,
   js text,
   is_public boolean not null default true,
+  image_path text,
+  image_url text,
   is_forked boolean not null default false,
   forked_from bigint references projects(id) on delete set null,
   created_at timestamptz not null default now(),
@@ -101,3 +103,31 @@ create trigger handle_updated_at before update on notifications
 -- twitter_url
 -- github_url
 -- linkedin_url
+
+-- =========================================================
+-- Thumbnails - supabase storage
+-- =========================================================
+insert into storage.buckets  (id, name, public)values  ('thumbnails', 'thumbnails', true);
+
+CREATE POLICY "Authenticated users can upload files"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id = 'thumbnails');
+
+CREATE POLICY "Users can view own files"
+ON storage.objects
+FOR SELECT
+TO authenticated
+USING (
+  bucket_id = 'thumbnails');
+
+CREATE POLICY "Users can delete own files"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+  bucket_id = 'thumbnails'
+  AND owner = auth.uid()
+);

@@ -7,6 +7,8 @@ export interface Project {
   css: string | null;
   js: string | null;
   is_public: boolean;
+  image_url: string | null;
+  image_path: string | null;
   is_forked: boolean;
   forked_from: number | null;
   created_at: string; // ISO timestamp

@@ -10,11 +10,15 @@ export function EditorHeader({
   onFormat,
   onSave,
   saving,
+  thumbnailUpdating,
+  updateThumbnail,
 }: {
   projectInfo: { id: string; title: string };
   onFormat: () => void;
   onSave: () => void;
   saving: boolean;
+  thumbnailUpdating: boolean;
+  updateThumbnail: () => void;
 }) {
   return (
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-6">
@@ -38,7 +42,17 @@ export function EditorHeader({
           <LinkIcon size="1rem" />
         </Link>
       </div>
-      <div className="flex gap-3">
+      <div className="flex gap-2">
+        <button className="btn btn-neutral" onClick={updateThumbnail}>
+          {thumbnailUpdating ? (
+            <>
+              <LoadingDots />
+              Updating...
+            </>
+          ) : (
+            "Update Thumbnail"
+          )}
+        </button>
         <button className="btn btn-neutral" onClick={onFormat}>
           Format Code
         </button>

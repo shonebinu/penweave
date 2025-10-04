@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useParams } from "react-router";
 
 import { useAuth } from "@/features/auth/useAuth.ts";
@@ -5,8 +6,8 @@ import { LoadingScreen } from "@/shared/pages/LoadingScreen.tsx";
 
 import { EditorHeader } from "../components/EditorHeader.tsx";
 import { EditorTabs } from "../components/EditorTabs.tsx";
-import { LivePreview } from "../components/LivePreview.tsx";
 import { useProjectEditor } from "../useProjectEditor.ts";
+import { useProjectPreview } from "../useProjectPreview.ts";
 
 export function Editor() {
   const { session } = useAuth();
@@ -14,6 +15,19 @@ export function Editor() {
 
   const { project, updateCode, loading, format, save, saving } =
     useProjectEditor(session?.user?.id, projectId);
+
+  const {
+    iframeRef,
+    iframeSrc,
+    sendToIframe,
+    updateThumbnail,
+    thumbnailUpdating,
+  } = useProjectPreview(session?.user?.id, projectId, "100vh");
+
+  useEffect(() => {
+    if (!project) return;
+    sendToIframe(project.html, project.css, project.js);
+  }, [project, sendToIframe]);
 
   if (loading) return <LoadingScreen />;
   if (!projectId || !project) return <Navigate to="/projects" />;
@@ -25,6 +39,8 @@ export function Editor() {
         onFormat={format}
         onSave={save}
         saving={saving}
+        thumbnailUpdating={thumbnailUpdating}
+        updateThumbnail={updateThumbnail}
       />
       <main>
         <EditorTabs
@@ -35,11 +51,7 @@ export function Editor() {
           setCssCode={(val) => updateCode("css", val)}
           setJsCode={(val) => updateCode("js", val)}
         />
-        <LivePreview
-          htmlCode={project.html}
-          cssCode={project.css}
-          jsCode={project.js}
-        />
+        <iframe ref={iframeRef} src={iframeSrc} className="h-screen w-full" />
       </main>
     </>
   );
