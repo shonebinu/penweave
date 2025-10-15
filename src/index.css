@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: dim --default;
+}
+
+@theme {
+  --header-height: 4rem;
+}
+
+.cm-theme {
+  height: 100%;
+
+  .cm-editor {
+    height: 100%;
+  }
+}
+
+div.cm-focused {
+  outline: none !important;
+}
