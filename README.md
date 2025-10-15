@@ -4,6 +4,7 @@ For testing purpose run runner.html with python http server
 
 ## TODO
 
+- [ ] light dark mode
 - [ ] Change Supabase email template
 - [ ] Add Terms and Services page
 - [ ] Landing page (reference: [codecatch.net](https://codecatch.net/))

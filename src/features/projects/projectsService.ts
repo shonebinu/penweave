@@ -1,9 +1,16 @@
+import type { Project } from "@/shared/types/project.ts";
 import { supabase } from "@/supabaseClient.ts";
 
 const DEFAULT_CODE = {
-  html: "<button>Click Here</button>",
-  css: "button { color: green; }",
-  js: "document.querySelector('button').onclick = () => alert('Hello world!');",
+  html: `<button>Click Here</button>`,
+  css: `body { 
+  background: white; 
+} 
+
+button { 
+  color: green;
+}`,
+  js: `document.querySelector("button").onclick = () => alert("Hello world!");`,
 };
 
 const createProject = async (
@@ -18,7 +25,8 @@ const createProject = async (
   const { data, error } = await supabase
     .from("projects")
     .insert({ user_id, title, description, is_public, html, css, js })
-    .select("id");
+    .select("id")
+    .single();
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Error creating a new project");
@@ -35,7 +43,7 @@ const fetchAllProjectsByUser = async (user_id: string) => {
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
 
-  return data;
+  return data as Project[];
 };
 
 export { createProject, fetchAllProjectsByUser };
