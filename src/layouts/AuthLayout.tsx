@@ -1,8 +1,8 @@
 import { Outlet } from "react-router";
 
-import { LogoWithName } from "@/shared/components/LogoWithName";
+import LogoWithName from "@/shared/components/LogoWithName";
 
-export function AuthLayout() {
+export default function AuthLayout() {
   return (
     <>
       <header className="flex h-[var(--header-height)] items-center border-b px-6">

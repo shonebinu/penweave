@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 import type { Project } from "@/shared/types/project.ts";
 
-export function ProjectsCard({ project }: { project: Project }) {
+export default function ProjectsCard({ project }: { project: Project }) {
   return (
     <div className="card bg-base-100 shadow-sm" key={project.title}>
       <figure className="bg-base-300 flex h-48 w-full items-center justify-center overflow-hidden">
@@ -24,7 +24,7 @@ export function ProjectsCard({ project }: { project: Project }) {
         <div className="flex items-center justify-between">
           <h2 className="card-title truncate">{project.title}</h2>
           <span
-            className={`badge badge-soft ${project.is_public ? "badge-primary" : "badge-secondary"}`}
+            className={`badge badge-soft ${project.is_public ? "badge-accent" : "badge-secondary"}`}
           >
             {project.is_public ? "Public" : "Private"}
           </span>
@@ -67,9 +67,6 @@ export function ProjectsCard({ project }: { project: Project }) {
             >
               <li>
                 <a>Edit Details</a>
-              </li>
-              <li>
-                <a>Duplicate</a>
               </li>
               <li>
                 <a>Delete</a>

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useAuth } from "@/features/auth/useAuth.ts";
 import { handleError } from "@/utils/error.ts";
 
-export function Logout() {
+export default function Logout() {
   const [logoutFailed, setLogoutFailed] = useState(false);
   const { signOutUser } = useAuth();
   const navigate = useNavigate();

@@ -6,7 +6,11 @@ interface AuthRedirectProps {
   link: string;
 }
 
-export function AuthRedirect({ text, linkText, link }: AuthRedirectProps) {
+export default function AuthRedirect({
+  text,
+  linkText,
+  link,
+}: AuthRedirectProps) {
   return (
     <p className="text-center text-sm">
       {text}{" "}

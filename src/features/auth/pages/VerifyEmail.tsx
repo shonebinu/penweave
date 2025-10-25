@@ -1,11 +1,11 @@
 import { Link, Navigate, useLocation } from "react-router";
 
-import { AuthCard } from "../components/AuthCard.tsx";
-import { AuthRedirect } from "../components/AuthRedirect.tsx";
-import { SubmitButton } from "../components/SubmitButton.tsx";
+import AuthCard from "../components/AuthCard.tsx";
+import AuthRedirect from "../components/AuthRedirect.tsx";
+import SubmitButton from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
 
-export function VerifyEmail() {
+export default function VerifyEmail() {
   const { state } = useLocation();
   const { session } = useAuth();
 

@@ -1,8 +1,8 @@
 import { EditorView } from "@codemirror/view";
-import { nordInit } from "@uiw/codemirror-theme-nord";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror, { type Extension } from "@uiw/react-codemirror";
 
-export function CodePanel({
+export default function CodePanel({
   value,
   onChange,
   extensions,
@@ -17,7 +17,7 @@ export function CodePanel({
         value={value}
         extensions={[EditorView.lineWrapping, ...extensions]}
         onChange={onChange}
-        theme={nordInit({ settings: { fontSize: ".95rem" } })}
+        theme={vscodeDark}
       />
     </div>
   );

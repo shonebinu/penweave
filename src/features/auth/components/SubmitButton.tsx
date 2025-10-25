@@ -1,6 +1,6 @@
-import { LoadingDots } from "../../../shared/components/LoadingDots.tsx";
+import LoadingDots from "@/shared/components/LoadingDots.tsx";
 
-export function SubmitButton({
+export default function SubmitButton({
   loading,
   text,
 }: {
@@ -8,7 +8,7 @@ export function SubmitButton({
   text: string;
 }) {
   return (
-    <button className="btn btn-neutral mt-4 w-full" disabled={loading}>
+    <button className="btn btn-primary mt-4 w-full" disabled={loading}>
       {loading && <LoadingDots />}
       {text}
     </button>

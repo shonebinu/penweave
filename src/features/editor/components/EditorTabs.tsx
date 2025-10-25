@@ -6,9 +6,9 @@ import { css } from "@codemirror/lang-css";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 
-import { CodePanel } from "./CodePanel.tsx";
+import CodePanel from "./CodePanel.tsx";
 
-export function EditorTabs({
+export default function EditorTabs({
   htmlCode,
   setHtmlCode,
   cssCode,

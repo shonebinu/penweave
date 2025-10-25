@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router";
 
-import { AuthContextProvider } from "@/features/auth/AuthContextProvider.tsx";
-import { router } from "@/router/routes.tsx";
+import AuthContextProvider from "@/features/auth/AuthContextProvider.tsx";
+import router from "@/router/routes.tsx";
 
 import "./index.css";
 

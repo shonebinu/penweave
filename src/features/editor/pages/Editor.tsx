@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { Navigate, useParams } from "react-router";
 
 import { useAuth } from "@/features/auth/useAuth.ts";
-import { LoadingScreen } from "@/shared/pages/LoadingScreen.tsx";
+import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
-import { EditorHeader } from "../components/EditorHeader.tsx";
-import { EditorTabs } from "../components/EditorTabs.tsx";
+import EditorHeader from "../components/EditorHeader.tsx";
+import EditorTabs from "../components/EditorTabs.tsx";
 import { useProjectEditor } from "../useProjectEditor.ts";
 import { useProjectPreview } from "../useProjectPreview.ts";
 
-export function Editor() {
+export default function Editor() {
   const { session } = useAuth();
   const { projectId } = useParams();
 
@@ -33,7 +33,7 @@ export function Editor() {
   if (!projectId || !project) return <Navigate to="/projects" />;
 
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <EditorHeader
         projectInfo={{ id: projectId, title: project.title }}
         onFormat={format}
@@ -42,7 +42,7 @@ export function Editor() {
         thumbnailUpdating={thumbnailUpdating}
         updateThumbnail={updateThumbnail}
       />
-      <main>
+      <main className="flex flex-1 flex-col">
         <EditorTabs
           htmlCode={project.html}
           cssCode={project.css}
@@ -51,8 +51,14 @@ export function Editor() {
           setCssCode={(val) => updateCode("css", val)}
           setJsCode={(val) => updateCode("js", val)}
         />
-        <iframe ref={iframeRef} src={iframeSrc} className="h-screen w-full" />
+        <div className="flex-1">
+          <iframe
+            ref={iframeRef}
+            src={iframeSrc}
+            className="h-full w-full border-0"
+          />
+        </div>
       </main>
-    </>
+    </div>
   );
 }

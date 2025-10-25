@@ -2,10 +2,10 @@ import { HardDriveUpload, Home, Link as LinkIcon } from "lucide-react";
 
 import { Link } from "react-router";
 
-import { LoadingDots } from "@/shared/components/LoadingDots.tsx";
-import { LogoWithName } from "@/shared/components/LogoWithName";
+import LoadingDots from "@/shared/components/LoadingDots.tsx";
+import LogoWithName from "@/shared/components/LogoWithName";
 
-export function EditorHeader({
+export default function EditorHeader({
   projectInfo,
   onFormat,
   onSave,
@@ -25,17 +25,15 @@ export function EditorHeader({
       <div className="flex items-center gap-3">
         <LogoWithName />
         <Link to="/projects">
-          <div className="tooltip tooltip-right" data-tip="Go to My Works">
+          <div className="tooltip tooltip-bottom" data-tip="Go to My Works">
             <button className="btn btn-square">
               <Home size="1rem" />
             </button>
           </div>
         </Link>
-      </div>
-      <div>
         <Link
           to={`/projects/${projectInfo.id}`}
-          className="link link-hover tooltip tooltip-right flex items-center gap-1"
+          className="link link-hover tooltip tooltip-bottom flex items-center gap-1"
           data-tip="Go to Project page"
         >
           <p className="truncate">{projectInfo.title}</p>
@@ -43,7 +41,7 @@ export function EditorHeader({
         </Link>
       </div>
       <div className="flex gap-2">
-        <button className="btn btn-neutral" onClick={updateThumbnail}>
+        <button className="btn" onClick={updateThumbnail}>
           {thumbnailUpdating ? (
             <>
               <LoadingDots />
@@ -53,7 +51,7 @@ export function EditorHeader({
             "Update Thumbnail"
           )}
         </button>
-        <button className="btn btn-neutral" onClick={onFormat}>
+        <button className="btn" onClick={onFormat}>
           Format Code
         </button>
         <button className="btn btn-primary w-30" onClick={onSave}>

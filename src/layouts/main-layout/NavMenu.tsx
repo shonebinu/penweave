@@ -9,7 +9,7 @@ const navItems = [
   { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
 ];
 
-export function NavMenu() {
+export default function NavMenu() {
   return (
     <div className="flex-none">
       <ul className="menu menu-horizontal gap-1 px-1">

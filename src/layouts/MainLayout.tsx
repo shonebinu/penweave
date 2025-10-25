@@ -1,11 +1,11 @@
 import { Outlet } from "react-router";
 
-import { LogoWithName } from "@/shared/components/LogoWithName.tsx";
+import LogoWithName from "@/shared/components/LogoWithName.tsx";
 
-import { NavMenu } from "./main-layout/NavMenu.tsx";
-import { UserMenu } from "./main-layout/UserMenu.tsx";
+import NavMenu from "./main-layout/NavMenu.tsx";
+import UserMenu from "./main-layout/UserMenu.tsx";
 
-export function MainLayout() {
+export default function MainLayout() {
   return (
     <>
       <header className="flex h-[var(--header-height)] items-center justify-between border-b px-6">

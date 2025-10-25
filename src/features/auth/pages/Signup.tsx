@@ -3,14 +3,14 @@ import { Navigate, useNavigate } from "react-router";
 
 import { handleError } from "@/utils/error.ts";
 
-import { AuthCard } from "../components/AuthCard.tsx";
-import { AuthRedirect } from "../components/AuthRedirect.tsx";
-import { GoogleButton } from "../components/GoogleButton.tsx";
-import { InputField } from "../components/InputField.tsx";
-import { SubmitButton } from "../components/SubmitButton.tsx";
+import AuthCard from "../components/AuthCard.tsx";
+import AuthRedirect from "../components/AuthRedirect.tsx";
+import GoogleButton from "../components/GoogleButton.tsx";
+import InputField from "../components/InputField.tsx";
+import SubmitButton from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
 
-export function Signup() {
+export default function Signup() {
   const { session, signUpUser } = useAuth();
 
   const [name, setName] = useState("");

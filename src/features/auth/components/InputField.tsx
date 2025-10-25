@@ -9,7 +9,7 @@ interface InputFieldProps
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function InputField({
+export default function InputField({
   id,
   label,
   type,

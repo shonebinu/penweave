@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import PenweaveLogo from "@/assets/penweave.svg";
 
-export function AuthCard({
+export default function AuthCard({
   title,
   message,
   children,

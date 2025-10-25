@@ -1,19 +1,22 @@
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router";
 
-import { ForgotPassword } from "@/features/auth/pages/ForgotPassword.tsx";
-import { Login } from "@/features/auth/pages/Login";
-import { Logout } from "@/features/auth/pages/Logout.tsx";
-import { ResetPassword } from "@/features/auth/pages/ResetPassword.tsx";
-import { Signup } from "@/features/auth/pages/Signup.tsx";
-import { VerifyEmail } from "@/features/auth/pages/VerifyEmail.tsx";
-import { Editor } from "@/features/editor/pages/Editor.tsx";
-import { Projects } from "@/features/projects/pages/Projects.tsx";
-import { AuthLayout } from "@/layouts/AuthLayout.tsx";
-import { MainLayout } from "@/layouts/MainLayout.tsx";
+import ForgotPassword from "@/features/auth/pages/ForgotPassword.tsx";
+import Login from "@/features/auth/pages/Login";
+import Logout from "@/features/auth/pages/Logout.tsx";
+import ResetPassword from "@/features/auth/pages/ResetPassword.tsx";
+import Signup from "@/features/auth/pages/Signup.tsx";
+import VerifyEmail from "@/features/auth/pages/VerifyEmail.tsx";
+import Projects from "@/features/projects/pages/Projects.tsx";
+import AuthLayout from "@/layouts/AuthLayout.tsx";
+import MainLayout from "@/layouts/MainLayout.tsx";
 
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import WithSuspense from "./WithSuspense.tsx";
 
-export const router = createBrowserRouter([
+const Editor = lazy(() => import("@/features/editor/pages/Editor.tsx"));
+
+const router = createBrowserRouter([
   { path: "/", element: <h1>Landing Page</h1> },
   {
     element: <ProtectedRoute />,
@@ -31,7 +34,14 @@ export const router = createBrowserRouter([
           { path: "settings", element: <h1>Settings</h1> },
         ],
       },
-      { path: "projects/:projectId/editor", element: <Editor /> },
+      {
+        path: "projects/:projectId/editor",
+        element: (
+          <WithSuspense>
+            <Editor />
+          </WithSuspense>
+        ),
+      },
     ],
   },
   {
@@ -47,3 +57,5 @@ export const router = createBrowserRouter([
   },
   { path: "*", element: <h1>Not Found</h1> },
 ]);
+
+export default router;

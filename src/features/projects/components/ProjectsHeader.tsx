@@ -1,6 +1,10 @@
 import { BriefcaseBusiness, Plus } from "lucide-react";
 
-export function ProjectsHeader({ onNewProject }: { onNewProject: () => void }) {
+export default function ProjectsHeader({
+  onNewProject,
+}: {
+  onNewProject: () => void;
+}) {
   return (
     <div className="mb-3 flex items-center justify-between">
       <div>

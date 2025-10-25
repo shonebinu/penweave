@@ -11,7 +11,7 @@ const menuItems = [
   { icon: LogOut, label: "Logout", href: "/logout" },
 ];
 
-export function UserMenu() {
+export default function UserMenu() {
   const { session } = useAuth();
   const userAvatar = session?.user.user_metadata.avatar_url;
   const userName = session?.user.user_metadata.full_name;

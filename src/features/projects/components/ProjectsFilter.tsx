@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 
-export function ProjectsFilter() {
+export default function ProjectsFilter() {
   return (
     <>
       <div className="mb-5 flex justify-between gap-3">

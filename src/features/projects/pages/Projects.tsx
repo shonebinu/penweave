@@ -1,14 +1,14 @@
 import { useAuth } from "@/features/auth/useAuth.ts";
-import { LoadingScreen } from "@/shared/pages/LoadingScreen.tsx";
+import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
-import { CreateProjectModal } from "../components/CreateProjectModal.tsx";
-import { ProjectsCard } from "../components/ProjectsCard.tsx";
-import { ProjectsFilter } from "../components/ProjectsFilter.tsx";
-import { ProjectsHeader } from "../components/ProjectsHeader.tsx";
+import CreateProjectModal from "../components/CreateProjectModal.tsx";
+import ProjectsCard from "../components/ProjectsCard.tsx";
+import ProjectsFilter from "../components/ProjectsFilter.tsx";
+import ProjectsHeader from "../components/ProjectsHeader.tsx";
 import { useModal } from "../useModal.ts";
 import { useProjects } from "../useProjects.ts";
 
-export function Projects() {
+export default function Projects() {
   /* use nuqs for filters, use pagination or infinite scroll */
   const { session } = useAuth();
 

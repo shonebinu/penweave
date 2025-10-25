@@ -4,12 +4,19 @@ For testing purpose run runner.html with python http server
 
 ## TODO
 
+### Important
+
+- [ ] properly setup editor... preview is getting messed up... 100vh preview??? what to do??? resize editor and preview???
+- [ ] edit details and delete project in project pane
+
+### Rest of the stuff
+
 - [ ] light dark mode
 - [ ] Change Supabase email template
 - [ ] Add Terms and Services page
 - [ ] Landing page (reference: [codecatch.net](https://codecatch.net/))
 - [ ] try to make sense of useProjectPreview
-- [ ] add settings to change line wrap, font size, font, theme for editor
+- [ ] add settings to change line wrap, font size, font, theme for editor - dont allow change font, use default font
 - [ ] Implement Row Level Security (RLS) for tables and storage
 - [ ] notifications system using database triggers?
 - [ ] solve preview scroll issues (mthds -> add btn go to top... preview pane full screen another tab etc...)
