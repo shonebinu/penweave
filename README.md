@@ -6,7 +6,8 @@ For testing purpose run runner.html with python http server
 
 ### Important
 
-- [ ] properly setup editor... preview is getting messed up... 100vh preview??? what to do??? resize editor and preview???
+- REPLAN EVERYTHING. WIREFRAME AND DB BEFORE CODE
+- [ ] properly setup editor... preview is getting messed up... 100vh preview??? what to do??? resize editor and preview??? when user changes height in css??? default height???
 - [ ] edit details and delete project in project pane
 
 ### Rest of the stuff
