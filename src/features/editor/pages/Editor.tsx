@@ -31,7 +31,7 @@ export default function Editor() {
     sendToIframe,
     updateThumbnail,
     thumbnailUpdating,
-  } = useProjectPreview(session?.user?.id, projectId, "100vh");
+  } = useProjectPreview(session?.user?.id, projectId);
 
   useEffect(() => {
     if (!project) return;
@@ -71,11 +71,7 @@ export default function Editor() {
           setJsCode={(val) => updateCode("js", val)}
         />
         <div className="flex-1">
-          <iframe
-            ref={iframeRef}
-            src={iframeSrc}
-            className="h-full w-full border-0"
-          />
+          <iframe ref={iframeRef} src={iframeSrc} className="h-full w-full" />
         </div>
       </main>
     </div>

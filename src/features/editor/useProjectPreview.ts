@@ -11,11 +11,7 @@ const IFRAME_SRC = import.meta.env.VITE_CODE_RUNNER_URL;
 const SCREENSHOT_TIMEOUT = 10000;
 const getOrigin = (url: string) => new URL(url).origin;
 
-export function useProjectPreview(
-  userId?: string,
-  projectId?: string,
-  height: string = "100vh",
-) {
+export function useProjectPreview(userId?: string, projectId?: string) {
   const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const screenshotPromiseRef = useRef<{
@@ -118,7 +114,7 @@ export function useProjectPreview(
 
   return {
     iframeRef,
-    iframeSrc: `${IFRAME_SRC}?height=${height}`,
+    iframeSrc: IFRAME_SRC,
     sendToIframe,
     updateThumbnail,
     thumbnailUpdating,

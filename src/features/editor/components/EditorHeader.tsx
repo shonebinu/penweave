@@ -41,13 +41,12 @@ export default function EditorHeader({
   return (
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
       <div className="flex items-center gap-3">
-        <Logo />
-        <Link to="/projects" className="btn btn-soft btn-sm">
+        <Link to="/projects" className="btn btn-soft btn-square btn-sm">
           <ArrowLeft size="1rem" />
-          Home
         </Link>
+        <Logo />
         <div className="flex gap-2">
-          <div className="tooltip tooltip-bottom" data-tip="Edit title">
+          <div className="tooltip tooltip-bottom" data-tip="Edit project title">
             <button className="btn-square btn hover:btn-success">
               <Pencil size="1rem" />
             </button>
@@ -55,8 +54,7 @@ export default function EditorHeader({
           <div
             className="tooltip tooltip-bottom"
             data-tip={
-              "Make this project " +
-              (projectInfo.isPrivate ? "public" : "private")
+              "Make project " + (projectInfo.isPrivate ? "public" : "private")
             }
           >
             <button
@@ -80,7 +78,7 @@ export default function EditorHeader({
           </div>
         </div>
         <div className="flex flex-col">
-          <p className="truncate">{projectInfo.title}</p>
+          <p className="truncate font-medium">{projectInfo.title}</p>
           <Link
             to={"/users/" + projectInfo.userId}
             className="link label truncate text-sm"

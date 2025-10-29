@@ -26,40 +26,50 @@ export default function EditorTabs({
   const tabButtonStyles =
     "text-base-content hover:bg-base-200 flex w-full items-center justify-center rounded-md font-medium outline-none hover:cursor-pointer";
 
+  const tabs = [
+    {
+      label: "HTML",
+      icon: <Code size="1rem" className="text-error mr-2" />,
+      value: htmlCode,
+      setValue: setHtmlCode,
+      extensions: [html()],
+    },
+    {
+      label: "CSS",
+      icon: <PaintRoller size="1rem" className="text-info mr-2" />,
+      value: cssCode,
+      setValue: setCssCode,
+      extensions: [css()],
+    },
+    {
+      label: "JS",
+      icon: <Parentheses size="1rem" className="text-warning mr-2" />,
+      value: jsCode,
+      setValue: setJsCode,
+      extensions: [javascript()],
+    },
+  ];
+
   return (
-    <Tabs selectedTabClassName="bg-base-300" className="mb-1">
+    <Tabs selectedTabClassName="bg-base-300">
       <TabList className="flex h-10 w-full gap-1">
-        <Tab className={tabButtonStyles}>
-          <Code size="1rem" className="text-error mr-2" /> HTML
-        </Tab>
-        <Tab className={tabButtonStyles}>
-          <PaintRoller size="1rem" className="text-info mr-2" /> CSS
-        </Tab>
-        <Tab className={tabButtonStyles}>
-          <Parentheses size="1rem" className="text-warning mr-2" /> JS
-        </Tab>
+        {tabs.map(({ label, icon }) => (
+          <Tab key={label} className={tabButtonStyles}>
+            {icon} {label}
+          </Tab>
+        ))}
       </TabList>
-      <TabPanel>
-        <CodePanel
-          value={htmlCode}
-          extensions={[html()]}
-          onChange={(val) => setHtmlCode(val)}
-        />
-      </TabPanel>
-      <TabPanel>
-        <CodePanel
-          value={cssCode}
-          extensions={[css()]}
-          onChange={(val) => setCssCode(val)}
-        />
-      </TabPanel>
-      <TabPanel>
-        <CodePanel
-          value={jsCode}
-          extensions={[javascript()]}
-          onChange={(val) => setJsCode(val)}
-        />
-      </TabPanel>
+      {tabs.map(({ label, value, setValue, extensions }) => (
+        <TabPanel key={label}>
+          <div className="h-[40svh]">
+            <CodePanel
+              value={value}
+              extensions={extensions}
+              onChange={(val) => setValue(val)}
+            />
+          </div>
+        </TabPanel>
+      ))}
     </Tabs>
   );
 }

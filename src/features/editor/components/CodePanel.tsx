@@ -12,13 +12,11 @@ export default function CodePanel({
   extensions: Extension[];
 }) {
   return (
-    <div className="h-[40svh]">
-      <CodeMirror
-        value={value}
-        extensions={[EditorView.lineWrapping, ...extensions]}
-        onChange={onChange}
-        theme={nordInit({ settings: { fontSize: "1rem" } })}
-      />
-    </div>
+    <CodeMirror
+      value={value}
+      extensions={[EditorView.lineWrapping, ...extensions]}
+      onChange={onChange}
+      theme={nordInit({ settings: { fontSize: "1rem" } })}
+    />
   );
 }

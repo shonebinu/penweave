@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/modern-screenshot@4.6.6/dist/index.min.js"></script>
   </head>
-  <body style="margin: 0">
-    <iframe frameborder="0" style="width: 100%; height: 100vh"></iframe>
+  <body style="margin: 0; height: 100vh">
+    <iframe frameborder="0" style="width: 100%; height: 100%"></iframe>
 
     <script>
       const MESSAGE_ORIGIN = "http://localhost:5173";
       const iframe = document.querySelector("iframe");
-
-      iframe.style.height =
-        new URLSearchParams(location.search).get("height") || "100vh";
 
       const respond = (source, origin, type, payload) =>
         source.postMessage({ type, payload }, origin);
@@ -53,9 +50,7 @@
 
         if (type === "screenshot") {
           modernScreenshot
-            .domToJpeg(iframe.contentDocument.body, {
-              height: iframe.offsetHeight,
-            })
+            .domToJpeg(iframe.contentDocument.body)
             .then((dataUrl) =>
               respond(source, origin, "screenshot:response", {
                 status: "success",
