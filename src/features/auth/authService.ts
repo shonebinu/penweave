@@ -1,20 +1,25 @@
 import { supabase } from "@/supabaseClient.ts";
 
+import { upsertProfile } from "../users/usersService.ts";
+
 const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/projects`;
 const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-password`;
 const googleSignInRedirectUrl = emailVerificationRedirectUrl;
 
 const signUpUser = async (email: string, password: string, name: string) => {
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: name },
       emailRedirectTo: emailVerificationRedirectUrl,
     },
   });
 
   if (error) throw new Error(error.message);
+
+  if (data.user) {
+    await upsertProfile(data.user.id, name);
+  }
 };
 
 const signInUser = async (email: string, password: string) => {

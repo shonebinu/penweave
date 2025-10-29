@@ -57,7 +57,6 @@ export default function CreateProjectModal({
               className="input w-full"
               required
               placeholder="Project title"
-              maxLength={255}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />

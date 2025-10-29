@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import type { Session } from "@supabase/supabase-js";
 
+import { upsertProfile } from "@/features/users/usersService.ts";
 import { supabase } from "@/supabaseClient.ts";
 
 import { AuthContext } from "./authContext.ts";
@@ -18,6 +19,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+
   const signUpUser = (email: string, password: string, name: string) =>
     supabaseSignUp(email, password, name);
 
@@ -44,10 +46,20 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (_event === "PASSWORD_RECOVERY") {
         setIsPasswordRecovery(true);
       }
+
+      if (
+        _event === "SIGNED_IN" &&
+        session?.user &&
+        session.user.app_metadata?.provider === "google"
+      ) {
+        const { full_name, avatar_url } = session.user.user_metadata;
+        await upsertProfile(session.user.id, full_name, avatar_url);
+      }
+
       setSession(session);
       setLoading(false);
     });

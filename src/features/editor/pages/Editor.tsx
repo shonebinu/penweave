@@ -13,8 +13,17 @@ export default function Editor() {
   const { session } = useAuth();
   const { projectId } = useParams();
 
-  const { project, updateCode, loading, format, save, saving } =
-    useProjectEditor(session?.user?.id, projectId);
+  const {
+    project,
+    authorProfile,
+    updateCode,
+    loading,
+    format,
+    save,
+    saving,
+    toggleVisibility,
+    togglingVisibility,
+  } = useProjectEditor(session?.user?.id, projectId);
 
   const {
     iframeRef,
@@ -30,17 +39,27 @@ export default function Editor() {
   }, [project, sendToIframe]);
 
   if (loading) return <LoadingScreen />;
-  if (!projectId || !project) return <Navigate to="/projects" />;
+
+  if (!projectId || !project || !authorProfile)
+    return <Navigate to="/projects" />;
 
   return (
     <div className="flex h-screen flex-col">
       <EditorHeader
-        projectInfo={{ id: projectId, title: project.title }}
+        projectInfo={{
+          title: project.title,
+          isPrivate: project.is_private,
+          userId: project.user_id,
+          userName: authorProfile.display_name,
+          userPhoto: authorProfile.avatar_url,
+        }}
         onFormat={format}
         onSave={save}
         saving={saving}
         thumbnailUpdating={thumbnailUpdating}
         updateThumbnail={updateThumbnail}
+        toggleVisibility={toggleVisibility}
+        togglingVisibility={togglingVisibility}
       />
       <main className="flex flex-1 flex-col">
         <EditorTabs

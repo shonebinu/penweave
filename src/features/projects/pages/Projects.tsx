@@ -1,11 +1,11 @@
 import { useAuth } from "@/features/auth/useAuth.ts";
 import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
+import { useModal } from "../../../shared/hooks/useModal.ts";
 import CreateProjectModal from "../components/CreateProjectModal.tsx";
 import ProjectsCard from "../components/ProjectsCard.tsx";
 import ProjectsFilter from "../components/ProjectsFilter.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
-import { useModal } from "../useModal.ts";
 import { useProjects } from "../useProjects.ts";
 
 export default function Projects() {

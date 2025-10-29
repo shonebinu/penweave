@@ -3,17 +3,30 @@ import { decode } from "base64-arraybuffer";
 import type { Project } from "@/shared/types/project.ts";
 import { supabase } from "@/supabaseClient.ts";
 
-const fetchOwnedProject = async (user_id: string, project_id: string) => {
+const fetchProject = async (project_id: string) => {
   const { data, error } = await supabase
     .from("projects")
     .select()
     .eq("id", project_id)
-    .eq("user_id", user_id)
     .single();
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
   return data as Project;
+};
+
+const toggleProjectVisibility = async (
+  user_id: string,
+  project_id: string,
+  currentVisibility: boolean,
+) => {
+  const { error } = await supabase
+    .from("projects")
+    .update({ is_private: !currentVisibility })
+    .eq("id", project_id)
+    .eq("user_id", user_id);
+
+  if (error) throw new Error(error.message);
 };
 
 const updateOwnedProjectCode = async (
@@ -39,17 +52,17 @@ const updateOwnedProjectThumbnail = async (
 ) => {
   const { data: projectData, error: fetchError } = await supabase
     .from("projects")
-    .select("image_path")
+    .select("thumbnail_path")
     .eq("id", project_id)
     .eq("user_id", user_id)
     .single();
 
   if (fetchError) throw new Error(fetchError.message);
 
-  if (projectData?.image_path) {
+  if (projectData?.thumbnail_path) {
     const { error: deleteError } = await supabase.storage
       .from("thumbnails")
-      .remove([projectData.image_path]);
+      .remove([projectData.thumbnail_path]);
 
     if (deleteError) throw new Error(deleteError.message);
   }
@@ -70,7 +83,7 @@ const updateOwnedProjectThumbnail = async (
 
   const { error: updateError } = await supabase
     .from("projects")
-    .update({ image_url: publicUrl, image_path: filePath })
+    .update({ thumbnail_url: publicUrl, thumbnail_path: filePath })
     .eq("id", project_id)
     .eq("user_id", user_id);
 
@@ -78,7 +91,8 @@ const updateOwnedProjectThumbnail = async (
 };
 
 export {
-  fetchOwnedProject,
+  fetchProject,
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
+  toggleProjectVisibility,
 };

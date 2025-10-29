@@ -8,28 +8,39 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import { fetchProfile } from "@/features/users/usersService.ts";
+import type { Profile } from "@/shared/types/profile.ts";
 import type { SafeProject } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
-import { fetchOwnedProject, updateOwnedProjectCode } from "./editorService.ts";
+import {
+  fetchProject,
+  toggleProjectVisibility,
+  updateOwnedProjectCode,
+} from "./editorService.ts";
 
 export function useProjectEditor(userId?: string, projectId?: string) {
   const [project, setProject] = useState<SafeProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [authorProfile, setAuthorProfile] = useState<Profile | null>(null);
+  const [togglingVisibility, setTogglingVisibility] = useState(false);
 
   useEffect(() => {
-    if (!userId || !projectId) return;
+    if (!projectId) return;
 
     const load = async () => {
       try {
-        const proj = await fetchOwnedProject(userId, projectId);
+        const proj = await fetchProject(projectId);
 
-        if (!proj) {
+        if (!proj || (proj.is_private && proj.user_id !== userId)) {
           setProject(null);
           return;
         }
 
+        const profile = await fetchProfile(proj.user_id);
+
+        setAuthorProfile(profile);
         setProject({
           ...proj,
           html: proj.html ?? "",
@@ -45,6 +56,24 @@ export function useProjectEditor(userId?: string, projectId?: string) {
 
     load();
   }, [userId, projectId]);
+
+  const toggleVisibility = async () => {
+    if (!userId || !projectId || !project) return;
+    try {
+      setTogglingVisibility(true);
+      await toggleProjectVisibility(userId, projectId, project.is_private);
+      setProject((prev) =>
+        prev ? { ...prev, is_private: !prev.is_private } : prev,
+      );
+      toast.success(
+        `Project is now ${project.is_private ? "public" : "private"}.`,
+      );
+    } catch (err) {
+      handleError(err, "Visibility toggle failed");
+    } finally {
+      setTogglingVisibility(false);
+    }
+  };
 
   const persist = async () => {
     if (!userId || !projectId || !project) return;
@@ -66,11 +95,11 @@ export function useProjectEditor(userId?: string, projectId?: string) {
 
   const debouncedSave = useDebouncedCallback(() => {
     persist();
-  }, 2000);
+  }, 5000);
 
   const updateCode = (field: "html" | "css" | "js", value: string) => {
     if (!project) return;
-    setProject({ ...project, [field]: value });
+    setProject((prev) => (prev ? { ...prev, [field]: value } : prev));
     debouncedSave();
   };
 
@@ -87,5 +116,15 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     toast.success("Update saved.");
   };
 
-  return { project, updateCode, save, loading, saving, format };
+  return {
+    project,
+    authorProfile,
+    updateCode,
+    save,
+    loading,
+    saving,
+    format,
+    toggleVisibility,
+    togglingVisibility,
+  };
 }

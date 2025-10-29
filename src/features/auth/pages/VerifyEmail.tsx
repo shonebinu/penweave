@@ -2,7 +2,6 @@ import { Link, Navigate, useLocation } from "react-router";
 
 import AuthCard from "../components/AuthCard.tsx";
 import AuthRedirect from "../components/AuthRedirect.tsx";
-import SubmitButton from "../components/SubmitButton.tsx";
 import { useAuth } from "../useAuth.ts";
 
 export default function VerifyEmail() {
@@ -28,7 +27,7 @@ export default function VerifyEmail() {
       }
     >
       <Link to="/">
-        <SubmitButton loading={false} text="Skip, I'll check later" />
+        <button className="btn mt-4 w-full">Skip, I'll check later</button>
       </Link>
 
       <AuthRedirect

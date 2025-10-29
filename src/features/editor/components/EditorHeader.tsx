@@ -1,9 +1,17 @@
-import { HardDriveUpload, Home, Link as LinkIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  HardDriveUpload,
+  Loader2,
+  Lock,
+  LockOpen,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 import { Link } from "react-router";
 
 import LoadingDots from "@/shared/components/LoadingDots.tsx";
-import LogoWithName from "@/shared/components/LogoWithName";
+import Logo from "@/shared/components/Logo.tsx";
 
 export default function EditorHeader({
   projectInfo,
@@ -12,60 +20,86 @@ export default function EditorHeader({
   saving,
   thumbnailUpdating,
   updateThumbnail,
+  toggleVisibility,
+  togglingVisibility,
 }: {
-  projectInfo: { id: string; title: string };
+  projectInfo: {
+    title: string;
+    isPrivate: boolean;
+    userId: string;
+    userName: string;
+    userPhoto: string | null;
+  };
   onFormat: () => void;
   onSave: () => void;
   saving: boolean;
   thumbnailUpdating: boolean;
   updateThumbnail: () => void;
+  toggleVisibility: () => void;
+  togglingVisibility: boolean;
 }) {
   return (
-    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-6">
+    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
       <div className="flex items-center gap-3">
-        <LogoWithName />
-        <Link to="/projects">
-          <div className="tooltip tooltip-bottom" data-tip="Go to My Works">
-            <button className="btn btn-square">
-              <Home size="1rem" />
+        <Logo />
+        <Link to="/projects" className="btn btn-soft btn-sm">
+          <ArrowLeft size="1rem" />
+          Home
+        </Link>
+        <div className="flex gap-2">
+          <div className="tooltip tooltip-bottom" data-tip="Edit title">
+            <button className="btn-square btn hover:btn-success">
+              <Pencil size="1rem" />
             </button>
           </div>
-        </Link>
-        <Link
-          to={`/projects/${projectInfo.id}`}
-          className="link link-hover tooltip tooltip-bottom flex items-center gap-1"
-          data-tip="Go to Project page"
-        >
+          <div
+            className="tooltip tooltip-bottom"
+            data-tip={
+              "Make this project " +
+              (projectInfo.isPrivate ? "public" : "private")
+            }
+          >
+            <button
+              className="btn-square btn hover:btn-warning"
+              onClick={toggleVisibility}
+              disabled={togglingVisibility}
+            >
+              {togglingVisibility ? (
+                <Loader2 className="animate-spin" size="1rem" />
+              ) : !projectInfo.isPrivate ? (
+                <LockOpen size="1rem" />
+              ) : (
+                <Lock size="1rem" />
+              )}
+            </button>
+          </div>
+          <div className="tooltip tooltip-bottom" data-tip="Delete project">
+            <button className="btn-square btn hover:btn-error">
+              <Trash2 size="1rem" />
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col">
           <p className="truncate">{projectInfo.title}</p>
-          <LinkIcon size="1rem" />
-        </Link>
+          <Link
+            to={"/users/" + projectInfo.userId}
+            className="link label truncate text-sm"
+          >
+            {projectInfo.userName}
+          </Link>
+        </div>
       </div>
       <div className="flex gap-2">
         <button className="btn" onClick={updateThumbnail}>
-          {thumbnailUpdating ? (
-            <>
-              <LoadingDots />
-              Updating...
-            </>
-          ) : (
-            "Update Thumbnail"
-          )}
+          {thumbnailUpdating && <LoadingDots />}
+          Update thumbnail
         </button>
         <button className="btn" onClick={onFormat}>
           Format Code
         </button>
-        <button className="btn btn-primary w-30" onClick={onSave}>
-          {saving ? (
-            <>
-              <LoadingDots />
-              Saving...
-            </>
-          ) : (
-            <>
-              <HardDriveUpload size="1rem" />
-              Save
-            </>
-          )}
+        <button className="btn btn-primary w-25" onClick={onSave}>
+          {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
+          Save
         </button>
       </div>
     </header>
