@@ -59,6 +59,16 @@ const updateOwnedProjectTitle = async (
   if (error) throw new Error(error.message);
 };
 
+const deleteOwnedProject = async (user_id: string, project_id: string) => {
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", project_id)
+    .eq("user_id", user_id);
+
+  if (error) throw new Error(error.message);
+};
+
 const updateOwnedProjectThumbnail = async (
   user_id: string,
   project_id: string,
@@ -110,4 +120,5 @@ export {
   updateOwnedProjectThumbnail,
   toggleOwnedProjectVisibility,
   updateOwnedProjectTitle,
+  deleteOwnedProject,
 };

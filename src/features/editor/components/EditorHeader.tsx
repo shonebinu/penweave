@@ -23,6 +23,7 @@ export default function EditorHeader({
   toggleVisibility,
   togglingVisibility,
   onEditTitle,
+  onDeleteProject,
 }: {
   projectInfo: {
     title: string;
@@ -39,6 +40,7 @@ export default function EditorHeader({
   toggleVisibility: () => void;
   togglingVisibility: boolean;
   onEditTitle: () => void;
+  onDeleteProject: () => void;
 }) {
   return (
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
@@ -77,7 +79,10 @@ export default function EditorHeader({
             </button>
           </div>
           <div className="tooltip tooltip-bottom" data-tip="Delete project">
-            <button className="btn-square btn hover:btn-error">
+            <button
+              className="btn-square btn hover:btn-error"
+              onClick={onDeleteProject}
+            >
               <Trash2 size="1rem" />
             </button>
           </div>

@@ -5,6 +5,7 @@ import { useAuth } from "@/features/auth/useAuth.ts";
 import { useModal } from "@/shared/hooks/useModal.ts";
 import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
+import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
 import EditorHeader from "../components/EditorHeader.tsx";
 import EditorTabs from "../components/EditorTabs.tsx";
@@ -16,6 +17,7 @@ export default function Editor() {
   const { projectId } = useParams();
 
   const editTitleModal = useModal();
+  const deleteProjectModal = useModal();
 
   const {
     project,
@@ -28,6 +30,7 @@ export default function Editor() {
     toggleVisibility,
     editTitle,
     togglingVisibility,
+    deleteProject,
   } = useProjectEditor(session?.user?.id, projectId);
 
   const {
@@ -66,6 +69,7 @@ export default function Editor() {
         toggleVisibility={toggleVisibility}
         togglingVisibility={togglingVisibility}
         onEditTitle={editTitleModal.open}
+        onDeleteProject={deleteProjectModal.open}
       />
       <main className="flex flex-1 flex-col">
         <EditorTabs
@@ -90,6 +94,11 @@ export default function Editor() {
         isOpen={editTitleModal.isOpen}
         onClose={editTitleModal.close}
         onSubmit={editTitle}
+      />
+      <DeleteProjectModal
+        isOpen={deleteProjectModal.isOpen}
+        onClose={deleteProjectModal.close}
+        onSubmit={deleteProject}
       />
     </div>
   );

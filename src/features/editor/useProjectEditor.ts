@@ -14,6 +14,7 @@ import type { SafeProject } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {
+  deleteOwnedProject,
   fetchProject,
   toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
@@ -87,6 +88,17 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     }
   };
 
+  const deleteProject = async () => {
+    if (!userId || !projectId || !project) return;
+    try {
+      await deleteOwnedProject(userId, projectId);
+      toast.success("Project deleted.");
+      setProject(null);
+    } catch (err) {
+      handleError(err, "Project deletion failed");
+    }
+  };
+
   const persist = async () => {
     if (!userId || !projectId || !project) return;
     try {
@@ -139,5 +151,6 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     toggleVisibility,
     togglingVisibility,
     editTitle,
+    deleteProject,
   };
 }
