@@ -15,8 +15,9 @@ import { handleError } from "@/utils/error.ts";
 
 import {
   fetchProject,
-  toggleProjectVisibility,
+  toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
+  updateOwnedProjectTitle,
 } from "./editorService.ts";
 
 export function useProjectEditor(userId?: string, projectId?: string) {
@@ -61,7 +62,7 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     if (!userId || !projectId || !project) return;
     try {
       setTogglingVisibility(true);
-      await toggleProjectVisibility(userId, projectId, project.is_private);
+      await toggleOwnedProjectVisibility(userId, projectId, project.is_private);
       setProject((prev) =>
         prev ? { ...prev, is_private: !prev.is_private } : prev,
       );
@@ -72,6 +73,17 @@ export function useProjectEditor(userId?: string, projectId?: string) {
       handleError(err, "Visibility toggle failed");
     } finally {
       setTogglingVisibility(false);
+    }
+  };
+
+  const editTitle = async (newTitle: string) => {
+    if (!userId || !projectId || !project) return;
+    try {
+      await updateOwnedProjectTitle(userId, projectId, newTitle);
+      setProject((prev) => (prev ? { ...prev, title: newTitle } : prev));
+      toast.success("Title updated.");
+    } catch (err) {
+      handleError(err, "Title update failed");
     }
   };
 
@@ -126,5 +138,6 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     format,
     toggleVisibility,
     togglingVisibility,
+    editTitle,
   };
 }

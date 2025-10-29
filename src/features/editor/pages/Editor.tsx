@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { Navigate, useParams } from "react-router";
 
 import { useAuth } from "@/features/auth/useAuth.ts";
+import { useModal } from "@/shared/hooks/useModal.ts";
 import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
+import EditTitleModal from "../components/EditTitleModal.tsx";
 import EditorHeader from "../components/EditorHeader.tsx";
 import EditorTabs from "../components/EditorTabs.tsx";
 import { useProjectEditor } from "../useProjectEditor.ts";
@@ -12,6 +14,8 @@ import { useProjectPreview } from "../useProjectPreview.ts";
 export default function Editor() {
   const { session } = useAuth();
   const { projectId } = useParams();
+
+  const editTitleModal = useModal();
 
   const {
     project,
@@ -22,6 +26,7 @@ export default function Editor() {
     save,
     saving,
     toggleVisibility,
+    editTitle,
     togglingVisibility,
   } = useProjectEditor(session?.user?.id, projectId);
 
@@ -60,6 +65,7 @@ export default function Editor() {
         updateThumbnail={updateThumbnail}
         toggleVisibility={toggleVisibility}
         togglingVisibility={togglingVisibility}
+        onEditTitle={editTitleModal.open}
       />
       <main className="flex flex-1 flex-col">
         <EditorTabs
@@ -71,9 +77,20 @@ export default function Editor() {
           setJsCode={(val) => updateCode("js", val)}
         />
         <div className="flex-1">
-          <iframe ref={iframeRef} src={iframeSrc} className="h-full w-full" />
+          <iframe
+            ref={iframeRef}
+            src={iframeSrc}
+            className="h-full w-full"
+            title="Project preview"
+          />
         </div>
       </main>
+      <EditTitleModal
+        oldTitle={project.title}
+        isOpen={editTitleModal.isOpen}
+        onClose={editTitleModal.close}
+        onSubmit={editTitle}
+      />
     </div>
   );
 }

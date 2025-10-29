@@ -22,6 +22,7 @@ export default function EditorHeader({
   updateThumbnail,
   toggleVisibility,
   togglingVisibility,
+  onEditTitle,
 }: {
   projectInfo: {
     title: string;
@@ -37,6 +38,7 @@ export default function EditorHeader({
   updateThumbnail: () => void;
   toggleVisibility: () => void;
   togglingVisibility: boolean;
+  onEditTitle: () => void;
 }) {
   return (
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
@@ -47,7 +49,10 @@ export default function EditorHeader({
         <Logo />
         <div className="flex gap-2">
           <div className="tooltip tooltip-bottom" data-tip="Edit project title">
-            <button className="btn-square btn hover:btn-success">
+            <button
+              className="btn-square btn hover:btn-success"
+              onClick={onEditTitle}
+            >
               <Pencil size="1rem" />
             </button>
           </div>

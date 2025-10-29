@@ -15,7 +15,7 @@ const fetchProject = async (project_id: string) => {
   return data as Project;
 };
 
-const toggleProjectVisibility = async (
+const toggleOwnedProjectVisibility = async (
   user_id: string,
   project_id: string,
   currentVisibility: boolean,
@@ -39,6 +39,20 @@ const updateOwnedProjectCode = async (
   const { error } = await supabase
     .from("projects")
     .update({ html, css, js })
+    .eq("id", project_id)
+    .eq("user_id", user_id);
+
+  if (error) throw new Error(error.message);
+};
+
+const updateOwnedProjectTitle = async (
+  user_id: string,
+  project_id: string,
+  newTitle: string,
+) => {
+  const { error } = await supabase
+    .from("projects")
+    .update({ title: newTitle })
     .eq("id", project_id)
     .eq("user_id", user_id);
 
@@ -94,5 +108,6 @@ export {
   fetchProject,
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
-  toggleProjectVisibility,
+  toggleOwnedProjectVisibility,
+  updateOwnedProjectTitle,
 };
