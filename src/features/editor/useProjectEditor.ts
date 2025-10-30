@@ -29,7 +29,7 @@ export function useProjectEditor(userId?: string, projectId?: string) {
   const [togglingVisibility, setTogglingVisibility] = useState(false);
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId || !userId) return;
 
     const load = async () => {
       try {

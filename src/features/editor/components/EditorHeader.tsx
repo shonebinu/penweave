@@ -1,6 +1,6 @@
 import {
-  ArrowLeft,
   HardDriveUpload,
+  Home,
   Loader2,
   Lock,
   LockOpen,
@@ -46,7 +46,7 @@ export default function EditorHeader({
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
       <div className="flex items-center gap-3">
         <Link to="/projects" className="btn btn-soft btn-square btn-sm">
-          <ArrowLeft size="1rem" />
+          <Home size="1rem" />
         </Link>
         <Logo />
         <div className="flex gap-2">

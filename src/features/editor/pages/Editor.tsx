@@ -13,8 +13,10 @@ import { useProjectEditor } from "../useProjectEditor.ts";
 import { useProjectPreview } from "../useProjectPreview.ts";
 
 export default function Editor() {
-  const { session } = useAuth();
   const { projectId } = useParams();
+
+  // editor is outside protected route
+  const { session, loading: authLoading } = useAuth();
 
   const editTitleModal = useModal();
   const deleteProjectModal = useModal();
@@ -23,7 +25,7 @@ export default function Editor() {
     project,
     authorProfile,
     updateCode,
-    loading,
+    loading: projectLoading,
     format,
     save,
     saving,
@@ -46,7 +48,7 @@ export default function Editor() {
     sendToIframe(project.html, project.css, project.js);
   }, [project, sendToIframe]);
 
-  if (loading) return <LoadingScreen />;
+  if (authLoading || projectLoading) return <LoadingScreen />;
 
   if (!projectId || !project || !authorProfile)
     return <Navigate to="/projects" />;
