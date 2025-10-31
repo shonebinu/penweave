@@ -6,8 +6,8 @@ import Logout from "@/features/auth/pages/Logout.tsx";
 import ResetPassword from "@/features/auth/pages/ResetPassword.tsx";
 import Signup from "@/features/auth/pages/Signup.tsx";
 import VerifyEmail from "@/features/auth/pages/VerifyEmail.tsx";
-import Editor from "@/features/editor/pages/Editor.tsx";
-import Projects from "@/features/projects/pages/Projects.tsx";
+import Editor from "@/features/projects/pages/Editor.tsx";
+import Projects from "@/features/tmp/pages/Projects.tsx";
 import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 
