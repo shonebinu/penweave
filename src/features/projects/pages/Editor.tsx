@@ -35,7 +35,7 @@ export default function Editor() {
     deleteProject,
     updateThumbnail,
     thumbnailUpdating,
-  } = useProject(session?.user?.id, projectId);
+  } = useProject(session?.user?.id, projectId, authLoading);
 
   const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
     useProjectRenderer();

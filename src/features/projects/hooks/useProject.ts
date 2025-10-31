@@ -22,7 +22,11 @@ import {
   updateOwnedProjectTitle,
 } from "../services/editorService.ts";
 
-export function useProject(userId?: string, projectId?: string) {
+export function useProject(
+  userId?: string,
+  projectId?: string,
+  authLoading?: boolean,
+) {
   const [project, setProject] = useState<SafeProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -31,7 +35,7 @@ export function useProject(userId?: string, projectId?: string) {
   const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
 
   useEffect(() => {
-    if (!projectId || !userId) return;
+    if (!projectId || authLoading) return;
 
     const load = async () => {
       try {
