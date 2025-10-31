@@ -9,8 +9,8 @@ import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
 import EditorHeader from "../components/EditorHeader.tsx";
 import EditorTabs from "../components/EditorTabs.tsx";
-import { useProjectEditor } from "../useProjectEditor.ts";
-import { useProjectPreview } from "../useProjectPreview.ts";
+import { useProject } from "../useProject.ts";
+import { useProjectRenderer } from "../useProjectRenderer.ts";
 
 export default function Editor() {
   const { projectId } = useParams();
@@ -35,10 +35,10 @@ export default function Editor() {
     deleteProject,
     updateThumbnail,
     thumbnailUpdating,
-  } = useProjectEditor(session?.user?.id, projectId);
+  } = useProject(session?.user?.id, projectId);
 
   const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
-    useProjectPreview();
+    useProjectRenderer();
 
   useEffect(() => {
     if (!project) return;

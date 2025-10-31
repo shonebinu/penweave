@@ -22,7 +22,7 @@ import {
   updateOwnedProjectTitle,
 } from "./editorService.ts";
 
-export function useProjectEditor(userId?: string, projectId?: string) {
+export function useProject(userId?: string, projectId?: string) {
   const [project, setProject] = useState<SafeProject | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

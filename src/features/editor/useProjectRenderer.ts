@@ -7,7 +7,7 @@ const IFRAME_SRC = import.meta.env.VITE_CODE_RUNNER_URL;
 const SCREENSHOT_TIMEOUT = 10000;
 const getOrigin = (url: string) => new URL(url).origin;
 
-export function useProjectPreview() {
+export function useProjectRenderer() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const screenshotPromiseRef = useRef<{
     resolve: (dataUrl: string) => void;
