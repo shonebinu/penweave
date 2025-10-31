@@ -2,7 +2,7 @@ import { BellRing, LogOut, Settings, UserPen } from "lucide-react";
 
 import { Link } from "react-router";
 
-import { useAuth } from "@/features/auth/useAuth.ts";
+import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 
 const menuItems = [
   { icon: BellRing, label: "Notifications", href: "/notifications" },

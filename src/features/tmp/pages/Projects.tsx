@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth/useAuth.ts";
+import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
 import { useModal } from "../../../shared/hooks/useModal.ts";
