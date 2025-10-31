@@ -6,7 +6,7 @@ import CreateProjectModal from "../components/CreateProjectModal.tsx";
 import ProjectsCard from "../components/ProjectsCard.tsx";
 import ProjectsFilter from "../components/ProjectsFilter.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
-import { useProjects } from "../useProjects.ts";
+import { useProjects } from "../hooks/useProjects.ts";
 
 export default function Projects() {
   /* use nuqs for filters, use pagination or infinite scroll */

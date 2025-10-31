@@ -5,7 +5,10 @@ import { useNavigate } from "react-router";
 import type { Project } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
-import { createProject, fetchAllProjectsByUser } from "./projectsService.ts";
+import {
+  createProject,
+  fetchAllProjectsByUser,
+} from "../services/projectsService.ts";
 
 export function useProjects(userId?: string) {
   const [loading, setLoading] = useState(true);

@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import type { Session } from "@supabase/supabase-js";
 
-import { upsertProfile } from "@/features/users/usersService.ts";
+import { upsertProfile } from "@/features/users/services/usersService.ts";
 import { supabase } from "@/supabaseClient.ts";
 
 import {

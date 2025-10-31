@@ -1,4 +1,4 @@
-import { upsertProfile } from "@/features/users/usersService.ts";
+import { upsertProfile } from "@/features/users/services/usersService";
 import { supabase } from "@/supabaseClient.ts";
 
 const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/projects`;

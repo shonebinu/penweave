@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-import { fetchProfile } from "@/features/users/usersService.ts";
+import { fetchProfile } from "@/features/users/services/usersService.ts";
 import type { Profile } from "@/shared/types/profile.ts";
 import type { SafeProject } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
