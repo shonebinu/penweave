@@ -18,6 +18,7 @@ import {
   fetchProject,
   toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
+  updateOwnedProjectThumbnail,
   updateOwnedProjectTitle,
 } from "./editorService.ts";
 
@@ -27,6 +28,7 @@ export function useProjectEditor(userId?: string, projectId?: string) {
   const [saving, setSaving] = useState(false);
   const [authorProfile, setAuthorProfile] = useState<Profile | null>(null);
   const [togglingVisibility, setTogglingVisibility] = useState(false);
+  const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
 
   useEffect(() => {
     if (!projectId || !userId) return;
@@ -140,6 +142,21 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     toast.success("Update saved.");
   };
 
+  const updateThumbnail = async (captureScreenshot: () => Promise<string>) => {
+    if (!userId || !projectId) return;
+
+    try {
+      setThumbnailUpdating(true);
+      const dataUrl = await captureScreenshot();
+      await updateOwnedProjectThumbnail(userId, projectId, dataUrl);
+      toast.success("Thumbnail updated!");
+    } catch (err) {
+      handleError(err, "Thumbnail update failed");
+    } finally {
+      setThumbnailUpdating(false);
+    }
+  };
+
   return {
     project,
     authorProfile,
@@ -152,5 +169,7 @@ export function useProjectEditor(userId?: string, projectId?: string) {
     togglingVisibility,
     editTitle,
     deleteProject,
+    updateThumbnail,
+    thumbnailUpdating,
   };
 }

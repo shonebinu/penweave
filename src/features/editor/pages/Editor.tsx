@@ -33,15 +33,12 @@ export default function Editor() {
     editTitle,
     togglingVisibility,
     deleteProject,
-  } = useProjectEditor(session?.user?.id, projectId);
-
-  const {
-    iframeRef,
-    iframeSrc,
-    sendToIframe,
     updateThumbnail,
     thumbnailUpdating,
-  } = useProjectPreview(session?.user?.id, projectId);
+  } = useProjectEditor(session?.user?.id, projectId);
+
+  const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
+    useProjectPreview();
 
   useEffect(() => {
     if (!project) return;
@@ -67,7 +64,7 @@ export default function Editor() {
         onSave={save}
         saving={saving}
         thumbnailUpdating={thumbnailUpdating}
-        updateThumbnail={updateThumbnail}
+        updateThumbnail={() => updateThumbnail(captureScreenshot)}
         toggleVisibility={toggleVisibility}
         togglingVisibility={togglingVisibility}
         onEditTitle={editTitleModal.open}

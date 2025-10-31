@@ -1,18 +1,13 @@
 import { useDebouncedCallback } from "use-debounce";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-
-import { handleError } from "@/utils/error.ts";
-
-import { updateOwnedProjectThumbnail } from "./editorService.ts";
 
 const IFRAME_SRC = import.meta.env.VITE_CODE_RUNNER_URL;
 const SCREENSHOT_TIMEOUT = 10000;
 const getOrigin = (url: string) => new URL(url).origin;
 
-export function useProjectPreview(userId?: string, projectId?: string) {
-  const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
+export function useProjectPreview() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const screenshotPromiseRef = useRef<{
     resolve: (dataUrl: string) => void;
@@ -69,21 +64,6 @@ export function useProjectPreview(userId?: string, projectId?: string) {
     });
   };
 
-  const updateThumbnail = async () => {
-    if (!userId || !projectId) return;
-
-    try {
-      setThumbnailUpdating(true);
-      const dataUrl = await captureScreenshot();
-      await updateOwnedProjectThumbnail(userId, projectId, dataUrl);
-      toast.success("Thumbnail updated!");
-    } catch (err) {
-      handleError(err, "Thumbnail update failed");
-    } finally {
-      setThumbnailUpdating(false);
-    }
-  };
-
   useEffect(() => {
     const handleMessage = ({ origin, data }: MessageEvent) => {
       if (origin !== getOrigin(IFRAME_SRC)) return;
@@ -116,7 +96,6 @@ export function useProjectPreview(userId?: string, projectId?: string) {
     iframeRef,
     iframeSrc: IFRAME_SRC,
     sendToIframe,
-    updateThumbnail,
-    thumbnailUpdating,
+    captureScreenshot,
   };
 }
