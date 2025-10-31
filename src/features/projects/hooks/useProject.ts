@@ -20,7 +20,7 @@ import {
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
   updateOwnedProjectTitle,
-} from "./editorService.ts";
+} from "../services/editorService.ts";
 
 export function useProject(userId?: string, projectId?: string) {
   const [project, setProject] = useState<SafeProject | null>(null);

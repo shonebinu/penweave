@@ -9,8 +9,8 @@ import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
 import EditorHeader from "../components/EditorHeader.tsx";
 import EditorTabs from "../components/EditorTabs.tsx";
-import { useProject } from "../useProject.ts";
-import { useProjectRenderer } from "../useProjectRenderer.ts";
+import { useProject } from "../hooks/useProject.ts";
+import { useProjectRenderer } from "../hooks/useProjectRenderer.ts";
 
 export default function Editor() {
   const { projectId } = useParams();
