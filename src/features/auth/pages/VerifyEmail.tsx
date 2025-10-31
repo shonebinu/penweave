@@ -2,7 +2,7 @@ import { Link, Navigate, useLocation } from "react-router";
 
 import AuthCard from "../components/AuthCard.tsx";
 import AuthRedirect from "../components/AuthRedirect.tsx";
-import { useAuth } from "../useAuth.ts";
+import { useAuth } from "../hooks/useAuth.ts";
 
 export default function VerifyEmail() {
   const { state } = useLocation();

@@ -1,6 +1,5 @@
+import { upsertProfile } from "@/features/users/usersService.ts";
 import { supabase } from "@/supabaseClient.ts";
-
-import { upsertProfile } from "../users/usersService.ts";
 
 const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/projects`;
 const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-password`;

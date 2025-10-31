@@ -8,7 +8,7 @@ import AuthCard from "../components/AuthCard.tsx";
 import AuthRedirect from "../components/AuthRedirect.tsx";
 import InputField from "../components/InputField.tsx";
 import SubmitButton from "../components/SubmitButton.tsx";
-import { useAuth } from "../useAuth.ts";
+import { useAuth } from "../hooks/useAuth.ts";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

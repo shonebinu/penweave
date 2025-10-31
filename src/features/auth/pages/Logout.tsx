@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-import { useAuth } from "@/features/auth/useAuth.ts";
+import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import { handleError } from "@/utils/error.ts";
 
 export default function Logout() {

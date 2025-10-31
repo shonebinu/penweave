@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, useParams } from "react-router";
 
-import { useAuth } from "@/features/auth/useAuth.ts";
+import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import { useModal } from "@/shared/hooks/useModal.ts";
 import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 

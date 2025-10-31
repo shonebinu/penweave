@@ -8,7 +8,7 @@ import AuthRedirect from "../components/AuthRedirect.tsx";
 import GoogleButton from "../components/GoogleButton.tsx";
 import InputField from "../components/InputField.tsx";
 import SubmitButton from "../components/SubmitButton.tsx";
-import { useAuth } from "../useAuth.ts";
+import { useAuth } from "../hooks/useAuth.ts";
 
 export default function Signup() {
   const { session, signUpUser } = useAuth();

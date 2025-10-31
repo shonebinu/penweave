@@ -5,7 +5,6 @@ import type { Session } from "@supabase/supabase-js";
 import { upsertProfile } from "@/features/users/usersService.ts";
 import { supabase } from "@/supabaseClient.ts";
 
-import { AuthContext } from "./authContext.ts";
 import {
   sendResetPassword as supabaseSendResetPassword,
   signInUser as supabaseSignIn,
@@ -13,7 +12,8 @@ import {
   signOutUser as supabaseSignOut,
   signUpUser as supabaseSignUp,
   updatePassword as supabaseUpdatePassword,
-} from "./authService.ts";
+} from "../services/authService.ts";
+import { AuthContext } from "./authContext.ts";
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
