@@ -7,6 +7,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 import { fetchProfile } from "@/features/users/services/usersService.ts";
 import type { Profile } from "@/shared/types/profile.ts";
@@ -16,11 +17,12 @@ import { handleError } from "@/utils/error.ts";
 import {
   deleteOwnedProject,
   fetchProject,
+  forkPublicProject,
   toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
   updateOwnedProjectTitle,
-} from "../services/editorService.ts";
+} from "../services/projectService.ts";
 
 export function useProject(
   userId?: string,
@@ -33,6 +35,11 @@ export function useProject(
   const [authorProfile, setAuthorProfile] = useState<Profile | null>(null);
   const [togglingVisibility, setTogglingVisibility] = useState(false);
   const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
+  const [forking, setForking] = useState(false);
+  const [titleEditing, setTitleEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!projectId || authLoading) return;
@@ -63,7 +70,7 @@ export function useProject(
     };
 
     load();
-  }, [userId, projectId]);
+  }, [userId, projectId, authLoading]);
 
   const toggleVisibility = async () => {
     if (!userId || !projectId || !project) return;
@@ -86,22 +93,42 @@ export function useProject(
   const editTitle = async (newTitle: string) => {
     if (!userId || !projectId || !project) return;
     try {
+      setTitleEditing(true);
       await updateOwnedProjectTitle(userId, projectId, newTitle);
       setProject((prev) => (prev ? { ...prev, title: newTitle } : prev));
       toast.success("Title updated.");
     } catch (err) {
       handleError(err, "Title update failed");
+    } finally {
+      setTitleEditing(false);
     }
   };
 
   const deleteProject = async () => {
     if (!userId || !projectId || !project) return;
     try {
+      setDeleting(true);
       await deleteOwnedProject(userId, projectId);
       toast.success("Project deleted.");
       setProject(null);
     } catch (err) {
       handleError(err, "Project deletion failed");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const forkProject = async () => {
+    if (!userId || !projectId || !project) return;
+    try {
+      setForking(true);
+      const newProjectId = await forkPublicProject(userId, projectId);
+      toast.success("Project successfully forked. Redirecting...");
+      navigate("/projects/" + newProjectId);
+    } catch (err) {
+      handleError(err, "Project forking failed");
+    } finally {
+      setForking(false);
     }
   };
 
@@ -129,7 +156,11 @@ export function useProject(
 
   const updateCode = (field: "html" | "css" | "js", value: string) => {
     if (!project) return;
+
     setProject((prev) => (prev ? { ...prev, [field]: value } : prev));
+
+    if (project.user_id !== userId)
+      toast.error("Fork the project to make your changes.");
     debouncedSave();
   };
 
@@ -165,6 +196,7 @@ export function useProject(
     project,
     authorProfile,
     updateCode,
+    forking,
     save,
     loading,
     saving,
@@ -175,5 +207,8 @@ export function useProject(
     deleteProject,
     updateThumbnail,
     thumbnailUpdating,
+    forkProject,
+    titleEditing,
+    deleting,
   };
 }

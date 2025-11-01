@@ -12,6 +12,8 @@ import EditorTabs from "../components/EditorTabs.tsx";
 import { useProject } from "../hooks/useProject.ts";
 import { useProjectRenderer } from "../hooks/useProjectRenderer.ts";
 
+export type ViewerType = "creator" | "user" | "visitor";
+
 export default function Editor() {
   const { projectId } = useParams();
 
@@ -32,9 +34,13 @@ export default function Editor() {
     toggleVisibility,
     editTitle,
     togglingVisibility,
+    forking,
     deleteProject,
     updateThumbnail,
     thumbnailUpdating,
+    titleEditing,
+    deleting,
+    forkProject,
   } = useProject(session?.user?.id, projectId, authLoading);
 
   const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
@@ -42,6 +48,7 @@ export default function Editor() {
 
   useEffect(() => {
     if (!project) return;
+
     sendToIframe(project.html, project.css, project.js);
   }, [project, sendToIframe]);
 
@@ -50,9 +57,16 @@ export default function Editor() {
   if (!projectId || !project || !authorProfile)
     return <Navigate to="/projects" />;
 
+  let viewerType: ViewerType;
+
+  if (session?.user.id === project.user_id) viewerType = "creator";
+  else if (session?.user.id) viewerType = "user";
+  else viewerType = "visitor";
+
   return (
     <div className="flex h-screen flex-col">
       <EditorHeader
+        viewerType={viewerType}
         projectInfo={{
           title: project.title,
           isPrivate: project.is_private,
@@ -69,6 +83,10 @@ export default function Editor() {
         togglingVisibility={togglingVisibility}
         onEditTitle={editTitleModal.open}
         onDeleteProject={deleteProjectModal.open}
+        onForkProject={forkProject}
+        forking={forking}
+        titleEditing={titleEditing}
+        deleting={deleting}
       />
       <main className="flex flex-1 flex-col">
         <EditorTabs
@@ -88,17 +106,21 @@ export default function Editor() {
           />
         </div>
       </main>
-      <EditTitleModal
-        oldTitle={project.title}
-        isOpen={editTitleModal.isOpen}
-        onClose={editTitleModal.close}
-        onSubmit={editTitle}
-      />
-      <DeleteProjectModal
-        isOpen={deleteProjectModal.isOpen}
-        onClose={deleteProjectModal.close}
-        onSubmit={deleteProject}
-      />
+      {viewerType === "creator" && (
+        <>
+          <EditTitleModal
+            oldTitle={project.title}
+            isOpen={editTitleModal.isOpen}
+            onClose={editTitleModal.close}
+            onSubmit={editTitle}
+          />
+          <DeleteProjectModal
+            isOpen={deleteProjectModal.isOpen}
+            onClose={deleteProjectModal.close}
+            onSubmit={deleteProject}
+          />
+        </>
+      )}
     </div>
   );
 }

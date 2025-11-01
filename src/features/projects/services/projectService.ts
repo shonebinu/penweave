@@ -3,11 +3,11 @@ import { decode } from "base64-arraybuffer";
 import type { Project } from "@/shared/types/project.ts";
 import { supabase } from "@/supabaseClient.ts";
 
-const fetchProject = async (project_id: string) => {
+const fetchProject = async (projectId: string) => {
   const { data, error } = await supabase
     .from("projects")
     .select()
-    .eq("id", project_id)
+    .eq("id", projectId)
     .single();
 
   if (error) throw new Error(error.message);
@@ -16,22 +16,22 @@ const fetchProject = async (project_id: string) => {
 };
 
 const toggleOwnedProjectVisibility = async (
-  user_id: string,
-  project_id: string,
+  userId: string,
+  projectId: string,
   currentVisibility: boolean,
 ) => {
   const { error } = await supabase
     .from("projects")
     .update({ is_private: !currentVisibility })
-    .eq("id", project_id)
-    .eq("user_id", user_id);
+    .eq("id", projectId)
+    .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
 };
 
 const updateOwnedProjectCode = async (
-  user_id: string,
-  project_id: string,
+  userId: string,
+  projectId: string,
   html: string,
   css: string,
   js: string,
@@ -39,46 +39,83 @@ const updateOwnedProjectCode = async (
   const { error } = await supabase
     .from("projects")
     .update({ html, css, js })
-    .eq("id", project_id)
-    .eq("user_id", user_id);
+    .eq("id", projectId)
+    .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
 };
 
 const updateOwnedProjectTitle = async (
-  user_id: string,
-  project_id: string,
+  userId: string,
+  projectId: string,
   newTitle: string,
 ) => {
   const { error } = await supabase
     .from("projects")
     .update({ title: newTitle })
-    .eq("id", project_id)
-    .eq("user_id", user_id);
+    .eq("id", projectId)
+    .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
 };
 
-const deleteOwnedProject = async (user_id: string, project_id: string) => {
+const deleteOwnedProject = async (userId: string, projectId: string) => {
   const { error } = await supabase
     .from("projects")
     .delete()
-    .eq("id", project_id)
-    .eq("user_id", user_id);
+    .eq("id", projectId)
+    .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
 };
 
+const forkPublicProject = async (newUserId: string, projectId: string) => {
+  const { data: project, error: fetchError } = await supabase
+    .from("projects")
+    .select("title, html, css, js, is_private")
+    .eq("id", projectId)
+    .single();
+
+  if (fetchError) throw new Error(fetchError.message);
+  if (!project) throw new Error("Project not found");
+  if (project.is_private) throw new Error("Cannot fork a private project");
+
+  const { data: newProject, error: insertError } = await supabase
+    .from("projects")
+    .insert({
+      user_id: newUserId,
+      title: `${project.title} (fork)`,
+      html: project.html,
+      css: project.css,
+      js: project.js,
+    })
+    .select("id")
+    .single();
+
+  if (insertError) throw new Error(insertError.message);
+
+  const newProjectId = newProject.id;
+
+  const { error: forkError } = await supabase.from("forks").insert({
+    forked_from: projectId,
+    forked_to: newProjectId,
+  });
+
+  if (forkError) throw new Error(forkError.message);
+
+  return newProjectId as string;
+};
+
 const updateOwnedProjectThumbnail = async (
-  user_id: string,
-  project_id: string,
+  userId: string,
+  projectId: string,
   base64DataUrl: string,
 ) => {
   const { data: projectData, error: fetchError } = await supabase
     .from("projects")
     .select("thumbnail_path")
-    .eq("id", project_id)
-    .eq("user_id", user_id)
+    .eq("id", projectId)
+    .eq("user_id", userId)
     .single();
 
   if (fetchError) throw new Error(fetchError.message);
@@ -91,7 +128,7 @@ const updateOwnedProjectThumbnail = async (
     if (deleteError) throw new Error(deleteError.message);
   }
 
-  const filePath = `${user_id}/${project_id}-${Date.now()}.jpg`;
+  const filePath = `${userId}/${projectId}-${Date.now()}.jpg`;
 
   const { error: uploadError } = await supabase.storage
     .from("thumbnails")
@@ -108,8 +145,8 @@ const updateOwnedProjectThumbnail = async (
   const { error: updateError } = await supabase
     .from("projects")
     .update({ thumbnail_url: publicUrl, thumbnail_path: filePath })
-    .eq("id", project_id)
-    .eq("user_id", user_id);
+    .eq("id", projectId)
+    .eq("user_id", userId);
 
   if (updateError) throw new Error(updateError.message);
 };
@@ -120,5 +157,6 @@ export {
   updateOwnedProjectThumbnail,
   toggleOwnedProjectVisibility,
   updateOwnedProjectTitle,
+  forkPublicProject,
   deleteOwnedProject,
 };
