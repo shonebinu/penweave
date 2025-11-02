@@ -49,7 +49,7 @@ export default function EditorTabs({
           <input
             type="radio"
             name="editor-tabs"
-            className="tab flex-1 font-medium"
+            className="tab flex-1 font-semibold"
             aria-label={label}
             defaultChecked={label === "HTML"}
           />

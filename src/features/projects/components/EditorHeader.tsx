@@ -4,6 +4,7 @@ import {
   Home,
   Lock,
   LockOpen,
+  Menu,
   Pencil,
   Trash2,
   UserRound,
@@ -57,8 +58,8 @@ export default function EditorHeader({
   deleting: boolean;
 }) {
   return (
-    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-3">
-      <div className="flex items-center gap-3">
+    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-3">
+      <div className="flex items-center gap-2 md:gap-3">
         {viewerType !== "visitor" && (
           <Link to="/projects" className="btn btn-soft btn-square btn-sm">
             <Home size="1rem" />
@@ -66,7 +67,7 @@ export default function EditorHeader({
         )}
         <Logo />
         {viewerType === "creator" && (
-          <div className="join">
+          <div className="join hidden md:flex">
             <div
               className="tooltip tooltip-bottom"
               data-tip="Edit project title"
@@ -153,25 +154,107 @@ export default function EditorHeader({
       <div className="flex gap-2">
         {viewerType === "creator" && (
           <>
-            <button
-              className="btn"
-              onClick={updateThumbnail}
-              disabled={thumbnailUpdating}
-            >
-              {thumbnailUpdating && <LoadingDots />}
-              Update thumbnail
-            </button>
-            <button className="btn" onClick={onFormat}>
-              Format Code
-            </button>
-            <button
-              className="btn btn-primary w-25"
-              onClick={onSave}
-              disabled={saving}
-            >
-              {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
-              Save
-            </button>
+            <div className="hidden gap-2 md:flex">
+              <button
+                className="btn"
+                onClick={updateThumbnail}
+                disabled={thumbnailUpdating}
+              >
+                {thumbnailUpdating && <LoadingDots />}
+                Update thumbnail
+              </button>
+              <button className="btn" onClick={onFormat}>
+                Format Code
+              </button>
+              <button
+                className="btn btn-primary w-25"
+                onClick={onSave}
+                disabled={saving}
+              >
+                {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
+                Save
+              </button>
+            </div>
+            <div className="dropdown dropdown-end md:hidden">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-square"
+              >
+                <Menu size="1rem" />
+              </div>
+              <ul
+                tabIndex={-1}
+                className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+              >
+                <li>
+                  <button
+                    onClick={onEditTitle}
+                    disabled={titleEditing}
+                    className="text-success"
+                  >
+                    {titleEditing ? (
+                      <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                      <Pencil size="1rem" />
+                    )}
+                    Edit Title
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={toggleVisibility}
+                    disabled={togglingVisibility}
+                    className="text-warning"
+                  >
+                    {togglingVisibility ? (
+                      <span className="loading loading-spinner loading-sm"></span>
+                    ) : !projectInfo.isPrivate ? (
+                      <LockOpen size="1rem" />
+                    ) : (
+                      <Lock size="1rem" />
+                    )}
+                    Make {projectInfo.isPrivate ? "Public" : "Private"}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="text-error"
+                    onClick={onDeleteProject}
+                    disabled={deleting}
+                  >
+                    {deleting ? (
+                      <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                      <Trash2 size="1rem" />
+                    )}
+                    Delete Project
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={updateThumbnail}
+                    disabled={thumbnailUpdating}
+                  >
+                    {thumbnailUpdating && <LoadingDots />}
+                    Update thumbnail
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onFormat}>Format Code</button>
+                </li>
+                <li>
+                  <button
+                    className="text-primary"
+                    onClick={onSave}
+                    disabled={saving}
+                  >
+                    {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
+                    Save
+                  </button>
+                </li>
+              </ul>
+            </div>
           </>
         )}
         {viewerType === "user" && (
@@ -182,18 +265,22 @@ export default function EditorHeader({
             disabled={forking}
           >
             {forking ? <LoadingDots /> : <GitFork size="1rem" />}
-            Fork
+            <span className="hidden md:block">Fork</span>
           </button>
         )}
         {viewerType === "visitor" && (
           <>
             <a className="btn-primary btn" href="/login">
-              <GitFork size="1rem" />
-              Log in to fork
+              <span className="hidden md:block">
+                <GitFork size="1rem" />
+              </span>
+              Log in <span className="hidden md:block">to fork</span>
             </a>
-            <a className="btn" href="/signup">
-              Sign up
-            </a>
+            <div className="hidden md:block">
+              <a className="btn" href="/signup">
+                Sign up
+              </a>
+            </div>
           </>
         )}
       </div>
