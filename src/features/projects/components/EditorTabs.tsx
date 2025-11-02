@@ -51,12 +51,14 @@ export default function EditorTabs({
             aria-label={label}
             defaultChecked={label === "HTML"}
           />
-          <div className="tab-content h-[40svh]">
-            <CodePanel
-              value={value}
-              extensions={extensions}
-              onChange={(val) => setValue(val)}
-            />
+          <div className="tab-content">
+            <div className="h-[40svh]">
+              <CodePanel
+                value={value}
+                extensions={extensions}
+                onChange={(val) => setValue(val)}
+              />
+            </div>
           </div>
         </>
       ))}
