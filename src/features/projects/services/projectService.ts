@@ -1,5 +1,6 @@
 import { decode } from "base64-arraybuffer";
 
+import type { Fork } from "@/shared/types/fork.ts";
 import type { Project } from "@/shared/types/project.ts";
 import { supabase } from "@/supabaseClient.ts";
 
@@ -13,6 +14,18 @@ const fetchProject = async (projectId: string) => {
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
   return data as Project;
+};
+
+const fetchForkInfo = async (projectId: string) => {
+  const { data, error } = await supabase
+    .from("forks")
+    .select()
+    .eq("forked_to", projectId);
+
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("No data returned");
+
+  return data.length ? (data[0] as Fork) : null;
 };
 
 const toggleOwnedProjectVisibility = async (
@@ -159,4 +172,5 @@ export {
   updateOwnedProjectTitle,
   forkPublicProject,
   deleteOwnedProject,
+  fetchForkInfo,
 };

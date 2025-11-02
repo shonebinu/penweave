@@ -10,12 +10,14 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
 import { fetchProfile } from "@/features/users/services/usersService.ts";
+import type { Fork } from "@/shared/types/fork.ts";
 import type { Profile } from "@/shared/types/profile.ts";
 import type { SafeProject } from "@/shared/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {
   deleteOwnedProject,
+  fetchForkInfo,
   fetchProject,
   forkPublicProject,
   toggleOwnedProjectVisibility,
@@ -33,6 +35,7 @@ export function useProject(
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [authorProfile, setAuthorProfile] = useState<Profile | null>(null);
+  const [forkInfo, setForkInfo] = useState<Fork | null>(null);
   const [togglingVisibility, setTogglingVisibility] = useState(false);
   const [thumbnailUpdating, setThumbnailUpdating] = useState(false);
   const [forking, setForking] = useState(false);
@@ -54,8 +57,10 @@ export function useProject(
         }
 
         const profile = await fetchProfile(proj.user_id);
+        const forkInfo = await fetchForkInfo(proj.id);
 
         setAuthorProfile(profile);
+        setForkInfo(forkInfo);
         setProject({
           ...proj,
           html: proj.html ?? "",
@@ -210,5 +215,6 @@ export function useProject(
     forkProject,
     titleEditing,
     deleting,
+    forkInfo,
   };
 }

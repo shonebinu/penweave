@@ -41,6 +41,7 @@ export default function Editor() {
     titleEditing,
     deleting,
     forkProject,
+    forkInfo,
   } = useProject(session?.user?.id, projectId, authLoading);
 
   const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
@@ -73,6 +74,7 @@ export default function Editor() {
           userId: project.user_id,
           userName: authorProfile.display_name,
           userPhoto: authorProfile.avatar_url,
+          forkedFrom: forkInfo ? forkInfo.forked_from : null,
         }}
         onFormat={format}
         onSave={save}
