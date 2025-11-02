@@ -1,4 +1,7 @@
+import { GripHorizontal } from "lucide-react";
+
 import { useEffect } from "react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Navigate, useParams } from "react-router";
 
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
@@ -90,24 +93,29 @@ export default function Editor() {
         titleEditing={titleEditing}
         deleting={deleting}
       />
-      <main className="flex flex-1 flex-col">
-        <EditorTabs
-          htmlCode={project.html}
-          cssCode={project.css}
-          jsCode={project.js}
-          setHtmlCode={(val) => updateCode("html", val)}
-          setCssCode={(val) => updateCode("css", val)}
-          setJsCode={(val) => updateCode("js", val)}
-        />
-        <div className="flex-1">
+      <PanelGroup direction="vertical" className="flex flex-1 flex-col">
+        <Panel minSize={10}>
+          <EditorTabs
+            htmlCode={project.html}
+            cssCode={project.css}
+            jsCode={project.js}
+            setHtmlCode={(val) => updateCode("html", val)}
+            setCssCode={(val) => updateCode("css", val)}
+            setJsCode={(val) => updateCode("js", val)}
+          />
+        </Panel>
+        <PanelResizeHandle className="bg-base-200">
+          <GripHorizontal size="1rem" className="mx-auto" />
+        </PanelResizeHandle>
+        <Panel minSize={10} className="flex-1">
           <iframe
             ref={iframeRef}
             src={iframeSrc}
             className="h-full w-full"
             title="Project preview"
           />
-        </div>
-      </main>
+        </Panel>
+      </PanelGroup>
       {viewerType === "creator" && (
         <>
           <EditTitleModal

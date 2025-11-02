@@ -41,7 +41,7 @@ export default function EditorTabs({
   ];
 
   return (
-    <div className="tabs tabs-border">
+    <div className="tabs tabs-border h-full">
       {tabs.map(({ label, value, setValue, extensions }) => (
         <>
           <input
@@ -52,7 +52,7 @@ export default function EditorTabs({
             defaultChecked={label === "HTML"}
           />
           <div className="tab-content">
-            <div className="h-[40svh]">
+            <div className="h-full">
               <CodePanel
                 value={value}
                 extensions={extensions}

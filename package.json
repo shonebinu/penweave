@@ -26,6 +26,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
+    "react-resizable-panels": "^3.0.6",
     "react-router": "^7.9.1",
     "tailwindcss": "^4.1.13",
     "use-debounce": "^10.0.6"
