@@ -1,4 +1,4 @@
-import { GripHorizontal } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 
 import { useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
@@ -94,7 +94,7 @@ export default function Editor() {
         deleting={deleting}
       />
       <PanelGroup direction="vertical" className="flex flex-1 flex-col">
-        <Panel minSize={10}>
+        <Panel minSize={10} defaultSize={45}>
           <EditorTabs
             htmlCode={project.html}
             cssCode={project.css}
@@ -105,9 +105,9 @@ export default function Editor() {
           />
         </Panel>
         <PanelResizeHandle className="bg-base-200">
-          <GripHorizontal size="1rem" className="mx-auto" />
+          <Ellipsis size="1rem" className="mx-auto" />
         </PanelResizeHandle>
-        <Panel minSize={10} className="flex-1">
+        <Panel minSize={10} defaultSize={55} className="flex-1">
           <iframe
             ref={iframeRef}
             src={iframeSrc}

@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { css } from "@codemirror/lang-css";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
@@ -43,7 +45,7 @@ export default function EditorTabs({
   return (
     <div className="tabs tabs-border h-full">
       {tabs.map(({ label, value, setValue, extensions }) => (
-        <>
+        <Fragment key={label}>
           <input
             type="radio"
             name="editor-tabs"
@@ -60,7 +62,7 @@ export default function EditorTabs({
               />
             </div>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );
