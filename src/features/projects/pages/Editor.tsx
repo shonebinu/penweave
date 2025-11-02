@@ -104,7 +104,7 @@ export default function Editor() {
             setJsCode={(val) => updateCode("js", val)}
           />
         </Panel>
-        <PanelResizeHandle className="bg-base-200">
+        <PanelResizeHandle>
           <Ellipsis size="1rem" className="mx-auto" />
         </PanelResizeHandle>
         <Panel minSize={10} defaultSize={55} className="flex-1">
