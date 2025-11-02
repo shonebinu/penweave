@@ -2,7 +2,6 @@ import {
   GitFork,
   HardDriveUpload,
   Home,
-  Loader2,
   Lock,
   LockOpen,
   Pencil,
@@ -78,7 +77,7 @@ export default function EditorHeader({
                 disabled={titleEditing}
               >
                 {titleEditing ? (
-                  <Loader2 className="animate-spin" size="1rem" />
+                  <span className="loading loading-spinner loading-sm"></span>
                 ) : (
                   <Pencil size="1rem" />
                 )}
@@ -96,7 +95,7 @@ export default function EditorHeader({
                 disabled={togglingVisibility}
               >
                 {togglingVisibility ? (
-                  <Loader2 className="animate-spin" size="1rem" />
+                  <span className="loading loading-spinner loading-sm"></span>
                 ) : !projectInfo.isPrivate ? (
                   <LockOpen size="1rem" />
                 ) : (
@@ -111,7 +110,7 @@ export default function EditorHeader({
                 disabled={deleting}
               >
                 {deleting ? (
-                  <Loader2 className="animate-spin" size="1rem" />
+                  <span className="loading loading-spinner loading-sm"></span>
                 ) : (
                   <Trash2 size="1rem" />
                 )}
