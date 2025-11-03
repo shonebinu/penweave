@@ -1,4 +1,4 @@
-import LoadingDots from "@/shared/components/LoadingDots.tsx";
+import LoadingDots from "@/components/LoadingDots";
 
 export default function SubmitButton({
   loading,

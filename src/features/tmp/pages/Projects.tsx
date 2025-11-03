@@ -1,7 +1,7 @@
+import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
-import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
 
-import { useModal } from "../../../shared/hooks/useModal.ts";
+import { useModal } from "../../projects/hooks/useModal.ts";
 import CreateProjectModal from "../components/CreateProjectModal.tsx";
 import ProjectsCard from "../components/ProjectsCard.tsx";
 import ProjectsFilter from "../components/ProjectsFilter.tsx";

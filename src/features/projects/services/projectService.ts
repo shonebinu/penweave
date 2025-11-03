@@ -1,7 +1,7 @@
 import { decode } from "base64-arraybuffer";
 
-import type { Fork } from "@/shared/types/fork.ts";
-import type { Project } from "@/shared/types/project.ts";
+import type { Fork } from "@/features/projects/types/fork";
+import type { Project } from "@/features/projects/types/project";
 import { supabase } from "@/supabaseClient.ts";
 
 const fetchProject = async (projectId: string) => {

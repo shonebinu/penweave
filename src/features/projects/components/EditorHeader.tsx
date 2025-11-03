@@ -12,8 +12,8 @@ import {
 
 import { Link } from "react-router";
 
-import LoadingDots from "@/shared/components/LoadingDots.tsx";
-import Logo from "@/shared/components/Logo.tsx";
+import LoadingDots from "@/components/LoadingDots.tsx";
+import Logo from "@/components/Logo.tsx";
 
 import type { ViewerType } from "../pages/Editor.tsx";
 

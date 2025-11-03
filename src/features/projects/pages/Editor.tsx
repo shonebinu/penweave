@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Navigate, useParams } from "react-router";
 
+import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
-import { useModal } from "@/shared/hooks/useModal.ts";
-import LoadingScreen from "@/shared/pages/LoadingScreen.tsx";
+import { useModal } from "@/features/projects/hooks/useModal.ts";
 
 import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";

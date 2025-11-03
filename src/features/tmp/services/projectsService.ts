@@ -1,4 +1,4 @@
-import type { Project } from "@/shared/types/project.ts";
+import type { Project } from "@/features/projects/types/project";
 import { supabase } from "@/supabaseClient.ts";
 
 const DEFAULT_CODE = {

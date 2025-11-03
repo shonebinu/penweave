@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
-import LoadingDots from "@/shared/components/LoadingDots.tsx";
+import LoadingDots from "@/components/LoadingDots";
 
 export default function CreateProjectModal({
   isOpen,

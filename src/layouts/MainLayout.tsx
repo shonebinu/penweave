@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-import Logo from "@/shared/components/Logo.tsx";
+import Logo from "@/components/Logo.tsx";
 
 import NavMenu from "./main-layout/NavMenu.tsx";
 import UserMenu from "./main-layout/UserMenu.tsx";

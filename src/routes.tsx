@@ -11,7 +11,7 @@ import Projects from "@/features/tmp/pages/Projects.tsx";
 import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 
-import ProtectedRoute from "./ProtectedRoute.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <h1>Landing Page</h1> },

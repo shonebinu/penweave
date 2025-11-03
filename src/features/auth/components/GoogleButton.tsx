@@ -1,5 +1,5 @@
 import GoogleLogo from "@/assets/google.svg";
-import LoadingDots from "@/shared/components/LoadingDots.tsx";
+import LoadingDots from "@/components/LoadingDots.tsx";
 import { handleError } from "@/utils/error.ts";
 
 import { useAuth } from "../hooks/useAuth.ts";

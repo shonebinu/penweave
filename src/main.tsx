@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router";
 
 import AuthContextProvider from "@/features/auth/contexts/AuthContextProvider.tsx";
-import router from "@/router/routes.tsx";
+import router from "@/routes";
 
 import "./index.css";
 

@@ -1,4 +1,4 @@
-import type { Profile } from "@/shared/types/profile.ts";
+import type { Profile } from "@/features/users/types/profile";
 import { supabase } from "@/supabaseClient.ts";
 
 const upsertProfile = async (
