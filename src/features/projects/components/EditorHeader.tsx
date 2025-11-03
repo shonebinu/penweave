@@ -7,7 +7,6 @@ import {
   Menu,
   Pencil,
   Trash2,
-  UserRound,
 } from "lucide-react";
 
 import { Link } from "react-router";
@@ -15,7 +14,8 @@ import { Link } from "react-router";
 import LoadingDots from "@/components/LoadingDots.tsx";
 import Logo from "@/components/Logo.tsx";
 
-import type { ViewerType } from "../pages/Editor.tsx";
+import type { ViewerType } from "../types/types.ts";
+import EditorProjectInfo from "./EditorProjectInfo.tsx";
 
 export default function EditorHeader({
   viewerType,
@@ -119,37 +119,7 @@ export default function EditorHeader({
             </div>
           </div>
         )}
-        <div className="flex flex-col">
-          <p className="truncate font-medium">{projectInfo.title}</p>
-          <div className="flex items-center gap-2">
-            <div
-              className="tooltip tooltip-bottom"
-              data-tip="View creator's profile"
-            >
-              <Link
-                to={"/users/" + projectInfo.userId}
-                className="link label truncate text-sm"
-              >
-                <UserRound size=".9rem" />
-                {projectInfo.userName}
-              </Link>
-            </div>
-            {projectInfo.forkedFrom && (
-              <div
-                className="tooltip tooltip-bottom"
-                data-tip="View fork origin"
-              >
-                <Link
-                  to={"/projects/" + projectInfo.forkedFrom}
-                  className="label link truncate text-sm"
-                >
-                  <GitFork size=".9rem" />
-                  Forked from
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
+        <EditorProjectInfo projectInfo={projectInfo} />
       </div>
       <div className="flex gap-2">
         {viewerType === "creator" && (

@@ -14,8 +14,7 @@ import EditorHeader from "../components/EditorHeader.tsx";
 import EditorTabs from "../components/EditorTabs.tsx";
 import { useProject } from "../hooks/useProject.ts";
 import { useProjectRenderer } from "../hooks/useProjectRenderer.ts";
-
-export type ViewerType = "creator" | "user" | "visitor";
+import type { ViewerType } from "../types/types.ts";
 
 export default function Editor() {
   const { projectId } = useParams();

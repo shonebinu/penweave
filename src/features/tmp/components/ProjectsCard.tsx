@@ -3,7 +3,7 @@ import { Lock, Trash2 } from "lucide-react";
 
 import { Link } from "react-router";
 
-import type { Project } from "@/features/projects/types/project";
+import type { Project } from "@/types/project";
 
 export default function ProjectsCard({ project }: { project: Project }) {
   return (

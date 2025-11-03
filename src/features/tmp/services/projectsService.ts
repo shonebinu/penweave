@@ -1,5 +1,5 @@
-import type { Project } from "@/features/projects/types/project";
 import { supabase } from "@/supabaseClient.ts";
+import type { Project } from "@/types/project";
 
 const DEFAULT_CODE = {
   html: `<button>Click Here</button>`,

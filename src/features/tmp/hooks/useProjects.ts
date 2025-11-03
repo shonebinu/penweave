@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
-import type { Project } from "@/features/projects/types/project.ts";
+import type { Project } from "@/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {

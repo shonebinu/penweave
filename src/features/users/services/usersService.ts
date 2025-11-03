@@ -1,5 +1,5 @@
-import type { Profile } from "@/features/users/types/profile";
 import { supabase } from "@/supabaseClient.ts";
+import type { Profile } from "@/types/profile";
 
 const upsertProfile = async (
   user_id: string,

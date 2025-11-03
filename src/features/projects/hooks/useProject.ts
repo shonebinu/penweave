@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
-import type { Fork } from "@/features/projects/types/fork.ts";
-import type { SafeProject } from "@/features/projects/types/project.ts";
 import { fetchProfile } from "@/features/users/services/usersService.ts";
-import type { Profile } from "@/features/users/types/profile.ts";
+import type { Fork } from "@/types/fork.ts";
+import type { Profile } from "@/types/profile.ts";
+import type { SafeProject } from "@/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {
