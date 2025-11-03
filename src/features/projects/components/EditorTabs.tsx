@@ -3,8 +3,9 @@ import { Fragment } from "react";
 import { css } from "@codemirror/lang-css";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
-
-import CodePanel from "./CodePanel.tsx";
+import { EditorView } from "@codemirror/view";
+import { nordInit } from "@uiw/codemirror-theme-nord";
+import CodeMirror from "@uiw/react-codemirror";
 
 export default function EditorTabs({
   htmlCode,
@@ -26,25 +27,25 @@ export default function EditorTabs({
       label: "HTML",
       value: htmlCode,
       setValue: setHtmlCode,
-      extensions: [html()],
+      langExtension: html(),
     },
     {
       label: "CSS",
       value: cssCode,
       setValue: setCssCode,
-      extensions: [css()],
+      langExtension: css(),
     },
     {
       label: "JS",
       value: jsCode,
       setValue: setJsCode,
-      extensions: [javascript()],
+      langExtension: javascript(),
     },
   ];
 
   return (
     <div className="tabs tabs-border h-full">
-      {tabs.map(({ label, value, setValue, extensions }) => (
+      {tabs.map(({ label, value, setValue, langExtension }) => (
         <Fragment key={label}>
           <input
             type="radio"
@@ -55,10 +56,11 @@ export default function EditorTabs({
           />
           <div className="tab-content">
             <div className="h-full">
-              <CodePanel
+              <CodeMirror
                 value={value}
-                extensions={extensions}
+                extensions={[EditorView.lineWrapping, langExtension]}
                 onChange={(val) => setValue(val)}
+                theme={nordInit({ settings: { fontSize: "1rem" } })}
               />
             </div>
           </div>

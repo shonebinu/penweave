@@ -122,7 +122,7 @@ const forkPublicProject = async (newUserId: string, projectId: string) => {
 const updateOwnedProjectThumbnail = async (
   userId: string,
   projectId: string,
-  base64DataUrl: string,
+  base64Data: string,
 ) => {
   const { data: projectData, error: fetchError } = await supabase
     .from("projects")
@@ -145,7 +145,7 @@ const updateOwnedProjectThumbnail = async (
 
   const { error: uploadError } = await supabase.storage
     .from("thumbnails")
-    .upload(filePath, decode(base64DataUrl.split("base64,")[1]), {
+    .upload(filePath, decode(base64Data), {
       contentType: "image/jpeg",
     });
 

@@ -11,10 +11,10 @@ import {
 
 import { Link } from "react-router";
 
-import LoadingDots from "@/components/LoadingDots.tsx";
 import Logo from "@/components/Logo.tsx";
 
 import type { ViewerType } from "../types/types.ts";
+import ActionButton from "./ActionButton.tsx";
 import EditorProjectInfo from "./EditorProjectInfo.tsx";
 
 export default function EditorHeader({
@@ -68,55 +68,29 @@ export default function EditorHeader({
         <Logo />
         {viewerType === "creator" && (
           <div className="join hidden md:flex">
-            <div
-              className="tooltip tooltip-bottom"
-              data-tip="Edit project title"
-            >
-              <button
-                className="btn-square btn hover:btn-success join-item btn-soft"
-                onClick={onEditTitle}
-                disabled={titleEditing}
-              >
-                {titleEditing ? (
-                  <span className="loading loading-spinner loading-sm"></span>
-                ) : (
-                  <Pencil size="1rem" />
-                )}
-              </button>
-            </div>
-            <div
-              className="tooltip tooltip-bottom"
-              data-tip={
+            <ActionButton
+              className="btn-square btn join-item btn-soft hover:btn-success"
+              onClick={onEditTitle}
+              loading={titleEditing}
+              icon={Pencil}
+              tooltip="Edit project title"
+            />
+            <ActionButton
+              className="btn-square btn join-item btn-soft hover:btn-warning"
+              onClick={toggleVisibility}
+              loading={togglingVisibility}
+              icon={projectInfo.isPrivate ? Lock : LockOpen}
+              tooltip={
                 "Make project " + (projectInfo.isPrivate ? "public" : "private")
               }
-            >
-              <button
-                className="btn-square btn hover:btn-warning join-item btn-soft"
-                onClick={toggleVisibility}
-                disabled={togglingVisibility}
-              >
-                {togglingVisibility ? (
-                  <span className="loading loading-spinner loading-sm"></span>
-                ) : !projectInfo.isPrivate ? (
-                  <LockOpen size="1rem" />
-                ) : (
-                  <Lock size="1rem" />
-                )}
-              </button>
-            </div>
-            <div className="tooltip tooltip-bottom" data-tip="Delete project">
-              <button
-                className="btn-square btn hover:btn-error join-item btn-soft"
-                onClick={onDeleteProject}
-                disabled={deleting}
-              >
-                {deleting ? (
-                  <span className="loading loading-spinner loading-sm"></span>
-                ) : (
-                  <Trash2 size="1rem" />
-                )}
-              </button>
-            </div>
+            />
+            <ActionButton
+              className="btn-square btn join-item btn-soft hover:btn-error"
+              onClick={onDeleteProject}
+              loading={deleting}
+              icon={Trash2}
+              tooltip="Delete project"
+            />
           </div>
         )}
         <EditorProjectInfo projectInfo={projectInfo} />
@@ -125,25 +99,24 @@ export default function EditorHeader({
         {viewerType === "creator" && (
           <>
             <div className="hidden gap-2 md:flex">
-              <button
+              <ActionButton
                 className="btn"
                 onClick={updateThumbnail}
-                disabled={thumbnailUpdating}
+                loading={thumbnailUpdating}
               >
-                {thumbnailUpdating && <LoadingDots />}
                 Update thumbnail
-              </button>
+              </ActionButton>
               <button className="btn" onClick={onFormat}>
                 Format Code
               </button>
-              <button
+              <ActionButton
                 className="btn btn-primary w-25"
                 onClick={onSave}
-                disabled={saving}
+                loading={saving}
+                icon={HardDriveUpload}
               >
-                {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
                 Save
-              </button>
+              </ActionButton>
             </div>
             <div className="dropdown dropdown-end md:hidden">
               <div
@@ -158,85 +131,70 @@ export default function EditorHeader({
                 className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
               >
                 <li>
-                  <button
-                    onClick={onEditTitle}
-                    disabled={titleEditing}
+                  <ActionButton
                     className="text-success"
+                    onClick={onEditTitle}
+                    loading={titleEditing}
+                    icon={Pencil}
                   >
-                    {titleEditing ? (
-                      <span className="loading loading-spinner loading-sm"></span>
-                    ) : (
-                      <Pencil size="1rem" />
-                    )}
                     Edit Title
-                  </button>
+                  </ActionButton>
                 </li>
                 <li>
-                  <button
-                    onClick={toggleVisibility}
-                    disabled={togglingVisibility}
+                  <ActionButton
                     className="text-warning"
+                    onClick={toggleVisibility}
+                    loading={togglingVisibility}
+                    icon={projectInfo.isPrivate ? Lock : LockOpen}
                   >
-                    {togglingVisibility ? (
-                      <span className="loading loading-spinner loading-sm"></span>
-                    ) : !projectInfo.isPrivate ? (
-                      <LockOpen size="1rem" />
-                    ) : (
-                      <Lock size="1rem" />
-                    )}
                     Make {projectInfo.isPrivate ? "Public" : "Private"}
-                  </button>
+                  </ActionButton>
                 </li>
                 <li>
-                  <button
+                  <ActionButton
                     className="text-error"
                     onClick={onDeleteProject}
-                    disabled={deleting}
+                    loading={deleting}
+                    icon={Trash2}
                   >
-                    {deleting ? (
-                      <span className="loading loading-spinner loading-sm"></span>
-                    ) : (
-                      <Trash2 size="1rem" />
-                    )}
                     Delete Project
-                  </button>
+                  </ActionButton>
                 </li>
                 <li>
-                  <button
+                  <ActionButton
                     onClick={updateThumbnail}
-                    disabled={thumbnailUpdating}
+                    loading={thumbnailUpdating}
                   >
-                    {thumbnailUpdating && <LoadingDots />}
                     Update thumbnail
-                  </button>
+                  </ActionButton>
                 </li>
                 <li>
                   <button onClick={onFormat}>Format Code</button>
                 </li>
                 <li>
-                  <button
+                  <ActionButton
                     className="text-primary"
                     onClick={onSave}
-                    disabled={saving}
+                    loading={saving}
+                    icon={HardDriveUpload}
                   >
-                    {saving ? <LoadingDots /> : <HardDriveUpload size="1rem" />}
                     Save
-                  </button>
+                  </ActionButton>
                 </li>
               </ul>
             </div>
           </>
         )}
         {viewerType === "user" && (
-          <button
+          <ActionButton
             className="btn btn-primary"
-            title="Fork the project to make your changes."
             onClick={onForkProject}
-            disabled={forking}
+            loading={forking}
+            icon={GitFork}
+            title="Fork the project to make your changes."
           >
-            {forking ? <LoadingDots /> : <GitFork size="1rem" />}
             <span className="hidden md:block">Fork</span>
-          </button>
+          </ActionButton>
         )}
         {viewerType === "visitor" && (
           <>

@@ -183,12 +183,15 @@ export function useProject(
   };
 
   const updateThumbnail = async (captureScreenshot: () => Promise<string>) => {
-    if (!userId || !projectId) return;
+    if (!userId || !projectId || !project) return;
 
     try {
       setThumbnailUpdating(true);
       const dataUrl = await captureScreenshot();
-      await updateOwnedProjectThumbnail(userId, projectId, dataUrl);
+      const base64Data = dataUrl.split("base64,")[1];
+      if (!base64Data) throw new Error("The editor is empty");
+
+      await updateOwnedProjectThumbnail(userId, projectId, base64Data);
       toast.success("Thumbnail updated!");
     } catch (err) {
       handleError(err, "Thumbnail update failed");
