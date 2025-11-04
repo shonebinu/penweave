@@ -98,9 +98,9 @@ export default function EditorHeader({
   };
 
   return (
-    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-3">
+    <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-2 lg:px-3">
       {/* left side */}
-      <div className="flex items-center gap-2 md:gap-3">
+      <div className="flex items-center gap-2 lg:gap-3">
         {viewerType !== "visitor" && (
           <Link to="/projects" className="btn btn-soft btn-square btn-sm">
             <Home size="1rem" />
@@ -108,7 +108,7 @@ export default function EditorHeader({
         )}
         <Logo />
         {viewerType === "creator" && (
-          <div className="join hidden md:flex">
+          <div className="join hidden lg:flex">
             {creatorActions.desktopLeft.map((props, i) => (
               <ActionButton key={i} {...props} />
             ))}
@@ -121,14 +121,14 @@ export default function EditorHeader({
       <div className="flex gap-2">
         {viewerType === "creator" && (
           <>
-            <div className="hidden gap-2 md:flex">
+            <div className="hidden gap-2 lg:flex">
               {creatorActions.desktopRight.map(({ children, ...props }, i) => (
                 <ActionButton key={i} {...props}>
                   {children}
                 </ActionButton>
               ))}
             </div>
-            <div className="dropdown dropdown-end md:hidden">
+            <div className="dropdown dropdown-end lg:hidden">
               <div
                 tabIndex={0}
                 role="button"
@@ -160,25 +160,25 @@ export default function EditorHeader({
 
         {viewerType === "user" && (
           <ActionButton
-            className="btn btn-primary"
+            className="btn btn-primary max-lg:btn-square"
             onClick={onForkProject}
             loading={forking}
             icon={GitFork}
-            title="Fork the project to make your changes."
+            title="Fork your own copy of this project."
           >
-            <span className="hidden md:block">Fork</span>
+            <span className="hidden lg:block">Fork</span>
           </ActionButton>
         )}
 
         {viewerType === "visitor" && (
           <>
-            <a className="btn-primary btn" href="/login">
-              <span className="hidden md:block">
+            <a className="btn-primary btn max-lg:btn-square" href="/login">
+              <span className="hidden lg:block">
                 <GitFork size="1rem" />
               </span>
-              Log in <span className="hidden md:block">to fork</span>
+              Log in <span className="hidden lg:block">to fork</span>
             </a>
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <a className="btn" href="/signup">
                 Sign up
               </a>

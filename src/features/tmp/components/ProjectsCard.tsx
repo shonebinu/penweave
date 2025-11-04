@@ -23,13 +23,13 @@ export default function ProjectsCard({ project }: { project: Project }) {
       <div className="card-body pt-3">
         <div className="flex items-center justify-between">
           <Link to={"/projects/" + project.id}>
-            <h2 className="card-title truncate">{project.title}</h2>
+            <h2 className="card-title line-clamp-1">{project.title}</h2>
           </Link>
           <span className="badge badge-soft">
             {!project.is_private ? "Public" : "Private"}
           </span>
         </div>
-        <span className="label">
+        <span className="text-base-content/60 text-sm">
           Updated{" "}
           {formatDistanceToNowStrict(new Date(project.updated_at), {
             addSuffix: true,

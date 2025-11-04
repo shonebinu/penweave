@@ -10,31 +10,31 @@ export default function EditorProjectInfo({
   projectInfo: ProjectInfo;
 }) {
   return (
-    <div className="flex flex-col">
-      <p className="truncate font-medium">{projectInfo.title}</p>
+    <div className="mr-2 flex flex-col">
+      <p className="line-clamp-1 font-medium">
+        {projectInfo.title + "some long title"}
+      </p>
       <div className="flex items-center gap-2">
-        <div
-          className="tooltip tooltip-bottom"
-          data-tip="View creator's profile"
+        <Link
+          to={"/users/" + projectInfo.userId}
+          className="link text-base-content/60 flex items-center gap-0.5 text-sm"
+          title="View creator's profile"
         >
-          <Link
-            to={"/users/" + projectInfo.userId}
-            className="link label truncate text-sm"
-          >
-            <UserRound size=".9rem" />
-            {projectInfo.userName}
-          </Link>
-        </div>
+          <UserRound size=".9rem" className="shrink-0" />
+          <p className="line-clamp-1">
+            {projectInfo.userName + "some long name"}
+          </p>
+        </Link>
+
         {projectInfo.forkedFrom && (
-          <div className="tooltip tooltip-bottom" data-tip="View fork origin">
-            <Link
-              to={"/projects/" + projectInfo.forkedFrom}
-              className="label link truncate text-sm"
-            >
-              <GitFork size=".9rem" />
-              Forked from
-            </Link>
-          </div>
+          <Link
+            to={"/projects/" + projectInfo.forkedFrom}
+            className="link text-base-content/60 flex items-center gap-0.5 text-sm"
+            title="View fork origin"
+          >
+            <GitFork size=".9rem" className="shrink-0" />
+            <p className="whitespace-nowrap">Forked from</p>
+          </Link>
         )}
       </div>
     </div>

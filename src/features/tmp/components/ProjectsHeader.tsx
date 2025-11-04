@@ -12,7 +12,9 @@ export default function ProjectsHeader({
           <BriefcaseBusiness />
           My Works
         </h1>
-        <p className="label text-sm">Create, manage and run your projects.</p>
+        <p className="text-base-content/60 text-sm">
+          Create, manage and run your projects.
+        </p>
       </div>
       <button className="btn btn-primary" onClick={onNewProject}>
         <Plus size="1rem" />
