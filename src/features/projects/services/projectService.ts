@@ -4,6 +4,50 @@ import { supabase } from "@/supabaseClient.ts";
 import type { Fork } from "@/types/fork";
 import type { Project } from "@/types/project";
 
+const DEFAULT_CODE = {
+  html: `<button>Click Here</button>`,
+  css: `body { 
+  background-color: white; 
+} 
+
+button { 
+  color: green;
+}`,
+  js: `document.querySelector("button").onclick = () => alert("Hello world!");`,
+};
+
+const createProject = async (
+  user_id: string,
+  title: string,
+  html: string = DEFAULT_CODE.html,
+  css: string = DEFAULT_CODE.css,
+  js: string = DEFAULT_CODE.js,
+) => {
+  const { data, error } = await supabase
+    .from("projects")
+    .insert({ user_id, title, html, css, js })
+    .select("id")
+    .single();
+
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Error creating a new project");
+
+  return data;
+};
+
+const fetchAllProjectsByUser = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("projects")
+    .select()
+    .eq("user_id", user_id)
+    .order("updated_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("No data returned");
+
+  return data as Project[];
+};
+
 const fetchProject = async (projectId: string) => {
   const { data, error } = await supabase
     .from("projects")
@@ -93,19 +137,13 @@ const forkPublicProject = async (newUserId: string, projectId: string) => {
   if (!project) throw new Error("Project not found");
   if (project.is_private) throw new Error("Cannot fork a private project");
 
-  const { data: newProject, error: insertError } = await supabase
-    .from("projects")
-    .insert({
-      user_id: newUserId,
-      title: `${project.title} (fork)`,
-      html: project.html,
-      css: project.css,
-      js: project.js,
-    })
-    .select("id")
-    .single();
-
-  if (insertError) throw new Error(insertError.message);
+  const newProject = await createProject(
+    newUserId,
+    `${project.title} (fork)`,
+    project.html,
+    project.css,
+    project.js,
+  );
 
   const newProjectId = newProject.id;
 
@@ -173,4 +211,6 @@ export {
   forkPublicProject,
   deleteOwnedProject,
   fetchForkInfo,
+  fetchAllProjectsByUser,
+  createProject,
 };

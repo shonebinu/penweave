@@ -1,21 +1,28 @@
-import { Search } from "lucide-react";
+import { BriefcaseBusiness, Plus, Search } from "lucide-react";
 
-export default function ProjectsFilter() {
+export default function ProjectsHeader() {
   return (
     <>
-      <div className="mb-5 flex justify-between gap-3">
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            <BriefcaseBusiness />
+            Projects
+          </h1>
+          <p className="text-base-content/60 text-sm">
+            Create, manage and run your projects.
+          </p>
+        </div>
+        <button className="btn btn-primary">
+          <Plus size="1rem" />
+          New Project
+        </button>
+      </div>
+      <div className="mb-5">
         <label className="input">
           <Search size=".8rem" className="opacity-50" />
           <input type="search" required placeholder="Search" />
         </label>
-
-        <select className="select w-40">
-          <option disabled>Sort by</option>
-          <option>Recently Updated</option>
-          <option>Recently Created</option>
-          <option>Most Forked</option>
-          <option>Most Liked</option>
-        </select>
       </div>
 
       <form className="mb-5 flex flex-wrap gap-1">
