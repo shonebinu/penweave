@@ -1,7 +1,7 @@
-import { BriefcaseBusiness, Earth, LogOut } from "lucide-react";
+import { BriefcaseBusiness, Earth, LogOut, Menu } from "lucide-react";
 
 import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
 
 import Logo from "@/components/Logo.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
@@ -10,7 +10,7 @@ import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
 
 const navItems = [
-  { icon: BriefcaseBusiness, label: "My Works", href: "/projects" },
+  { icon: BriefcaseBusiness, label: "Projects", href: "/projects" },
   { icon: Earth, label: "Explore", href: "/explore" },
 ];
 
@@ -45,17 +45,45 @@ export default function MainLayout() {
       .toUpperCase() || "N/A";
   return (
     <>
-      <header className="flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-3">
-        <Logo includeName />
+      <header className="flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-10">
+        <div className="flex gap-2">
+          <div className="dropdown">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-square md:hidden"
+            >
+              <Menu size="1rem" />
+            </div>
+            <ul
+              tabIndex={-1}
+              className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            >
+              {navItems.map(({ icon: Icon, label, href }) => (
+                <li key={label}>
+                  <Link to={href}>
+                    <Icon size="1rem" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="flex-none">
+          <Logo showNameOnLargeOnly />
+        </div>
+
+        <div className="hidden md:block">
           <ul className="menu menu-horizontal gap-1 px-1">
             {navItems.map(({ icon: Icon, label, href }) => (
               <li key={label}>
-                <Link to={href}>
+                <NavLink
+                  to={href}
+                  className={({ isActive }) => (isActive ? "menu-active" : "")}
+                >
                   <Icon size="1rem" />
                   {label}
-                </Link>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -100,7 +128,7 @@ export default function MainLayout() {
         </div>
       </header>
 
-      <main className="mx-28 py-5">
+      <main className="mx-4 py-5 sm:mx-8 md:mx-16 lg:mx-32">
         <Outlet />
       </main>
     </>

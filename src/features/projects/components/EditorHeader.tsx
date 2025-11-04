@@ -160,25 +160,25 @@ export default function EditorHeader({
 
         {viewerType === "user" && (
           <ActionButton
-            className="btn btn-primary max-lg:btn-square"
+            className="btn btn-primary max-sm:btn-square"
             onClick={onForkProject}
             loading={forking}
             icon={GitFork}
             title="Fork your own copy of this project."
           >
-            <span className="hidden lg:block">Fork</span>
+            <span className="hidden sm:block">Fork</span>
           </ActionButton>
         )}
 
         {viewerType === "visitor" && (
           <>
-            <a className="btn-primary btn max-lg:btn-square" href="/login">
-              <span className="hidden lg:block">
+            <a className="btn-primary btn" href="/login">
+              <span className="hidden md:block">
                 <GitFork size="1rem" />
               </span>
-              Log in <span className="hidden lg:block">to fork</span>
+              Log in <span className="hidden md:block">to fork</span>
             </a>
-            <div className="hidden lg:block">
+            <div className="hidden md:block">
               <a className="btn" href="/signup">
                 Sign up
               </a>

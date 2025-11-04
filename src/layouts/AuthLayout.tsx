@@ -6,7 +6,7 @@ export default function AuthLayout() {
   return (
     <>
       <header className="flex h-[var(--header-height)] items-center border-b px-6">
-        <Logo includeName={true} />
+        <Logo includeName />
       </header>
       <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center px-2">
         <Outlet />
