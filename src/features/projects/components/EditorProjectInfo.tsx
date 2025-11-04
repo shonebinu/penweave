@@ -11,9 +11,7 @@ export default function EditorProjectInfo({
 }) {
   return (
     <div className="mr-2 flex flex-col">
-      <p className="line-clamp-1 font-medium">
-        {projectInfo.title + "some long title"}
-      </p>
+      <p className="line-clamp-1 font-medium">{projectInfo.title}</p>
       <div className="flex items-center gap-2">
         <Link
           to={"/users/" + projectInfo.userId}
@@ -21,9 +19,7 @@ export default function EditorProjectInfo({
           title="View creator's profile"
         >
           <UserRound size=".9rem" className="shrink-0" />
-          <p className="line-clamp-1">
-            {projectInfo.userName + "some long name"}
-          </p>
+          <p className="line-clamp-1">{projectInfo.userName}</p>
         </Link>
 
         {projectInfo.forkedFrom && (
