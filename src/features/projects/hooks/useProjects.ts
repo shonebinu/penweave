@@ -7,7 +7,7 @@ import { handleError } from "@/utils/error.ts";
 import {
   createProject,
   deleteOwnedProject,
-  fetchUserProjectsWithForks,
+  fetchUserProjectsWithForkInfo,
   toggleOwnedProjectVisibility,
   updateOwnedProjectTitle,
 } from "../services/projectsService.ts";
@@ -30,7 +30,7 @@ export function useProjects(userId?: string) {
 
     const loadProjects = async () => {
       try {
-        const projs = await fetchUserProjectsWithForks(userId);
+        const projs = await fetchUserProjectsWithForkInfo(userId);
         setProjects(projs);
       } catch (err) {
         handleError(err, "Project loading failed");

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";

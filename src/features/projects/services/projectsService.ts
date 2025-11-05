@@ -37,7 +37,7 @@ const createProject = async (
   return data;
 };
 
-const fetchUserProjectsWithForks = async (user_id: string) => {
+const fetchUserProjectsWithForkInfo = async (user_id: string) => {
   const { data, error } = await supabase
     .from("projects")
     .select(
@@ -225,6 +225,6 @@ export {
   forkPublicProject,
   deleteOwnedProject,
   fetchForkInfo,
-  fetchUserProjectsWithForks,
+  fetchUserProjectsWithForkInfo,
   createProject,
 };
