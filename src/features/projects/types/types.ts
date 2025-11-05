@@ -1,6 +1,8 @@
+import type { Project } from "@/types/project.ts";
+
 export type ViewerType = "creator" | "user" | "visitor";
 
-export type ProjectInfo = {
+export type EditorHeaderProjectInfo = {
   title: string;
   isPrivate: boolean;
   userId: string;
@@ -8,3 +10,5 @@ export type ProjectInfo = {
   userPhoto: string | null;
   forkedFrom: string | null;
 };
+
+export type ProjectWithForkInfo = Project & { forkedFrom?: string | null };

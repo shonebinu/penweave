@@ -1,100 +1,101 @@
-import { formatDistanceToNowStrict } from "date-fns";
-import { GitFork, Lock, Pencil, Trash2 } from "lucide-react";
-
-import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { useState } from "react";
 
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
-import type { Project } from "@/types/project.ts";
-import { handleError } from "@/utils/error.ts";
 
+import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
+import EditTitleModal from "../components/EditTitleModal.tsx";
+import ProjectCard from "../components/ProjectCard.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
-import { fetchAllProjectsByUser } from "../services/projectService.ts";
+import { useModal } from "../hooks/useModal.ts";
+import { useProjects } from "../hooks/useProjects.ts";
+import type { ProjectWithForkInfo } from "../types/types.ts";
 
 export default function Projects() {
   /* use nuqs for filters, use pagination or infinite scroll | pagination by daisy ui */
   const { session } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [projects, setProjects] = useState<Project[] | null>(null);
+  const {
+    projects,
+    loading,
+    toggleVisibility,
+    editTitle,
+    deleteProject,
+    titleEditingId,
+    togglingVisibilityId,
+    deletingId,
+    creatingProject,
+    createNewProject,
+  } = useProjects(session?.user.id);
 
-  useEffect(() => {
-    if (!session?.user.id) return;
+  const [activeProject, setActiveProject] =
+    useState<ProjectWithForkInfo | null>(null); // track which project is being edited or deleted
 
-    const loadProjects = async () => {
-      try {
-        const projs = await fetchAllProjectsByUser(session.user.id);
-        setProjects(projs);
-      } catch (err) {
-        handleError(err, "Project loading failed");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProjects();
-  }, [session]);
+  const editTitleModal = useModal();
+  const deleteProjectModal = useModal();
 
   if (loading) return <LoadingScreen />;
 
   return (
     <>
-      <ProjectsHeader />
+      <ProjectsHeader
+        createNewProject={createNewProject}
+        creatingProject={creatingProject}
+      />
       <div className="grid grid-cols-4 gap-8">
         {!projects || projects.length === 0 ? (
-          <div className="mx-auto">
+          <div className="col-span-full">
             No projects yet. Create one to get started!
           </div>
         ) : (
           projects.map((project) => (
-            <div className="card bg-base-100 shadow" key={project.id}>
-              <figure className="bg-base-300 flex h-48 w-full items-center justify-center overflow-hidden">
-                {project.thumbnail_url ? (
-                  <img
-                    src={project.thumbnail_url}
-                    alt="Project thumbnail"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-sm">No Thumbnail</span>
-                )}
-              </figure>
-
-              <div className="card-body pt-3">
-                <div>
-                  <Link to={"/projects/" + project.id}>
-                    <h2 className="card-title line-clamp-1">{project.title}</h2>
-                  </Link>
-                  <Link
-                    to="/to"
-                    className="link text-base-content/60 flex items-center gap-1"
-                  >
-                    <GitFork size=".9rem" className="shrink-0" />
-                    Forked from
-                  </Link>
-                </div>
-                <div>
-                  Updated{" "}
-                  {formatDistanceToNowStrict(new Date(project.updated_at), {
-                    addSuffix: true,
-                  })}
-                </div>
-                <div className="card-actions justify-end">
-                  <button className="btn btn-square btn-soft">
-                    <Pencil size="1rem" />
-                  </button>
-                  <button className="btn btn-square btn-soft">
-                    <Lock size="1rem" />
-                  </button>
-                  <button className="btn btn-square btn-soft">
-                    <Trash2 size="1rem" />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onEditTitle={() => {
+                setActiveProject(project);
+                editTitleModal.open();
+              }}
+              onDeleteProject={() => {
+                setActiveProject(project);
+                deleteProjectModal.open();
+              }}
+              toggleVisibility={async () => {
+                await toggleVisibility(project.id, project.is_private);
+              }}
+              togglingVisibility={togglingVisibilityId === project.id}
+              titleEditing={titleEditingId === project.id}
+              deleting={deletingId === project.id}
+            />
           ))
         )}
       </div>
+      {activeProject && (
+        <>
+          <EditTitleModal
+            oldTitle={activeProject.title}
+            isOpen={editTitleModal.isOpen}
+            onClose={() => {
+              setActiveProject(null);
+              editTitleModal.close();
+            }}
+            onSubmit={async (newTitle) => {
+              await editTitle(activeProject.id, newTitle);
+              editTitleModal.close();
+            }}
+          />
+          <DeleteProjectModal
+            isOpen={deleteProjectModal.isOpen}
+            onClose={() => {
+              setActiveProject(null);
+              deleteProjectModal.close();
+            }}
+            onSubmit={async () => {
+              await deleteProject(activeProject.id);
+              deleteProjectModal.close();
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

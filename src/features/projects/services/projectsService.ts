@@ -4,6 +4,8 @@ import { supabase } from "@/supabaseClient.ts";
 import type { Fork } from "@/types/fork";
 import type { Project } from "@/types/project";
 
+import type { ProjectWithForkInfo } from "../types/types.ts";
+
 const DEFAULT_CODE = {
   html: `<button>Click Here</button>`,
   css: `body { 
@@ -35,17 +37,29 @@ const createProject = async (
   return data;
 };
 
-const fetchAllProjectsByUser = async (user_id: string) => {
+const fetchUserProjectsWithForks = async (user_id: string) => {
   const { data, error } = await supabase
     .from("projects")
-    .select()
+    .select(
+      `
+      *,
+      forks:forks_forked_to_fkey (
+        forked_from
+      )
+    `,
+    )
     .eq("user_id", user_id)
     .order("updated_at", { ascending: false });
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
 
-  return data as Project[];
+  const projectsWithForkInfo = data.map(({ forks, ...proj }) => ({
+    ...proj,
+    forkedFrom: forks[0]?.forked_from ?? null,
+  }));
+
+  return projectsWithForkInfo as ProjectWithForkInfo[];
 };
 
 const fetchProject = async (projectId: string) => {
@@ -211,6 +225,6 @@ export {
   forkPublicProject,
   deleteOwnedProject,
   fetchForkInfo,
-  fetchAllProjectsByUser,
+  fetchUserProjectsWithForks,
   createProject,
 };

@@ -24,7 +24,7 @@ import {
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
   updateOwnedProjectTitle,
-} from "../services/projectService.ts";
+} from "../services/projectsService.ts";
 
 export function useProject(
   userId?: string,
@@ -89,7 +89,7 @@ export function useProject(
         `Project is now ${project.is_private ? "public" : "private"}.`,
       );
     } catch (err) {
-      handleError(err, "Visibility toggle failed");
+      handleError(err, "Visibility toggling failed");
     } finally {
       setTogglingVisibility(false);
     }

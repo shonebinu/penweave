@@ -2,12 +2,12 @@ import { GitFork, UserRound } from "lucide-react";
 
 import { Link } from "react-router";
 
-import type { ProjectInfo } from "../types/types.ts";
+import type { EditorHeaderProjectInfo } from "../types/types.ts";
 
 export default function EditorProjectInfo({
   projectInfo,
 }: {
-  projectInfo: ProjectInfo;
+  projectInfo: EditorHeaderProjectInfo;
 }) {
   return (
     <div className="mr-2 flex flex-col">

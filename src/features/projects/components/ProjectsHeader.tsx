@@ -1,6 +1,14 @@
 import { BriefcaseBusiness, Plus, Search } from "lucide-react";
 
-export default function ProjectsHeader() {
+import ActionButton from "./ActionButton.tsx";
+
+export default function ProjectsHeader({
+  createNewProject,
+  creatingProject,
+}: {
+  createNewProject: () => void;
+  creatingProject: boolean;
+}) {
   return (
     <>
       <div className="mb-3 flex items-center justify-between">
@@ -13,10 +21,14 @@ export default function ProjectsHeader() {
             Create, manage and run your projects.
           </p>
         </div>
-        <button className="btn btn-primary">
-          <Plus size="1rem" />
+        <ActionButton
+          onClick={createNewProject}
+          loading={creatingProject}
+          icon={Plus}
+          className="btn btn-primary"
+        >
           New Project
-        </button>
+        </ActionButton>
       </div>
       <div className="mb-5">
         <label className="input">

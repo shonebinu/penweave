@@ -31,10 +31,12 @@ create trigger handle_updated_at before update on profiles
 
 create table forks (
   id uuid primary key default gen_random_uuid(),
-  forked_from uuid references projects(id) on delete set null,
-  forked_to uuid references projects(id) on delete set null,
+  forked_from uuid,
+  forked_to uuid,
   created_at timestamptz not null default now(),
-  check (forked_from IS DISTINCT FROM forked_to)
+  check (forked_from IS DISTINCT FROM forked_to),
+  constraint forks_forked_from_fkey foreign key (forked_from) references projects(id) on delete set null,
+  constraint forks_forked_to_fkey foreign key (forked_to) references projects(id) on delete set null
 );
 
 -- supabase storage

@@ -13,7 +13,7 @@ import { Link } from "react-router";
 
 import Logo from "@/components/Logo.tsx";
 
-import type { ProjectInfo, ViewerType } from "../types/types.ts";
+import type { EditorHeaderProjectInfo, ViewerType } from "../types/types.ts";
 import ActionButton from "./ActionButton.tsx";
 import EditorProjectInfo from "./EditorProjectInfo.tsx";
 
@@ -35,7 +35,7 @@ export default function EditorHeader({
   deleting,
 }: {
   viewerType: ViewerType;
-  projectInfo: ProjectInfo;
+  projectInfo: EditorHeaderProjectInfo;
   onFormat: () => void;
   onSave: () => void;
   saving: boolean;
