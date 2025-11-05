@@ -7,13 +7,11 @@ import type { Project } from "@/types/project";
 import type { ProjectWithForkInfo } from "../types/types.ts";
 
 const DEFAULT_CODE = {
-  html: `<button>Click Here</button>`,
+  html: `<!-- Everything inside <body></body> goes here.-->
+
+<button>Click Here</button>`,
   css: `body { 
   background-color: white; 
-} 
-
-button { 
-  color: green;
 }`,
   js: `document.querySelector("button").onclick = () => alert("Hello world!");`,
 };
@@ -37,8 +35,15 @@ const createProject = async (
   return data;
 };
 
-const fetchUserProjectsWithForkInfo = async (user_id: string) => {
-  const { data, error } = await supabase
+const fetchUserProjectsWithForkInfo = async (
+  user_id: string,
+  page: number,
+  pageSize: number,
+) => {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error, count } = await supabase
     .from("projects")
     .select(
       `
@@ -47,9 +52,11 @@ const fetchUserProjectsWithForkInfo = async (user_id: string) => {
         forked_from
       )
     `,
+      { count: "exact" },
     )
     .eq("user_id", user_id)
-    .order("updated_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
@@ -59,7 +66,10 @@ const fetchUserProjectsWithForkInfo = async (user_id: string) => {
     forkedFrom: forks[0]?.forked_from ?? null,
   }));
 
-  return projectsWithForkInfo as ProjectWithForkInfo[];
+  return {
+    projects: projectsWithForkInfo as ProjectWithForkInfo[],
+    totalProjectsCount: count ?? 0,
+  };
 };
 
 const fetchProject = async (projectId: string) => {
@@ -193,12 +203,12 @@ const updateOwnedProjectThumbnail = async (
     if (deleteError) throw new Error(deleteError.message);
   }
 
-  const filePath = `${userId}/${projectId}-${Date.now()}.jpg`;
+  const filePath = `${userId}/${projectId}-${Date.now()}.webp`;
 
   const { error: uploadError } = await supabase.storage
     .from("thumbnails")
     .upload(filePath, decode(base64Data), {
-      contentType: "image/jpeg",
+      contentType: "image/webp",
     });
 
   if (uploadError) throw new Error(uploadError.message);

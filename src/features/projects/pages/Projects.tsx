@@ -13,8 +13,12 @@ import { useProjects } from "../hooks/useProjects.ts";
 import type { ProjectWithForkInfo } from "../types/types.ts";
 
 export default function Projects() {
-  /* use nuqs for filters, use pagination or infinite scroll | pagination by daisy ui */
   const { session } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = 8;
+
   const {
     projects,
     loading,
@@ -26,7 +30,8 @@ export default function Projects() {
     deletingId,
     creatingProject,
     createNewProject,
-  } = useProjects(session?.user.id);
+    totalProjectsCount,
+  } = useProjects(session?.user.id, page, pageSize);
 
   const [activeProject, setActiveProject] =
     useState<ProjectWithForkInfo | null>(null); // track which project is being edited or deleted
@@ -35,6 +40,8 @@ export default function Projects() {
   const deleteProjectModal = useModal();
 
   if (loading) return <LoadingScreen />;
+
+  const totalPages = Math.ceil(totalProjectsCount / pageSize);
 
   return (
     <>
@@ -70,6 +77,33 @@ export default function Projects() {
           ))
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <div className="join">
+            <button
+              className="join-item btn"
+              disabled={page === 1}
+              onClick={() => setSearchParams({ page: String(page - 1) })}
+            >
+              «
+            </button>
+
+            <span className="join-item btn btn-disabled">
+              Page {page} of {totalPages}
+            </span>
+
+            <button
+              className="join-item btn"
+              disabled={page === totalPages}
+              onClick={() => setSearchParams({ page: String(page + 1) })}
+            >
+              »
+            </button>
+          </div>
+        </div>
+      )}
+
       {activeProject && (
         <>
           <EditTitleModal

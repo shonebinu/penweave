@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/modern-screenshot@4.6.6/dist/index.min.js"></script>
+    <script src="https://unpkg.com/@zumer/snapdom/dist/snapdom.min.js"></script>
   </head>
   <body style="margin: 0; height: 100vh; overflow: hidden">
     <iframe frameborder="0" style="width: 100%; height: 100%"></iframe>
@@ -49,14 +49,14 @@
         }
 
         if (type === "screenshot") {
-          modernScreenshot
-            .domToJpeg(iframe.contentDocument.body)
-            .then((dataUrl) =>
+          snapdom
+            .toWebp(iframe.contentDocument.body)
+            .then((img) => {
               respond(source, origin, "screenshot:response", {
                 status: "success",
-                dataUrl,
-              }),
-            )
+                dataUrl: img.src,
+              });
+            })
             .catch((err) =>
               respond(source, origin, "screenshot:response", {
                 status: "error",

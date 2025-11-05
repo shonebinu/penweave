@@ -55,7 +55,7 @@ export default function ProjectCard({
             <img
               src={project.thumbnail_url}
               alt="Project thumbnail"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-left-top"
             />
           ) : (
             <span className="text-sm">No Thumbnail</span>

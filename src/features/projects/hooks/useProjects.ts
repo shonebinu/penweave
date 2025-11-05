@@ -13,9 +13,11 @@ import {
 } from "../services/projectsService.ts";
 import type { ProjectWithForkInfo } from "../types/types.ts";
 
-export function useProjects(userId?: string) {
+export function useProjects(userId?: string, page = 1, pageSize = 8) {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectWithForkInfo[] | null>(null);
+  const [totalProjectsCount, SetTotalProjectsCount] = useState(0);
+
   const [creatingProject, setCreatingProject] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingVisibilityId, setTogglingVisibilityId] = useState<
@@ -30,8 +32,11 @@ export function useProjects(userId?: string) {
 
     const loadProjects = async () => {
       try {
-        const projs = await fetchUserProjectsWithForkInfo(userId);
+        setLoading(true);
+        const { projects: projs, totalProjectsCount: total } =
+          await fetchUserProjectsWithForkInfo(userId, page, pageSize);
         setProjects(projs);
+        SetTotalProjectsCount(total);
       } catch (err) {
         handleError(err, "Project loading failed");
       } finally {
@@ -40,7 +45,7 @@ export function useProjects(userId?: string) {
     };
 
     loadProjects();
-  }, [userId]);
+  }, [userId, page, pageSize]);
 
   const createNewProject = async () => {
     if (!userId) return;
@@ -125,6 +130,7 @@ export function useProjects(userId?: string) {
     createNewProject,
     toggleVisibility,
     editTitle,
+    totalProjectsCount,
     deleteProject,
     titleEditingId,
     togglingVisibilityId,
