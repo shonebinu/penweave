@@ -49,22 +49,25 @@ export default function ProjectCard({
 
   return (
     <div className="card bg-base-100 shadow" key={project.id}>
-      <figure className="bg-base-200 flex h-48 w-full items-center justify-center overflow-hidden">
-        {project.thumbnail_url ? (
-          <img
-            src={project.thumbnail_url}
-            alt="Project thumbnail"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <span className="text-sm">No Thumbnail</span>
-        )}
-      </figure>
-
+      <Link to={"/projects/" + project.id}>
+        <figure className="bg-base-200 flex h-48 w-full items-center justify-center overflow-hidden">
+          {project.thumbnail_url ? (
+            <img
+              src={project.thumbnail_url}
+              alt="Project thumbnail"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="text-sm">No Thumbnail</span>
+          )}
+        </figure>
+      </Link>
       <div className="card-body">
         <div>
           <Link to={"/projects/" + project.id}>
-            <h2 className="card-title line-clamp-1">{project.title}</h2>
+            <h2 className="card-title line-clamp-1" title={project.title}>
+              {project.title}
+            </h2>
           </Link>
           {project.forkedFrom && (
             <Link
