@@ -1,6 +1,6 @@
 import { Ellipsis } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Navigate, useParams } from "react-router";
 
@@ -21,8 +21,6 @@ export default function Editor() {
 
   // editor is outside protected route
   const { session, loading: authLoading } = useAuth();
-
-  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const editTitleModal = useModal();
   const deleteProjectModal = useModal();
@@ -48,12 +46,16 @@ export default function Editor() {
     forkInfo,
   } = useProject(session?.user?.id, projectId, authLoading);
 
-  const { iframeRef, iframeSrc, sendToIframe, captureScreenshot } =
-    useProjectRenderer();
+  const {
+    iframeRef,
+    iframeSrc,
+    sendToIframe,
+    captureScreenshot,
+    iframeLoaded,
+  } = useProjectRenderer();
 
   useEffect(() => {
     if (!project || !iframeLoaded) return;
-
     sendToIframe(project.html, project.css, project.js);
   }, [project, sendToIframe, iframeLoaded]);
 
@@ -112,7 +114,6 @@ export default function Editor() {
           <iframe
             ref={iframeRef}
             src={iframeSrc}
-            onLoad={() => setIframeLoaded(true)}
             className="h-full w-full"
             title="Project preview"
           />

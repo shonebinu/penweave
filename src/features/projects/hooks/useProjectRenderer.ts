@@ -1,6 +1,6 @@
 import { useDebouncedCallback } from "use-debounce";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 const IFRAME_SRC = import.meta.env.VITE_CODE_RUNNER_URL;
@@ -8,15 +8,33 @@ const SCREENSHOT_TIMEOUT = 10000;
 const getOrigin = (url: string) => new URL(url).origin;
 
 export function useProjectRenderer() {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+
   const screenshotPromiseRef = useRef<{
     resolve: (dataUrl: string) => void;
     reject: (error: Error) => void;
   } | null>(null);
 
+  const iframeNodeRef = useRef<HTMLIFrameElement | null>(null);
+
+  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
+    if (node !== null) {
+      iframeNodeRef.current = node;
+
+      const handleLoad = () => setIframeLoaded(true);
+
+      node.addEventListener("load", handleLoad);
+
+      return () => {
+        node.removeEventListener("load", handleLoad);
+        iframeNodeRef.current = null;
+      };
+    }
+  }, []);
+
   const sendToIframe = useDebouncedCallback(
     (html: string, css: string, js: string) => {
-      iframeRef.current?.contentWindow?.postMessage(
+      iframeNodeRef.current?.contentWindow?.postMessage(
         {
           type: "render",
           payload: { html, css, js },
@@ -33,8 +51,6 @@ export function useProjectRenderer() {
     }
 
     return new Promise((resolve, reject) => {
-      screenshotPromiseRef.current = { resolve, reject };
-
       const timeoutId = setTimeout(() => {
         screenshotPromiseRef.current = null;
         reject(new Error("Screenshot request timed out"));
@@ -57,7 +73,7 @@ export function useProjectRenderer() {
         reject: wrappedReject,
       };
 
-      iframeRef.current?.contentWindow?.postMessage(
+      iframeNodeRef.current?.contentWindow?.postMessage(
         { type: "screenshot" },
         IFRAME_SRC,
       );
@@ -97,5 +113,6 @@ export function useProjectRenderer() {
     iframeSrc: IFRAME_SRC,
     sendToIframe,
     captureScreenshot,
+    iframeLoaded,
   };
 }
