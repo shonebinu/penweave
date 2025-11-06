@@ -1,14 +1,21 @@
 import { BriefcaseBusiness, Plus, Search } from "lucide-react";
 
+import { useState } from "react";
+
 import ActionButton from "./ActionButton.tsx";
 
 export default function ProjectsHeader({
   createNewProject,
   creatingProject,
+  searchQuery,
+  setSearchQuery,
 }: {
   createNewProject: () => void;
   creatingProject: boolean;
+  searchQuery: string;
+  setSearchQuery: (newQuery: string) => void;
 }) {
+  const [query, setQuery] = useState(searchQuery);
   return (
     <>
       <div className="mb-3 flex items-center justify-between">
@@ -31,41 +38,25 @@ export default function ProjectsHeader({
         </ActionButton>
       </div>
       <div className="mb-5">
-        <label className="input">
-          <Search size=".8rem" className="opacity-50" />
-          <input type="search" required placeholder="Search" />
-        </label>
+        <div className="join">
+          <label className="input join-item">
+            <Search size=".8rem" className="opacity-50" />
+            <input
+              type="search"
+              required
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") setSearchQuery(query);
+              }}
+            />
+          </label>
+          <button className="btn" onClick={() => setSearchQuery(query)}>
+            Search
+          </button>
+        </div>
       </div>
-
-      <form className="mb-5 flex flex-wrap gap-1">
-        <input
-          className="btn"
-          type="checkbox"
-          name="visibility"
-          aria-label="Public"
-        />
-        <input
-          className="btn"
-          type="checkbox"
-          name="visibility"
-          aria-label="Private"
-        />
-
-        <input
-          className="btn"
-          type="checkbox"
-          name="type"
-          aria-label="Forked"
-        />
-        <input
-          className="btn"
-          type="checkbox"
-          name="type"
-          aria-label="Originals"
-        />
-
-        <input className="btn btn-square" type="reset" value="×" />
-      </form>
     </>
   );
 }

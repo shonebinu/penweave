@@ -4,7 +4,7 @@ import { css } from "@codemirror/lang-css";
 import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView } from "@codemirror/view";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { nordInit } from "@uiw/codemirror-theme-nord";
 import CodeMirror from "@uiw/react-codemirror";
 
 export default function EditorTabs({
@@ -60,7 +60,12 @@ export default function EditorTabs({
                 value={value}
                 extensions={[EditorView.lineWrapping, langExtension]}
                 onChange={(val) => setValue(val)}
-                theme={vscodeDark}
+                theme={nordInit({
+                  settings: {
+                    fontSize: "1rem",
+                    fontFamily: "var(--default-mono-font-family)",
+                  },
+                })}
               />
             </div>
           </div>

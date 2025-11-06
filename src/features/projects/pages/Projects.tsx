@@ -6,6 +6,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 
 import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
+import Pagination from "../components/Pagination.tsx";
 import ProjectCard from "../components/ProjectCard.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
 import { useModal } from "../hooks/useModal.ts";
@@ -19,6 +20,8 @@ export default function Projects() {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = 8;
 
+  const searchQuery = searchParams.get("search") || "";
+
   const {
     projects,
     loading,
@@ -31,7 +34,7 @@ export default function Projects() {
     creatingProject,
     createNewProject,
     totalProjectsCount,
-  } = useProjects(session?.user.id, page, pageSize);
+  } = useProjects(session?.user.id, page, pageSize, searchQuery);
 
   const [activeProject, setActiveProject] =
     useState<ProjectWithForkInfo | null>(null); // track which project is being edited or deleted
@@ -48,6 +51,10 @@ export default function Projects() {
       <ProjectsHeader
         createNewProject={createNewProject}
         creatingProject={creatingProject}
+        searchQuery={searchQuery}
+        setSearchQuery={(newQuery) => {
+          setSearchParams({ search: newQuery });
+        }}
       />
       <div className="grid grid-cols-4 gap-8">
         {!projects || projects.length === 0 ? (
@@ -77,33 +84,13 @@ export default function Projects() {
           ))
         )}
       </div>
-
-      {totalPages > 1 && (
-        <div className="mt-8 flex justify-center">
-          <div className="join">
-            <button
-              className="join-item btn"
-              disabled={page === 1}
-              onClick={() => setSearchParams({ page: String(page - 1) })}
-            >
-              «
-            </button>
-
-            <span className="join-item btn btn-disabled">
-              Page {page} of {totalPages}
-            </span>
-
-            <button
-              className="join-item btn"
-              disabled={page === totalPages}
-              onClick={() => setSearchParams({ page: String(page + 1) })}
-            >
-              »
-            </button>
-          </div>
-        </div>
-      )}
-
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        setPage={(newPage) => {
+          setSearchParams({ page: String(newPage) });
+        }}
+      />
       {activeProject && (
         <>
           <EditTitleModal

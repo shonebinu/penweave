@@ -13,7 +13,12 @@ import {
 } from "../services/projectsService.ts";
 import type { ProjectWithForkInfo } from "../types/types.ts";
 
-export function useProjects(userId?: string, page = 1, pageSize = 8) {
+export function useProjects(
+  userId?: string,
+  page = 1,
+  pageSize = 8,
+  searchQuery = "",
+) {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectWithForkInfo[] | null>(null);
   const [totalProjectsCount, SetTotalProjectsCount] = useState(0);
@@ -34,7 +39,12 @@ export function useProjects(userId?: string, page = 1, pageSize = 8) {
       try {
         setLoading(true);
         const { projects: projs, totalProjectsCount: total } =
-          await fetchUserProjectsWithForkInfo(userId, page, pageSize);
+          await fetchUserProjectsWithForkInfo(
+            userId,
+            page,
+            pageSize,
+            searchQuery,
+          );
         setProjects(projs);
         SetTotalProjectsCount(total);
       } catch (err) {
@@ -45,7 +55,7 @@ export function useProjects(userId?: string, page = 1, pageSize = 8) {
     };
 
     loadProjects();
-  }, [userId, page, pageSize]);
+  }, [userId, page, pageSize, searchQuery]);
 
   const createNewProject = async () => {
     if (!userId) return;

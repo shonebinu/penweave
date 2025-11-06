@@ -39,6 +39,7 @@ const fetchUserProjectsWithForkInfo = async (
   user_id: string,
   page: number,
   pageSize: number,
+  searchQuery: string,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -55,6 +56,7 @@ const fetchUserProjectsWithForkInfo = async (
       { count: "exact" },
     )
     .eq("user_id", user_id)
+    .ilike("title", `%${searchQuery}%`)
     .order("created_at", { ascending: false })
     .range(from, to);
 
