@@ -7,7 +7,6 @@ For testing purpose run runner.html with python http server
 - [ ] make mobile responsive
 - [ ] Implement Row Level Security (RLS) for tables and storage (only one profile for a user)
 - [ ] make sense of project preview hook
-- [ ] modern screenshot black corner fix
 - [ ] Change Supabase email template
 - [ ] Landing page (reference: [codecatch.net](https://codecatch.net/))
 - [ ] notifications system using database triggers?
