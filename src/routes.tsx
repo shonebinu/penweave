@@ -12,6 +12,8 @@ import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Explore from "./features/projects/pages/Explore.tsx";
+import Users from "./features/users/pages/Users.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <h1>Landing Page</h1> },
@@ -23,8 +25,10 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           { path: "projects", element: <Projects /> },
-          { path: "explore", element: <h1>Explore</h1> },
-          { path: "users/:userId", element: <h1>Users</h1> },
+          { path: "explore", element: <Explore /> },
+          //  { path: "following", element: <h1>Following</h1> },
+          //  { path: "bookmarks", element: <h1>Bookmarks</h1> },
+          { path: "users/:userId", element: <Users /> },
         ],
       },
     ],

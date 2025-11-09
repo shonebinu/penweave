@@ -15,7 +15,7 @@ export default function EditorProjectInfo({
       <div className="flex items-center gap-2">
         <Link
           to={"/users/" + projectInfo.userId}
-          className="link text-base-content/60 flex items-center gap-0.5 text-sm"
+          className="link text-base-content/80 flex items-center gap-0.5 text-sm"
           title="View creator's profile"
         >
           <UserRound size=".9rem" className="shrink-0" />
@@ -25,7 +25,7 @@ export default function EditorProjectInfo({
         {projectInfo.forkedFrom && (
           <Link
             to={"/projects/" + projectInfo.forkedFrom}
-            className="link text-base-content/60 flex items-center gap-0.5 text-sm"
+            className="link text-base-content/80 flex items-center gap-0.5 text-sm"
             title="View fork origin"
           >
             <GitFork size=".9rem" className="shrink-0" />

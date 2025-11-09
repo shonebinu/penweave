@@ -48,7 +48,7 @@ ON storage.objects
 FOR INSERT
 TO authenticated
 WITH CHECK (
-  bucket_id = 'thumbnails');
+  bucket_id = 'thumbnails');const { data, error, count } = await supabase .from("projects") .select( ` *, forks:forks_forked_to_fkey ( forked_from ), profiles:projects_user_id_fkey ( display_name ) `, { count: "exact" }, ) .eq("is_private", false) .ilike("title", `%${searchQuery}%`) .order("created_at", { ascending: false }) .range(from, to);
 
 CREATE POLICY "Users can view own files"
 ON storage.objects

@@ -12,3 +12,7 @@ export type EditorHeaderProjectInfo = {
 };
 
 export type ProjectWithForkInfo = Project & { forkedFrom?: string | null };
+
+export type ExploreProject = ProjectWithForkInfo & {
+  authorDisplayName?: string | null;
+};

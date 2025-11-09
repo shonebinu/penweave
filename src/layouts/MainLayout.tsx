@@ -1,20 +1,15 @@
-import { BriefcaseBusiness, Earth, LogOut, Menu } from "lucide-react";
+import { BriefcaseBusiness, Earth, LogOut, Menu, User2 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router";
 
+import LoadingScreen from "@/components/LoadingScreen.tsx";
 import Logo from "@/components/Logo.tsx";
+import UserAvatar from "@/components/UserAvatar.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import { fetchProfile } from "@/features/users/services/usersService.ts";
 import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
-
-const navItems = [
-  { icon: BriefcaseBusiness, label: "Projects", href: "/projects" },
-  { icon: Earth, label: "Explore", href: "/explore" },
-];
-
-const menuItems = [{ icon: LogOut, label: "Logout", href: "/logout" }];
 
 export default function MainLayout() {
   const { session } = useAuth();
@@ -36,16 +31,23 @@ export default function MainLayout() {
     loadProfile();
   }, [session]);
 
-  const userInitials =
-    profile?.display_name
-      ?.split(" ")
-      .map((word: string) => word[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase() || "N/A";
+  const navItems = [
+    { icon: BriefcaseBusiness, label: "Projects", href: "/projects" },
+    { icon: Earth, label: "Explore", href: "/explore" },
+    //    { icon: Rss, label: "Following", href: "/following" },
+    //   { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
+  ];
+
+  const menuItems = [
+    { icon: User2, label: "Profile", href: "/users/" + session?.user.id },
+    { icon: LogOut, label: "Logout", href: "/logout" },
+  ];
+
+  if (!profile) return <LoadingScreen />;
+
   return (
     <>
-      <header className="flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-10">
+      <header className="grid h-[var(--header-height)] grid-cols-2 items-center border-b px-2 md:grid-cols-3 md:px-10">
         <div className="flex gap-2">
           <div className="dropdown">
             <div
@@ -73,7 +75,7 @@ export default function MainLayout() {
           <Logo showNameOnLargeOnly />
         </div>
 
-        <div className="hidden md:block">
+        <div className="mx-auto hidden md:block">
           <ul className="menu menu-horizontal gap-1 px-1">
             {navItems.map(({ icon: Icon, label, href }) => (
               <li key={label}>
@@ -89,25 +91,12 @@ export default function MainLayout() {
           </ul>
         </div>
 
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  referrerPolicy="no-referrer"
-                  alt="user avatar"
-                />
-              ) : (
-                <div className="bg-neutral text-neutral-content flex h-full items-center justify-center">
-                  <span>{userInitials}</span>
-                </div>
-              )}
-            </div>
+        <div className="dropdown dropdown-end ml-auto">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+            <UserAvatar
+              avatarUrl={profile.avatar_url || undefined}
+              displayName={profile.display_name}
+            />
           </div>
           <ul
             tabIndex={0}
@@ -118,9 +107,6 @@ export default function MainLayout() {
                 <Link to={href}>
                   <Icon size="1rem" />
                   {label}
-                  {label === "Notifications" && (
-                    <div className="badge badge-primary badge-xs">New</div>
-                  )}
                 </Link>
               </li>
             ))}

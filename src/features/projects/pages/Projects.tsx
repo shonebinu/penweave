@@ -7,7 +7,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
 import Pagination from "../components/Pagination.tsx";
-import ProjectCard from "../components/ProjectCard.tsx";
+import ProjectsCard from "../components/ProjectsCard.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
 import { useModal } from "../hooks/useModal.ts";
 import { useProjects } from "../hooks/useProjects.ts";
@@ -56,14 +56,14 @@ export default function Projects() {
           setSearchParams({ search: newQuery });
         }}
       />
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!projects || projects.length === 0 ? (
           <div className="col-span-full">
             No projects yet. Create one to get started!
           </div>
         ) : (
           projects.map((project) => (
-            <ProjectCard
+            <ProjectsCard
               key={project.id}
               project={project}
               onEditTitle={() => {

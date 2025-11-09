@@ -5,8 +5,9 @@ import { Link } from "react-router";
 
 import type { ProjectWithForkInfo } from "../types/types.ts";
 import ActionButton from "./ActionButton.tsx";
+import CopyProjectLinkButton from "./CopyProjectLinkButton.tsx";
 
-export default function ProjectCard({
+export default function ProjectsCard({
   project,
   onEditTitle,
   onDeleteProject,
@@ -49,9 +50,12 @@ export default function ProjectCard({
   ];
 
   return (
-    <div className="card bg-base-100 shadow" key={project.id}>
-      <Link to={"/projects/" + project.id}>
-        <figure className="bg-base-200 flex h-48 w-full items-center justify-center overflow-hidden">
+    <div className="card bg-base-100 shadow">
+      <figure className="bg-base-200 h-48 overflow-hidden">
+        <Link
+          to={"/projects/" + project.id}
+          className="flex h-full w-full items-center justify-center"
+        >
           {project.thumbnail_url ? (
             <img
               src={project.thumbnail_url}
@@ -61,8 +65,8 @@ export default function ProjectCard({
           ) : (
             <span className="text-sm">No Thumbnail</span>
           )}
-        </figure>
-      </Link>
+        </Link>
+      </figure>
       <div className="card-body">
         <div>
           <Link to={"/projects/" + project.id}>
@@ -73,24 +77,28 @@ export default function ProjectCard({
           {project.forkedFrom && (
             <Link
               to={project.forkedFrom}
-              className="link text-base-content/60 flex items-center gap-1"
+              className="link text-base-content/80 flex items-center gap-1"
             >
               <GitFork size=".9rem" className="shrink-0" />
               Forked from
             </Link>
           )}
         </div>
-        <div>
+        <div className="text-base-content/80 text-xs">
           Updated{" "}
           {formatDistanceToNowStrict(new Date(project.updated_at), {
             addSuffix: true,
           })}
         </div>
-        <div className="card-actions mt-auto justify-end">
-          <div className="join">
-            {projectActions.map((props, i) => (
-              <ActionButton key={i} {...props} />
-            ))}
+        <div className="card-actions mt-auto">
+          <CopyProjectLinkButton projectId={project.id} />
+
+          <div className="ml-auto">
+            <div className="join">
+              {projectActions.map((props, i) => (
+                <ActionButton key={i} {...props} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

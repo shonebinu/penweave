@@ -4,7 +4,7 @@ import { supabase } from "@/supabaseClient.ts";
 import type { Fork } from "@/types/fork";
 import type { Project } from "@/types/project";
 
-import type { ProjectWithForkInfo } from "../types/types.ts";
+import type { ExploreProject, ProjectWithForkInfo } from "../types/types.ts";
 
 const DEFAULT_CODE = {
   html: `<!-- Everything inside <body></body> goes here.-->
@@ -40,11 +40,12 @@ const fetchUserProjectsWithForkInfo = async (
   page: number,
   pageSize: number,
   searchQuery: string,
+  publicOnly = false,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const { data, error, count } = await supabase
+  const query = supabase
     .from("projects")
     .select(
       `
@@ -55,10 +56,16 @@ const fetchUserProjectsWithForkInfo = async (
     `,
       { count: "exact" },
     )
-    .eq("user_id", user_id)
+    .eq("user_id", user_id);
+
+  if (publicOnly) query.eq("is_private", false);
+
+  query
     .ilike("title", `%${searchQuery}%`)
     .order("created_at", { ascending: false })
     .range(from, to);
+
+  const { data, error, count } = await query;
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
@@ -228,6 +235,54 @@ const updateOwnedProjectThumbnail = async (
   if (updateError) throw new Error(updateError.message);
 };
 
+const fetchExploreProjects = async (
+  page: number,
+  pageSize: number,
+  searchQuery: string,
+) => {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const {
+    data: projects,
+    error,
+    count,
+  } = await supabase
+    .from("projects")
+    .select(
+      `
+    *,
+    forks!forks_forked_to_fkey ( forked_from )
+  `,
+      { count: "exact" },
+    )
+    .eq("is_private", false)
+    .ilike("title", `%${searchQuery}%`)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) throw new Error(error.message);
+
+  const userIds = projects.map((p) => p.user_id);
+
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("user_id, display_name")
+    .in("user_id", userIds);
+
+  const exploreProjects = projects.map(({ forks, ...proj }) => ({
+    ...proj,
+    forkedFrom: forks[0]?.forked_from ?? null,
+    authorDisplayName:
+      profiles?.find((pr) => pr.user_id === proj.user_id)?.display_name ?? null,
+  }));
+
+  return {
+    projects: exploreProjects as ExploreProject[],
+    totalProjectsCount: count ?? 0,
+  };
+};
+
 export {
   fetchProject,
   updateOwnedProjectCode,
@@ -239,4 +294,5 @@ export {
   fetchForkInfo,
   fetchUserProjectsWithForkInfo,
   createProject,
+  fetchExploreProjects,
 };
