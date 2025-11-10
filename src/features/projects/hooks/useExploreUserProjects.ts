@@ -7,10 +7,9 @@ import {
   forkPublicProject,
 } from "@/features/projects/services/projectsService.ts";
 import type { ProjectWithForkInfo } from "@/features/projects/types/types.ts";
+import { fetchProfile } from "@/features/users/services/usersService.ts";
 import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
-
-import { fetchProfile } from "../services/usersService.ts";
 
 export function useExploreUsersProjects(
   userId?: string,

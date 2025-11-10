@@ -41,8 +41,8 @@ export default function MainLayout() {
   const navItems = [
     { icon: BriefcaseBusiness, label: "Projects", href: "/projects" },
     { icon: Earth, label: "Explore", href: "/explore" },
-    //    { icon: Rss, label: "Following", href: "/following" },
-    //   { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
+    //  { icon: Rss, label: "Following", href: "/following" },
+    //  { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
   ];
 
   const menuItems = [

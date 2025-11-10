@@ -18,7 +18,7 @@ export default function ProjectsHeader({
   const [query, setQuery] = useState(searchQuery);
   return (
     <>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold">
             <BriefcaseBusiness />

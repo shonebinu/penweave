@@ -9,8 +9,8 @@ import VerifyEmail from "@/features/auth/pages/VerifyEmail.tsx";
 import Editor from "@/features/projects/pages/Editor.tsx";
 import Explore from "@/features/projects/pages/Explore.tsx";
 import Projects from "@/features/projects/pages/Projects.tsx";
+import Users from "@/features/projects/pages/Users.tsx";
 import Settings from "@/features/users/pages/Settings.tsx";
-import Users from "@/features/users/pages/Users.tsx";
 import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
         children: [
           { path: "projects", element: <Projects /> },
           { path: "explore", element: <Explore /> },
-          //  { path: "following", element: <h1>Following</h1> },
-          //  { path: "bookmarks", element: <h1>Bookmarks</h1> },
+          //   { path: "following", element: <h1>Following</h1> },
+          //   { path: "bookmarks", element: <h1>Bookmarks</h1> },
           { path: "settings", element: <Settings /> },
           { path: "users/:userId", element: <Users /> },
         ],
