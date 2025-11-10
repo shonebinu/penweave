@@ -42,7 +42,7 @@ export default function Users() {
       </div>
       <div className="mt-3 flex flex-col items-center justify-center">
         <div className="flex items-center gap-1">
-          <h2 className="text-xl">{profile.display_name}</h2>
+          <h2 className="text-xl font-bold">{profile.display_name}</h2>
           {profile.user_id === session?.user.id && (
             <span className="badge badge-soft">You</span>
           )}
@@ -51,7 +51,7 @@ export default function Users() {
           Joined on: {format(new Date(profile.created_at), "dd MMM yyyy")}
         </p>
       </div>
-      <div className="mt-7 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!projects || projects.length === 0 ? (
           <div className="col-span-full">
             User doesn't have any public projects.

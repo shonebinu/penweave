@@ -13,6 +13,7 @@ const DEFAULT_CODE = {
   css: `body { 
   background-color: white; 
 }`,
+
   js: `document.querySelector("button").onclick = () => alert("Hello world!");`,
 };
 

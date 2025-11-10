@@ -1,4 +1,11 @@
-import { BriefcaseBusiness, Earth, LogOut, Menu, User2 } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Earth,
+  LogOut,
+  Menu,
+  Settings,
+  User2,
+} from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router";
@@ -40,6 +47,7 @@ export default function MainLayout() {
 
   const menuItems = [
     { icon: User2, label: "Profile", href: "/users/" + session?.user.id },
+    { icon: Settings, label: "Settings", href: "/settings" },
     { icon: LogOut, label: "Logout", href: "/logout" },
   ];
 
