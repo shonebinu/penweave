@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthContextProvider>
       <RouterProvider router={router} />
-      <Toaster position="bottom-right" />
+      <Toaster position="top-center" />
     </AuthContextProvider>
   </StrictMode>,
 );

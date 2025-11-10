@@ -20,7 +20,7 @@ export default function AuthCard({
           className="mb-1 h-10 w-10"
         />
         <h2 className="text-xl font-bold">{title}</h2>
-        <p>{message}</p>
+        <p className="text-base-content/80">{message}</p>
         {children}
       </div>
     </div>

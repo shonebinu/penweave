@@ -37,6 +37,7 @@ export default function Settings() {
     if (!session) return;
     setIsSubmitting(true);
     try {
+      if (!displayName.trim()) throw new Error("Display name can't be empty.");
       await upsertProfile(session.user.id, displayName.trim());
       toast.success("Display name changed successfully.");
     } catch (err) {

@@ -14,16 +14,20 @@ export default function UserAvatar({
       .toUpperCase() || "N/A";
 
   return (
-    <div className="avatar">
-      <div className="w-full rounded-full">
-        {avatarUrl ? (
-          <img src={avatarUrl} referrerPolicy="no-referrer" alt="user avatar" />
-        ) : (
-          <div className="bg-neutral text-neutral-content flex h-full items-center justify-center">
-            <span>{userInitials}</span>
-          </div>
-        )}
-      </div>
+    <div className="avatar avatar-placeholder w-24">
+      {avatarUrl ? (
+        <div className="w-full rounded-full">
+          <img
+            src={avatarUrl}
+            referrerPolicy="no-referrer"
+            alt="User avatar image"
+          />
+        </div>
+      ) : (
+        <div className="bg-neutral text-neutral-content w-full rounded-full">
+          <span className="font-bold">{userInitials}</span>
+        </div>
+      )}
     </div>
   );
 }

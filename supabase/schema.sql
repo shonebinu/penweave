@@ -1,6 +1,7 @@
 create extension if not exists moddatetime schema extensions;
 
--- tables
+-- TABLES
+-- projects
 create table projects (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
@@ -18,6 +19,35 @@ create table projects (
 create trigger handle_updated_at before update on projects
   for each row execute procedure moddatetime(updated_at);
 
+alter table projects enable row level security;
+
+create policy "Public can read non-private projects"
+on projects
+for select
+using (is_private = false);
+
+create policy "Authors can read their own private projects"
+on projects
+for select
+using (auth.uid() = user_id);
+
+create policy "Authors can insert their own projects"
+on projects
+for insert
+with check (auth.uid() = user_id);
+
+create policy "Authors can update their own projects"
+on projects
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Authors can delete their own projects"
+on projects
+for delete
+using (auth.uid() = user_id);
+
+-- profiles
 create table profiles (
   user_id uuid references auth.users(id) on delete cascade primary key,
   display_name text not null,
@@ -29,6 +59,30 @@ create table profiles (
 create trigger handle_updated_at before update on profiles
   for each row execute procedure moddatetime(updated_at);
 
+alter table profiles enable row level security;
+
+create policy "Anyone can read profiles"
+on profiles
+for select
+using (true);
+
+create policy "Users can insert their own profile"
+on profiles
+for insert
+with check (auth.uid() = user_id);
+
+create policy "Users can update their own profile"
+on profiles
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "Users can delete their own profile"
+on profiles
+for delete
+using (auth.uid() = user_id);
+
+-- forks
 create table forks (
   id uuid primary key default gen_random_uuid(),
   forked_from uuid,
@@ -39,29 +93,53 @@ create table forks (
   constraint forks_forked_to_fkey foreign key (forked_to) references projects(id) on delete set null
 );
 
--- supabase storage
+alter table forks enable row level security;
 
+create policy "Public can read forks"
+on forks
+for select
+using (true);
+
+create policy "owners of forked_to can insert"
+on forks
+for insert
+with check (
+  auth.uid() is not null
+  and forked_to is not null
+  and exists (
+    select 1
+    from projects p
+    where p.id = forked_to
+      and p.user_id = auth.uid()
+  )
+);
+
+
+-- STORAGE
+-- thumbnails
 insert into storage.buckets  (id, name, public)values  ('thumbnails', 'thumbnails', true);
 
-CREATE POLICY "Authenticated users can upload files"
-ON storage.objects
-FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'thumbnails');const { data, error, count } = await supabase .from("projects") .select( ` *, forks:forks_forked_to_fkey ( forked_from ), profiles:projects_user_id_fkey ( display_name ) `, { count: "exact" }, ) .eq("is_private", false) .ilike("title", `%${searchQuery}%`) .order("created_at", { ascending: false }) .range(from, to);
-
-CREATE POLICY "Users can view own files"
-ON storage.objects
-FOR SELECT
-TO authenticated
-USING (
-  bucket_id = 'thumbnails');
-
-CREATE POLICY "Users can delete own files"
-ON storage.objects
-FOR DELETE
-TO authenticated
-USING (
+create policy "Authenticated users can upload files"
+on storage.objects
+for insert
+to authenticated
+with check (
   bucket_id = 'thumbnails'
-  AND owner = auth.uid()
+);
+
+create policy "Users can view own files"
+on storage.objects
+for select
+to authenticated
+using (
+  bucket_id = 'thumbnails'
+);
+
+create policy "Users can delete own files"
+on storage.objects
+for delete
+to authenticated
+using (
+  bucket_id = 'thumbnails'
+  and owner = auth.uid()
 );

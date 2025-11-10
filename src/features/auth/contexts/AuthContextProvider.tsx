@@ -51,13 +51,12 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setIsPasswordRecovery(true);
       }
 
-      if (
-        _event === "SIGNED_IN" &&
-        session?.user &&
-        session.user.app_metadata?.provider === "google"
-      ) {
-        const { full_name, avatar_url } = session.user.user_metadata;
-        await upsertProfile(session.user.id, full_name, avatar_url);
+      if (_event === "SIGNED_IN" && session?.user) {
+        const { id, user_metadata } = session.user;
+        // Google auth saves name in full_name and has an avatar_url
+        // Email sign up saves to display_name and has no avatar_url
+        const name = user_metadata.display_name || user_metadata.full_name;
+        upsertProfile(id, name, user_metadata.avatar_url);
       }
 
       setSession(session);
