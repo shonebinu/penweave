@@ -2,8 +2,12 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import type { Session } from "@supabase/supabase-js";
 
-import { upsertProfile } from "@/features/users/services/usersService.ts";
+import {
+  fetchProfile,
+  upsertProfile,
+} from "@/features/users/services/usersService.ts";
 import { supabase } from "@/supabaseClient.ts";
+import type { Profile } from "@/types/profile.ts";
 
 import {
   sendResetPassword as supabaseSendResetPassword,
@@ -52,11 +56,10 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (_event === "SIGNED_IN" && session?.user) {
-        const { id, user_metadata } = session.user;
-        // Google auth saves name in full_name and has an avatar_url
-        // Email sign up saves to display_name and has no avatar_url
-        const name = user_metadata.display_name || user_metadata.full_name;
-        upsertProfile(id, name, user_metadata.avatar_url);
+        // calling await here is leading to infinite loading in chromium browsers somehow
+        syncProfile(session.user).catch((err) =>
+          console.error("Profile sync failed", err),
+        );
       }
 
       setSession(session);
@@ -65,6 +68,28 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  async function syncProfile(user: Session["user"]) {
+    const { id, user_metadata } = user;
+    const { avatar_url, display_name, full_name } = user_metadata;
+
+    let existingProfile: Profile | null = null;
+    // fetchProfile throws error if no data
+    try {
+      existingProfile = await fetchProfile(id);
+    } catch {
+      existingProfile = null;
+    }
+
+    if (!existingProfile) {
+      // avatar_url and full_name is populated by google auth
+      // display_name is populated on email sign up
+      const name = display_name ?? full_name ?? "Anonymous";
+      await upsertProfile(id, name, avatar_url);
+    } else if (avatar_url) {
+      await upsertProfile(id, existingProfile.display_name, avatar_url);
+    }
+  }
 
   return (
     <AuthContext.Provider

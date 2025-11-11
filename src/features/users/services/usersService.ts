@@ -2,23 +2,23 @@ import { supabase } from "@/supabaseClient.ts";
 import type { Profile } from "@/types/profile";
 
 const upsertProfile = async (
-  user_id: string,
-  display_name: string,
-  avatar_url?: string,
+  userId: string,
+  displayName: string,
+  avatarUrl?: string,
 ) => {
   const { error } = await supabase.from("profiles").upsert({
-    user_id,
-    display_name,
-    ...(avatar_url && { avatar_url }),
+    user_id: userId,
+    display_name: displayName,
+    ...(avatarUrl && { avatar_url: avatarUrl }),
   });
   if (error) throw new Error(error.message);
 };
 
-const fetchProfile = async (user_id: string) => {
+const fetchProfile = async (userId: string) => {
   const { data, error } = await supabase
     .from("profiles")
     .select()
-    .eq("user_id", user_id)
+    .eq("user_id", userId)
     .single();
 
   if (error) throw new Error(error.message);

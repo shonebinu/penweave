@@ -125,9 +125,10 @@ for insert
 to authenticated
 with check (
   bucket_id = 'thumbnails'
+  and owner = auth.uid()
 );
 
-create policy "Users can view own files"
+create policy "Any authenticated user can view thumbnails"
 on storage.objects
 for select
 to authenticated

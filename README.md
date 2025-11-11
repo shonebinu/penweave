@@ -4,6 +4,7 @@ For testing purpose run runner.html with python http server
 
 ## TODO
 
+- [ ] bookmarks, likes, followers features
 - [ ] make mobile responsive
 - [ ] Implement Row Level Security (RLS) for tables and storage (only one profile for a user)
 - [ ] make sense of project preview hook

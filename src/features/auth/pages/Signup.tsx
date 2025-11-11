@@ -27,7 +27,8 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      await signUpUser(email, password, name);
+      if (!name.trim()) throw new Error("Display name can't be empty.");
+      await signUpUser(email, password, name.trim());
       navigate("/verify-email", { state: { email } });
     } catch (err) {
       handleError(err, "Signup failed");
