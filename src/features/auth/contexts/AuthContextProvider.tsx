@@ -73,7 +73,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const { id, user_metadata } = user;
     const { avatar_url, display_name, full_name } = user_metadata;
 
-    let existingProfile: Profile | null = null;
+    let existingProfile: Profile | null;
     // fetchProfile throws error if no data
     try {
       existingProfile = await fetchProfile(id);
