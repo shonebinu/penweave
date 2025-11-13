@@ -11,7 +11,7 @@ import ProjectsCard from "../components/ProjectsCard.tsx";
 import ProjectsHeader from "../components/ProjectsHeader.tsx";
 import { useModal } from "../hooks/useModal.ts";
 import { useProjects } from "../hooks/useProjects.ts";
-import type { ProjectWithForkInfo } from "../types/types.ts";
+import type { ProjectWithForkAndLikeInfo } from "../types/types.ts";
 
 export default function Projects() {
   const { session } = useAuth();
@@ -37,7 +37,7 @@ export default function Projects() {
   } = useProjects(session?.user.id, page, pageSize, searchQuery);
 
   const [activeProject, setActiveProject] =
-    useState<ProjectWithForkInfo | null>(null); // track which project is being edited or deleted
+    useState<ProjectWithForkAndLikeInfo | null>(null); // track which project is being edited or deleted
 
   const editTitleModal = useModal();
   const deleteProjectModal = useModal();

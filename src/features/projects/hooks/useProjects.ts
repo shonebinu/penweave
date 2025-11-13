@@ -11,7 +11,7 @@ import {
   toggleOwnedProjectVisibility,
   updateOwnedProjectTitle,
 } from "../services/projectsService.ts";
-import type { ProjectWithForkInfo } from "../types/types.ts";
+import type { ProjectWithForkAndLikeInfo } from "../types/types.ts";
 
 export function useProjects(
   userId?: string,
@@ -20,7 +20,9 @@ export function useProjects(
   searchQuery = "",
 ) {
   const [loading, setLoading] = useState(true);
-  const [projects, setProjects] = useState<ProjectWithForkInfo[] | null>(null);
+  const [projects, setProjects] = useState<ProjectWithForkAndLikeInfo[] | null>(
+    null,
+  );
   const [totalProjectsCount, SetTotalProjectsCount] = useState(0);
 
   const [creatingProject, setCreatingProject] = useState(false);

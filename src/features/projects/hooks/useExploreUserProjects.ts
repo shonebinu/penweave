@@ -6,7 +6,7 @@ import {
   fetchUserProjectsWithForkInfo,
   forkPublicProject,
 } from "@/features/projects/services/projectsService.ts";
-import type { ProjectWithForkInfo } from "@/features/projects/types/types.ts";
+import type { ProjectWithForkAndLikeInfo } from "@/features/projects/types/types.ts";
 import { fetchProfile } from "@/features/users/services/usersService.ts";
 import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
@@ -19,7 +19,9 @@ export function useExploreUsersProjects(
   searchQuery = "",
 ) {
   const [loading, setLoading] = useState(true);
-  const [projects, setProjects] = useState<ProjectWithForkInfo[] | null>(null);
+  const [projects, setProjects] = useState<ProjectWithForkAndLikeInfo[] | null>(
+    null,
+  );
   const [totalProjectsCount, setTotalProjectsCount] = useState(0);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [forkingId, setForkingId] = useState<string | null>(null);

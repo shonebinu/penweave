@@ -4,7 +4,10 @@ import { supabase } from "@/supabaseClient.ts";
 import type { Fork } from "@/types/fork";
 import type { Project } from "@/types/project";
 
-import type { ExploreProject, ProjectWithForkInfo } from "../types/types.ts";
+import type {
+  ExploreProject,
+  ProjectWithForkAndLikeInfo,
+} from "../types/types.ts";
 
 const DEFAULT_CODE = {
   html: `<!-- Everything inside <body></body> goes here.-->
@@ -53,8 +56,11 @@ const fetchUserProjectsWithForkInfo = async (
       *,
       forks:forks_forked_to_fkey (
         forked_from
+      ),
+      likes:likes (
+        user_id
       )
-    `,
+      `,
       { count: "exact" },
     )
     .eq("user_id", user_id);
@@ -71,13 +77,14 @@ const fetchUserProjectsWithForkInfo = async (
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
 
-  const projectsWithForkInfo = data.map(({ forks, ...proj }) => ({
+  const projectsWithForkInfo = data.map(({ forks, likes, ...proj }) => ({
     ...proj,
     forkedFrom: forks[0]?.forked_from ?? null,
+    likeCount: likes?.length ?? 0,
   }));
 
   return {
-    projects: projectsWithForkInfo as ProjectWithForkInfo[],
+    projects: projectsWithForkInfo as ProjectWithForkAndLikeInfo[],
     totalProjectsCount: count ?? 0,
   };
 };
@@ -253,7 +260,8 @@ const fetchExploreProjects = async (
     .select(
       `
     *,
-    forks!forks_forked_to_fkey ( forked_from )
+    forks!forks_forked_to_fkey (forked_from),
+    likes:likes (user_id)
   `,
       { count: "exact" },
     )
@@ -271,9 +279,10 @@ const fetchExploreProjects = async (
     .select("user_id, display_name")
     .in("user_id", userIds);
 
-  const exploreProjects = projects.map(({ forks, ...proj }) => ({
+  const exploreProjects = projects.map(({ forks, likes, ...proj }) => ({
     ...proj,
     forkedFrom: forks[0]?.forked_from ?? null,
+    likeCount: likes?.length ?? 0,
     authorDisplayName:
       profiles?.find((pr) => pr.user_id === proj.user_id)?.display_name ?? null,
   }));

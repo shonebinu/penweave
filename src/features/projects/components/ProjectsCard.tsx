@@ -1,9 +1,9 @@
 import { formatDistanceToNowStrict } from "date-fns";
-import { GitFork, Lock, LockOpen, Pencil, Trash2 } from "lucide-react";
+import { GitFork, Heart, Lock, LockOpen, Pencil, Trash2 } from "lucide-react";
 
 import { Link } from "react-router";
 
-import type { ProjectWithForkInfo } from "../types/types.ts";
+import type { ProjectWithForkAndLikeInfo } from "../types/types.ts";
 import ActionButton from "./ActionButton.tsx";
 import CopyProjectLinkButton from "./CopyProjectLinkButton.tsx";
 
@@ -16,7 +16,7 @@ export default function ProjectsCard({
   titleEditing,
   deleting,
 }: {
-  project: ProjectWithForkInfo;
+  project: ProjectWithForkAndLikeInfo;
   onEditTitle: () => void;
   onDeleteProject: () => void;
   toggleVisibility: () => void;
@@ -74,15 +74,21 @@ export default function ProjectsCard({
               {project.title}
             </h2>
           </Link>
-          {project.forkedFrom && (
-            <Link
-              to={project.forkedFrom}
-              className="link text-base-content/80 flex items-center gap-1"
-            >
-              <GitFork size=".9rem" className="shrink-0" />
-              Forked from
-            </Link>
-          )}
+          <div className="flex">
+            {project.forkedFrom && (
+              <Link
+                to={project.forkedFrom}
+                className="link text-base-content/80 flex items-center gap-1"
+              >
+                <GitFork size=".9rem" className="shrink-0" />
+                Forked from
+              </Link>
+            )}
+            <span className="badge badge-sm badge-accent badge-soft ml-auto">
+              <Heart size=".9rem" className="shrink-0" />
+              {project.likeCount}
+            </span>
+          </div>
         </div>
         <div className="text-base-content/80 text-xs">
           Updated{" "}

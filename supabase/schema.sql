@@ -114,6 +114,39 @@ with check (
   )
 );
 
+-- likes
+create table likes (
+  user_id uuid references auth.users(id) on delete cascade not null,
+  project_id uuid references projects(id) on delete cascade not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, project_id)
+);
+
+alter table likes enable row level security;
+
+create policy "Public can read likes"
+on likes
+for select
+using (true);
+
+create policy "Users can insert their own likes (but not on their own projects)"
+on likes
+for insert
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from projects p
+    where p.id = project_id
+      and p.user_id <> auth.uid()
+  )
+);
+
+create policy "Users can delete their own likes"
+on likes
+for delete
+using (auth.uid() = user_id);
+
 
 -- STORAGE
 -- thumbnails

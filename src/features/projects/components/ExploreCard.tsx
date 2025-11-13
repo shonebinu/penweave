@@ -1,4 +1,4 @@
-import { GitFork, UserRound } from "lucide-react";
+import { GitFork, Heart, UserRound } from "lucide-react";
 
 import { Link } from "react-router";
 
@@ -18,6 +18,13 @@ export default function ExploreCard({
   author: boolean;
 }) {
   const exploreActions = [
+    {
+      onClick: () => true,
+      loading: false,
+      icon: Heart,
+      tooltip: "Like project",
+      className: "btn-square btn join-item btn-soft",
+    },
     {
       onClick: onForkProject,
       loading: forking,
@@ -53,18 +60,24 @@ export default function ExploreCard({
               {project.title}
             </h2>
           </Link>
-          {project.forkedFrom && (
-            <Link
-              to={project.forkedFrom}
-              className="link text-base-content/80 flex items-center gap-1"
-            >
-              <GitFork size=".9rem" className="shrink-0" />
-              Forked from
-            </Link>
-          )}
+          <div className="flex">
+            {project.forkedFrom && (
+              <Link
+                to={project.forkedFrom}
+                className="link text-base-content/80 flex items-center gap-1"
+              >
+                <GitFork size=".9rem" className="shrink-0" />
+                Forked from
+              </Link>
+            )}
+            <span className="badge badge-sm badge-accent badge-soft ml-auto">
+              <Heart size=".9rem" className="shrink-0" />
+              {project.likeCount}
+            </span>
+          </div>
         </div>
         {project.authorDisplayName && (
-          <div className="flex justify-between">
+          <div className="flex gap-2">
             <Link
               to={"/users/" + project.user_id}
               className="link text-base-content/80 flex items-center gap-0.5"

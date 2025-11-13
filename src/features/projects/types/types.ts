@@ -11,8 +11,11 @@ export type EditorHeaderProjectInfo = {
   forkedFrom: string | null;
 };
 
-export type ProjectWithForkInfo = Project & { forkedFrom?: string | null };
+export type ProjectWithForkAndLikeInfo = Project & {
+  forkedFrom?: string | null;
+  likeCount: number;
+};
 
-export type ExploreProject = ProjectWithForkInfo & {
+export type ExploreProject = ProjectWithForkAndLikeInfo & {
   authorDisplayName?: string | null;
 };
