@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { UserRoundPlus, UserRoundX } from "lucide-react";
 
 import { useParams, useSearchParams } from "react-router";
 
@@ -8,6 +9,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import ExploreCard from "@/features/projects/components/ExploreCard.tsx";
 import Pagination from "@/features/projects/components/Pagination.tsx";
 
+import ActionButton from "../components/ActionButton.tsx";
 import { useExploreProjects } from "../hooks/useExploreProjects.ts";
 
 export default function Users() {
@@ -26,7 +28,10 @@ export default function Users() {
     totalProjectsCount,
     forkingId,
     forkProject,
+    followInfo,
     toggleLikeId,
+    toggleFollow,
+    togglingFollow,
     toggleLike,
   } = useExploreProjects(session?.user.id, page, pageSize, "", exploreUserId);
 
@@ -52,6 +57,16 @@ export default function Users() {
         <p className="text-base-content/80 text-sm">
           Joined on: {format(new Date(profile.created_at), "dd MMM yyyy")}
         </p>
+        {profile.user_id !== session?.user.id && followInfo && (
+          <ActionButton
+            onClick={toggleFollow}
+            className={`btn mt-2 ${!followInfo.userFollows && "btn-primary"}`}
+            loading={togglingFollow}
+            icon={!followInfo.userFollows ? UserRoundPlus : UserRoundX}
+          >
+            {followInfo.userFollows ? "Unfollow" : "Follow"}
+          </ActionButton>
+        )}
       </div>
       <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!projects || projects.length === 0 ? (

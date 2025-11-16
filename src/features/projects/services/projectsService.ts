@@ -129,6 +129,18 @@ const fetchLikeInfo = async (userId: string, projectId: string) => {
   };
 };
 
+const fetchFollowInfo = async (sessionUserId: string, targetUserId: string) => {
+  const { data, error } = await supabase
+    .from("follows")
+    .select()
+    .eq("user_id", sessionUserId)
+    .eq("target_user_id", targetUserId);
+
+  if (error) throw new Error(error.message);
+
+  return { userFollows: data.length === 0 ? false : true };
+};
+
 const toggleOwnedProjectVisibility = async (
   userId: string,
   projectId: string,
@@ -336,6 +348,24 @@ const removeLike = async (userId: string, projectId: string) => {
   if (error) throw new Error(error.message);
 };
 
+const followUser = async (userId: string, targetUserId: string) => {
+  const { error } = await supabase
+    .from("follows")
+    .insert({ user_id: userId, target_user_id: targetUserId });
+
+  if (error) throw new Error(error.message);
+};
+
+const unFollowUser = async (userId: string, targetUserId: string) => {
+  const { error } = await supabase
+    .from("follows")
+    .delete()
+    .eq("user_id", userId)
+    .eq("target_user_id", targetUserId);
+
+  if (error) throw new Error(error.message);
+};
+
 export {
   fetchProject,
   updateOwnedProjectCode,
@@ -351,4 +381,7 @@ export {
   likeProject,
   fetchLikeInfo,
   removeLike,
+  fetchFollowInfo,
+  followUser,
+  unFollowUser,
 };

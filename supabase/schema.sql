@@ -147,6 +147,36 @@ on likes
 for delete
 using (auth.uid() = user_id);
 
+-- follows
+create table follows (
+  user_id uuid references auth.users(id) on delete cascade not null,       -- the follower
+  target_user_id uuid references auth.users(id) on delete cascade not null, -- the person being followed
+  created_at timestamptz not null default now(),
+  primary key (user_id, target_user_id),
+  check (user_id IS DISTINCT FROM target_user_id)
+);
+
+alter table follows enable row level security;
+
+create policy "Public can read follows"
+on follows
+for select
+using (true);
+
+create policy "Users can follow others (but not themselves)"
+on follows
+for insert
+with check (
+  auth.uid() = user_id
+  and user_id IS DISTINCT FROM target_user_id
+);
+
+create policy "Users can unfollow others"
+on follows
+for delete
+using (auth.uid() = user_id);
+
+
 
 -- STORAGE
 -- thumbnails

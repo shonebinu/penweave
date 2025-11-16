@@ -8,9 +8,12 @@ import { handleError } from "@/utils/error.ts";
 
 import {
   fetchExploreProjects,
+  fetchFollowInfo,
+  followUser,
   forkPublicProject,
   likeProject,
   removeLike,
+  unFollowUser,
 } from "../services/projectsService.ts";
 import type { ExploreProject } from "../types/types.ts";
 
@@ -27,6 +30,10 @@ export function useExploreProjects(
   const [forkingId, setForkingId] = useState<string | null>(null);
   const [toggleLikeId, setToggleLikeId] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [followInfo, setFollowInfo] = useState<{ userFollows: boolean } | null>(
+    null,
+  );
+  const [togglingFollow, setTogglingFollow] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,8 +54,12 @@ export function useExploreProjects(
         setProjects(projs);
         setTotalProjectsCount(total);
         if (exploreUserId) {
-          const prof = await fetchProfile(exploreUserId);
+          const [prof, foll] = await Promise.all([
+            fetchProfile(exploreUserId),
+            fetchFollowInfo(userId, exploreUserId),
+          ]);
           setProfile(prof);
+          setFollowInfo(foll);
         }
       } catch (err) {
         handleError(err, "Explore projects loading failed");
@@ -71,6 +82,31 @@ export function useExploreProjects(
       handleError(err, "Project forking failed");
     } finally {
       setForkingId(null);
+    }
+  };
+
+  const toggleFollow = async () => {
+    if (!userId || !exploreUserId) return;
+    try {
+      setTogglingFollow(true);
+      if (followInfo?.userFollows) {
+        await unFollowUser(userId, exploreUserId);
+      } else {
+        await followUser(userId, exploreUserId);
+      }
+      setFollowInfo((prev) => ({ ...prev, userFollows: !prev?.userFollows }));
+      toast.success(
+        followInfo?.userFollows
+          ? "Successfully unfollowed"
+          : "Following successfull",
+      );
+    } catch (err) {
+      handleError(
+        err,
+        followInfo?.userFollows ? "Failed to unfollow" : "Failed to follow",
+      );
+    } finally {
+      setTogglingFollow(false);
     }
   };
 
@@ -127,5 +163,8 @@ export function useExploreProjects(
     forkingId,
     toggleLike,
     toggleLikeId,
+    followInfo,
+    togglingFollow,
+    toggleFollow,
   };
 }
