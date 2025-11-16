@@ -104,6 +104,25 @@ export default function EditorHeader({
     ],
   };
 
+  const userActions = [
+    {
+      onClick: toggleLike,
+      loading: likeToggling,
+      icon: Heart,
+      className: "btn btn-square btn-soft",
+      tooltip: isCurrentUserLiked ? "Remove your like" : "Like this project",
+      iconFill: isCurrentUserLiked ? "currentColor" : "none",
+    },
+    {
+      onClick: onForkProject,
+      loading: forking,
+      icon: GitFork,
+      className: "btn btn-primary max-sm:btn-square",
+      children: <span className="hidden sm:block">Fork</span>,
+      title: "Fork your own copy of this project.",
+    },
+  ];
+
   return (
     <header className="mb-1 flex h-[var(--header-height)] items-center justify-between border-b px-2 lg:px-3">
       {/* left side */}
@@ -167,25 +186,11 @@ export default function EditorHeader({
 
         {viewerType === "user" && (
           <>
-            <ActionButton
-              className="btn btn-square btn-soft"
-              onClick={toggleLike}
-              loading={likeToggling}
-              icon={Heart}
-              tooltip={
-                isCurrentUserLiked ? "Remove your like" : "Like this project"
-              }
-              iconFill={isCurrentUserLiked ? "currentColor" : "none"}
-            />
-            <ActionButton
-              className="btn btn-primary max-sm:btn-square"
-              onClick={onForkProject}
-              loading={forking}
-              icon={GitFork}
-              title="Fork your own copy of this project."
-            >
-              <span className="hidden sm:block">Fork</span>
-            </ActionButton>
+            {userActions.map(({ children, ...props }, i) => (
+              <ActionButton key={i} {...props}>
+                {children}
+              </ActionButton>
+            ))}
           </>
         )}
 

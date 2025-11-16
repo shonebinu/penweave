@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import ActionButton from "@/features/projects/components/ActionButton.tsx";
+import HeaderTitle from "@/features/projects/components/HeaderTitle.tsx";
 import { handleError } from "@/utils/error.ts";
 
 import { fetchProfile, upsertProfile } from "../services/settingsService.ts";
@@ -51,13 +52,14 @@ export default function Settings() {
 
   return (
     <>
-      <h1 className="flex items-center gap-2 text-2xl font-bold">
-        <SettingsIcon />
-        Settings
-      </h1>
-      <p className="text-base-content/80 mb-3 text-sm">
-        Change your display name.
-      </p>
+      <div className="mb-3">
+        <HeaderTitle
+          icon={<SettingsIcon />}
+          title="Settings"
+          description="Change your display name."
+        />
+      </div>
+
       <div className="flex flex-col gap-1">
         <label htmlFor="display_name" className="label text-sm">
           Display Name

@@ -6,8 +6,10 @@ import Logout from "@/features/auth/pages/Logout.tsx";
 import ResetPassword from "@/features/auth/pages/ResetPassword.tsx";
 import Signup from "@/features/auth/pages/Signup.tsx";
 import VerifyEmail from "@/features/auth/pages/VerifyEmail.tsx";
+import Bookmarks from "@/features/projects/pages/Bookmarks.tsx";
 import Editor from "@/features/projects/pages/Editor.tsx";
 import Explore from "@/features/projects/pages/Explore.tsx";
+import Follows from "@/features/projects/pages/Follows.tsx";
 import Projects from "@/features/projects/pages/Projects.tsx";
 import Users from "@/features/projects/pages/Users.tsx";
 import Settings from "@/features/settings/pages/Settings.tsx";
@@ -27,8 +29,8 @@ const router = createBrowserRouter([
         children: [
           { path: "projects", element: <Projects /> },
           { path: "explore", element: <Explore /> },
-          //   { path: "following", element: <h1>Following</h1> },
-          //   { path: "bookmarks", element: <h1>Bookmarks</h1> },
+          { path: "follows", element: <Follows /> },
+          { path: "bookmarks", element: <Bookmarks /> },
           { path: "settings", element: <Settings /> },
           { path: "users/:userId", element: <Users /> },
         ],

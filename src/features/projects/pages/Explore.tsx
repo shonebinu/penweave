@@ -1,11 +1,14 @@
+import { Globe2 } from "lucide-react";
+
 import { useSearchParams } from "react-router";
 
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 
 import ExploreCard from "../components/ExploreCard.tsx";
-import ExploreHeader from "../components/ExploreHeader.tsx";
+import HeaderTitle from "../components/HeaderTitle.tsx";
 import Pagination from "../components/Pagination.tsx";
+import SearchBar from "../components/SearchBar.tsx";
 import { useExploreProjects } from "../hooks/useExploreProjects.ts";
 
 export default function Explore() {
@@ -34,7 +37,14 @@ export default function Explore() {
 
   return (
     <>
-      <ExploreHeader
+      <div className="mb-3">
+        <HeaderTitle
+          icon={<Globe2 />}
+          title="Explore"
+          description="Browse and discover new ideas."
+        />
+      </div>
+      <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={(newQuery) => {
           setSearchParams({ search: newQuery });

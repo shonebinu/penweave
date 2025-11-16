@@ -1,14 +1,18 @@
+import { BriefcaseBusiness, Plus } from "lucide-react";
+
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 
+import ActionButton from "../components/ActionButton.tsx";
 import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
+import HeaderTitle from "../components/HeaderTitle.tsx";
 import Pagination from "../components/Pagination.tsx";
 import ProjectsCard from "../components/ProjectsCard.tsx";
-import ProjectsHeader from "../components/ProjectsHeader.tsx";
+import SearchBar from "../components/SearchBar.tsx";
 import { useModal } from "../hooks/useModal.ts";
 import { useProjects } from "../hooks/useProjects.ts";
 import type { ProjectWithForkAndLikeInfo } from "../types/types.ts";
@@ -48,9 +52,23 @@ export default function Projects() {
 
   return (
     <>
-      <ProjectsHeader
-        createNewProject={createNewProject}
-        creatingProject={creatingProject}
+      <div className="mb-3 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <HeaderTitle
+          icon={<BriefcaseBusiness />}
+          title="Projects"
+          description="Create, manage and run your projects."
+        />
+        <ActionButton
+          onClick={createNewProject}
+          loading={creatingProject}
+          icon={Plus}
+          className="btn btn-primary"
+        >
+          New Project
+        </ActionButton>
+      </div>
+
+      <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={(newQuery) => {
           setSearchParams({ search: newQuery });
