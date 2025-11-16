@@ -1,4 +1,4 @@
-import { GitFork, UserRound } from "lucide-react";
+import { GitFork, Heart, UserRound } from "lucide-react";
 
 import { Link } from "react-router";
 
@@ -11,7 +11,16 @@ export default function EditorProjectInfo({
 }) {
   return (
     <div className="mr-2 flex flex-col">
-      <p className="line-clamp-1 font-medium">{projectInfo.title}</p>
+      <div className="flex items-center gap-1.5">
+        <p className="line-clamp-1 font-medium">{projectInfo.title}</p>{" "}
+        <span
+          className="badge badge-sm badge-accent badge-soft ml-auto"
+          title="Number of likes"
+        >
+          <Heart size=".9rem" className="shrink-0" />
+          {projectInfo.likeCount}
+        </span>
+      </div>
       <div className="flex items-center gap-2">
         <Link
           to={"/users/" + projectInfo.userId}

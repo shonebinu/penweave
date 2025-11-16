@@ -2,9 +2,13 @@
 
 For testing purpose run runner.html with python http server
 
+create a new proj in supabase and copy the env to .env
+
+enable google oauth and email/pass in supabase
+
 ## TODO
 
-- [ ] bookmarks, likes, followers features
+- [ ] bookmarks, followers features
 - [ ] make mobile responsive
 - [ ] Implement Row Level Security (RLS) for tables and storage (only one profile for a user)
 - [ ] create demo acc in penweave like pocketbase.io/demo. reset hourly

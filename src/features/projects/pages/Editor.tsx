@@ -44,6 +44,9 @@ export default function Editor() {
     deleting,
     forkProject,
     forkInfo,
+    likeInfo,
+    likeToggling,
+    toggleLike,
   } = useProject(session?.user?.id, projectId, authLoading);
 
   const {
@@ -81,6 +84,7 @@ export default function Editor() {
           userName: authorProfile.display_name,
           userPhoto: authorProfile.avatar_url,
           forkedFrom: forkInfo ? forkInfo.forked_from : null,
+          likeCount: likeInfo?.likeCount ?? 0,
         }}
         onFormat={format}
         onSave={save}
@@ -95,6 +99,9 @@ export default function Editor() {
         forking={forking}
         titleEditing={titleEditing}
         deleting={deleting}
+        isCurrentUserLiked={likeInfo?.isLikedByCurrentUser}
+        likeToggling={likeToggling}
+        toggleLike={toggleLike}
       />
       <PanelGroup direction="vertical" className="flex flex-1 flex-col">
         <Panel minSize={10} defaultSize={45}>

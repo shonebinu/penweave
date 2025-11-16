@@ -8,10 +8,10 @@ import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import ExploreCard from "@/features/projects/components/ExploreCard.tsx";
 import Pagination from "@/features/projects/components/Pagination.tsx";
 
-import { useExploreUsersProjects } from "../hooks/useExploreUserProjects.ts";
+import { useExploreProjects } from "../hooks/useExploreProjects.ts";
 
 export default function Users() {
-  const { userId } = useParams();
+  const { userId: exploreUserId } = useParams();
   const { session } = useAuth();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,7 +26,9 @@ export default function Users() {
     totalProjectsCount,
     forkingId,
     forkProject,
-  } = useExploreUsersProjects(userId, session?.user.id, page, pageSize);
+    toggleLikeId,
+    toggleLike,
+  } = useExploreProjects(session?.user.id, page, pageSize, "", exploreUserId);
 
   const totalPages = Math.ceil(totalProjectsCount / pageSize);
 
@@ -62,7 +64,9 @@ export default function Users() {
               key={project.id}
               project={project}
               forking={forkingId === project.id}
+              togglingLike={toggleLikeId === project.id}
               onForkProject={() => forkProject(project.id)}
+              onToggleLike={() => toggleLike(project.id)}
               author={session?.user.id === project.user_id}
             />
           ))

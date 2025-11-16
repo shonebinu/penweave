@@ -11,19 +11,24 @@ export default function ExploreCard({
   forking,
   onForkProject,
   author,
+  onToggleLike,
+  togglingLike,
 }: {
   project: ExploreProject;
   forking: boolean;
   onForkProject: () => void;
   author: boolean;
+  onToggleLike: () => void;
+  togglingLike: boolean;
 }) {
   const exploreActions = [
     {
-      onClick: () => true,
-      loading: false,
+      onClick: onToggleLike,
+      loading: togglingLike,
       icon: Heart,
-      tooltip: "Like project",
+      tooltip: !project.isLikedByCurrentUser ? "Like project" : "Remove Like",
       className: "btn-square btn join-item btn-soft",
+      iconFill: project.isLikedByCurrentUser ? "currentColor" : "none",
     },
     {
       onClick: onForkProject,

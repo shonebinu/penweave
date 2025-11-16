@@ -2,6 +2,7 @@ import { decode } from "base64-arraybuffer";
 
 import { supabase } from "@/supabaseClient.ts";
 import type { Fork } from "@/types/fork";
+import type { Like } from "@/types/like";
 import type { Project } from "@/types/project";
 
 import type {
@@ -13,8 +14,8 @@ const DEFAULT_CODE = {
   html: `<!-- Everything inside <body></body> goes here.-->
 
 <button>Click Here</button>`,
-  css: `body { 
-  background-color: white; 
+  css: `body {
+  background-color: white;
 }`,
 
   js: `document.querySelector("button").onclick = () => alert("Hello world!");`,
@@ -44,12 +45,11 @@ const fetchUserProjectsWithForkInfo = async (
   page: number,
   pageSize: number,
   searchQuery: string,
-  publicOnly = false,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const query = supabase
+  const { data, error, count } = await supabase
     .from("projects")
     .select(
       `
@@ -63,16 +63,10 @@ const fetchUserProjectsWithForkInfo = async (
       `,
       { count: "exact" },
     )
-    .eq("user_id", user_id);
-
-  if (publicOnly) query.eq("is_private", false);
-
-  query
+    .eq("user_id", user_id)
     .ilike("title", `%${searchQuery}%`)
     .order("created_at", { ascending: false })
     .range(from, to);
-
-  const { data, error, count } = await query;
 
   if (error) throw new Error(error.message);
   if (!data) throw new Error("No data returned");
@@ -111,6 +105,28 @@ const fetchForkInfo = async (projectId: string) => {
   if (!data) throw new Error("No data returned");
 
   return data.length ? (data[0] as Fork) : null;
+};
+
+const fetchLikeInfo = async (userId: string, projectId: string) => {
+  const { count, error } = await supabase
+    .from("likes")
+    .select("*", { count: "exact" })
+    .eq("project_id", projectId);
+
+  if (error) throw new Error(error.message);
+
+  const { data, error: likeError } = await supabase
+    .from("likes")
+    .select()
+    .eq("user_id", userId)
+    .eq("project_id", projectId);
+
+  if (likeError) throw new Error(likeError.message);
+
+  return {
+    likeCount: count as number,
+    isLikedByCurrentUser: data.length === 0 ? false : true,
+  };
 };
 
 const toggleOwnedProjectVisibility = async (
@@ -247,15 +263,13 @@ const fetchExploreProjects = async (
   page: number,
   pageSize: number,
   searchQuery: string,
+  currentUserId: string,
+  exploreUserId?: string,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const {
-    data: projects,
-    error,
-    count,
-  } = await supabase
+  const query = supabase
     .from("projects")
     .select(
       `
@@ -265,24 +279,35 @@ const fetchExploreProjects = async (
   `,
       { count: "exact" },
     )
-    .eq("is_private", false)
+    .eq("is_private", false);
+
+  if (exploreUserId) query.eq("user_id", exploreUserId);
+
+  query
     .ilike("title", `%${searchQuery}%`)
     .order("created_at", { ascending: false })
     .range(from, to);
+
+  const { data: projects, error, count } = await query;
 
   if (error) throw new Error(error.message);
 
   const userIds = projects.map((p) => p.user_id);
 
-  const { data: profiles } = await supabase
+  const { data: profiles, error: profileError } = await supabase
     .from("profiles")
     .select("user_id, display_name")
     .in("user_id", userIds);
+
+  if (profileError) throw new Error(profileError.message);
 
   const exploreProjects = projects.map(({ forks, likes, ...proj }) => ({
     ...proj,
     forkedFrom: forks[0]?.forked_from ?? null,
     likeCount: likes?.length ?? 0,
+    isLikedByCurrentUser:
+      (likes as Like[] | undefined)?.some((l) => l.user_id === currentUserId) ??
+      false,
     authorDisplayName:
       profiles?.find((pr) => pr.user_id === proj.user_id)?.display_name ?? null,
   }));
@@ -291,6 +316,24 @@ const fetchExploreProjects = async (
     projects: exploreProjects as ExploreProject[],
     totalProjectsCount: count ?? 0,
   };
+};
+
+const likeProject = async (userId: string, projectId: string) => {
+  const { error } = await supabase
+    .from("likes")
+    .insert({ user_id: userId, project_id: projectId });
+
+  if (error) throw new Error(error.message);
+};
+
+const removeLike = async (userId: string, projectId: string) => {
+  const { error } = await supabase
+    .from("likes")
+    .delete()
+    .eq("user_id", userId)
+    .eq("project_id", projectId);
+
+  if (error) throw new Error(error.message);
 };
 
 export {
@@ -305,4 +348,7 @@ export {
   fetchUserProjectsWithForkInfo,
   createProject,
   fetchExploreProjects,
+  likeProject,
+  fetchLikeInfo,
+  removeLike,
 };

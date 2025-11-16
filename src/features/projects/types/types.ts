@@ -9,6 +9,7 @@ export type EditorHeaderProjectInfo = {
   userName: string;
   userPhoto: string | null;
   forkedFrom: string | null;
+  likeCount: number;
 };
 
 export type ProjectWithForkAndLikeInfo = Project & {
@@ -17,5 +18,6 @@ export type ProjectWithForkAndLikeInfo = Project & {
 };
 
 export type ExploreProject = ProjectWithForkAndLikeInfo & {
-  authorDisplayName?: string | null;
+  authorDisplayName: string | null;
+  isLikedByCurrentUser: boolean;
 };

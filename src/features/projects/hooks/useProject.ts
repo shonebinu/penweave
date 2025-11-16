@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
-import { fetchProfile } from "@/features/users/services/usersService.ts";
+import { fetchProfile } from "@/features/settings/services/settingsService.ts";
 import type { Fork } from "@/types/fork.ts";
 import type { Profile } from "@/types/profile.ts";
 import type { SafeProject } from "@/types/project.ts";
@@ -18,8 +18,11 @@ import { handleError } from "@/utils/error.ts";
 import {
   deleteOwnedProject,
   fetchForkInfo,
+  fetchLikeInfo,
   fetchProject,
   forkPublicProject,
+  likeProject,
+  removeLike,
   toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
@@ -41,6 +44,11 @@ export function useProject(
   const [forking, setForking] = useState(false);
   const [titleEditing, setTitleEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [likeToggling, setLikeToggling] = useState(false);
+  const [likeInfo, setLikeInfo] = useState<{
+    likeCount: number;
+    isLikedByCurrentUser: boolean;
+  } | null>(null);
 
   const navigate = useNavigate();
 
@@ -56,11 +64,15 @@ export function useProject(
           return;
         }
 
-        const profile = await fetchProfile(proj.user_id);
-        const forkInfo = await fetchForkInfo(proj.id);
+        const [profile, forkInfo, likeInfo] = await Promise.all([
+          fetchProfile(proj.user_id),
+          fetchForkInfo(proj.id),
+          userId && fetchLikeInfo(userId, proj.id),
+        ]);
 
         setAuthorProfile(profile);
         setForkInfo(forkInfo);
+        if (likeInfo) setLikeInfo(likeInfo);
         setProject({
           ...proj,
           html: proj.html ?? "",
@@ -92,6 +104,41 @@ export function useProject(
       handleError(err, "Visibility toggling failed");
     } finally {
       setTogglingVisibility(false);
+    }
+  };
+
+  const toggleLike = async () => {
+    if (!likeInfo || !userId || !projectId) return;
+
+    try {
+      setLikeToggling(true);
+      if (likeInfo.isLikedByCurrentUser) {
+        await removeLike(userId, projectId);
+      } else {
+        await likeProject(userId, projectId);
+      }
+      setLikeInfo((prev) =>
+        prev
+          ? {
+              isLikedByCurrentUser: !prev.isLikedByCurrentUser,
+              likeCount: prev.isLikedByCurrentUser
+                ? prev.likeCount - 1
+                : prev.likeCount + 1,
+            }
+          : prev,
+      );
+      toast.success(
+        !likeInfo.isLikedByCurrentUser
+          ? "Project has been liked"
+          : "Project like has been removed",
+      );
+    } catch (err) {
+      handleError(
+        err,
+        likeInfo.isLikedByCurrentUser ? "Liking failed" : "Remove like failed",
+      );
+    } finally {
+      setLikeToggling(false);
     }
   };
 
@@ -219,5 +266,8 @@ export function useProject(
     titleEditing,
     deleting,
     forkInfo,
+    likeInfo,
+    likeToggling,
+    toggleLike,
   };
 }

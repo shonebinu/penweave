@@ -5,7 +5,7 @@ import type { Session } from "@supabase/supabase-js";
 import {
   fetchProfile,
   upsertProfile,
-} from "@/features/users/services/usersService.ts";
+} from "@/features/settings/services/settingsService.ts";
 import { supabase } from "@/supabaseClient.ts";
 import type { Profile } from "@/types/profile.ts";
 

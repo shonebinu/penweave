@@ -8,7 +8,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import ActionButton from "@/features/projects/components/ActionButton.tsx";
 import { handleError } from "@/utils/error.ts";
 
-import { fetchProfile, upsertProfile } from "../services/usersService.ts";
+import { fetchProfile, upsertProfile } from "../services/settingsService.ts";
 
 export default function Settings() {
   const { session } = useAuth();

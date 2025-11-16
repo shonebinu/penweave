@@ -98,7 +98,6 @@ export default function ProjectsCard({
         </div>
         <div className="card-actions mt-auto">
           <CopyProjectLinkButton projectId={project.id} />
-
           <div className="ml-auto">
             <div className="join">
               {projectActions.map((props, i) => (

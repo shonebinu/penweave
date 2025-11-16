@@ -8,6 +8,7 @@ export default function ActionButton({
   tooltip,
   children,
   title,
+  iconFill,
 }: {
   onClick: () => void;
   loading?: boolean;
@@ -16,6 +17,7 @@ export default function ActionButton({
   tooltip?: string;
   children?: React.ReactNode;
   title?: string;
+  iconFill?: string;
 }) {
   const button = (
     <button
@@ -24,14 +26,14 @@ export default function ActionButton({
       className={className}
       title={title}
     >
-      {Icon && !loading && <Icon size="1rem" />}
+      {Icon && !loading && <Icon size="1rem" fill={iconFill || "none"} />}
       {loading && <LoadingDots />}
       {children}
     </button>
   );
 
   return tooltip ? (
-    <div className="tooltip tooltip-bottom" data-tip={tooltip}>
+    <div className="lg:tooltip lg:tooltip-bottom" data-tip={tooltip}>
       {button}
     </div>
   ) : (

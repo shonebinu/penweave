@@ -10,7 +10,7 @@ import Editor from "@/features/projects/pages/Editor.tsx";
 import Explore from "@/features/projects/pages/Explore.tsx";
 import Projects from "@/features/projects/pages/Projects.tsx";
 import Users from "@/features/projects/pages/Users.tsx";
-import Settings from "@/features/users/pages/Settings.tsx";
+import Settings from "@/features/settings/pages/Settings.tsx";
 import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 

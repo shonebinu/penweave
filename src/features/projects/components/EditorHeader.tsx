@@ -1,6 +1,7 @@
 import {
   GitFork,
   HardDriveUpload,
+  Heart,
   Home,
   Lock,
   LockOpen,
@@ -33,6 +34,9 @@ export default function EditorHeader({
   forking,
   titleEditing,
   deleting,
+  isCurrentUserLiked,
+  likeToggling,
+  toggleLike,
 }: {
   viewerType: ViewerType;
   projectInfo: EditorHeaderProjectInfo;
@@ -49,6 +53,9 @@ export default function EditorHeader({
   forking: boolean;
   titleEditing: boolean;
   deleting: boolean;
+  isCurrentUserLiked?: boolean;
+  likeToggling: boolean;
+  toggleLike: () => void;
 }) {
   const creatorActions = {
     // ActionButton component receives these fields as props
@@ -159,15 +166,27 @@ export default function EditorHeader({
         )}
 
         {viewerType === "user" && (
-          <ActionButton
-            className="btn btn-primary max-sm:btn-square"
-            onClick={onForkProject}
-            loading={forking}
-            icon={GitFork}
-            title="Fork your own copy of this project."
-          >
-            <span className="hidden sm:block">Fork</span>
-          </ActionButton>
+          <>
+            <ActionButton
+              className="btn btn-square btn-soft"
+              onClick={toggleLike}
+              loading={likeToggling}
+              icon={Heart}
+              tooltip={
+                isCurrentUserLiked ? "Remove your like" : "Like this project"
+              }
+              iconFill={isCurrentUserLiked ? "currentColor" : "none"}
+            />
+            <ActionButton
+              className="btn btn-primary max-sm:btn-square"
+              onClick={onForkProject}
+              loading={forking}
+              icon={GitFork}
+              title="Fork your own copy of this project."
+            >
+              <span className="hidden sm:block">Fork</span>
+            </ActionButton>
+          </>
         )}
 
         {viewerType === "visitor" && (

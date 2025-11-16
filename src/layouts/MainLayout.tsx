@@ -14,7 +14,7 @@ import LoadingScreen from "@/components/LoadingScreen.tsx";
 import Logo from "@/components/Logo.tsx";
 import UserAvatar from "@/components/UserAvatar.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
-import { fetchProfile } from "@/features/users/services/usersService.ts";
+import { fetchProfile } from "@/features/settings/services/settingsService";
 import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
 

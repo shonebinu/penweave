@@ -18,8 +18,15 @@ export default function Explore() {
 
   const searchQuery = searchParams.get("search") || "";
 
-  const { projects, loading, totalProjectsCount, forkProject, forkingId } =
-    useExploreProjects(session?.user.id, page, pageSize, searchQuery);
+  const {
+    projects,
+    loading,
+    totalProjectsCount,
+    forkProject,
+    toggleLikeId,
+    forkingId,
+    toggleLike,
+  } = useExploreProjects(session?.user.id, page, pageSize, searchQuery);
 
   const totalPages = Math.ceil(totalProjectsCount / pageSize);
 
@@ -44,7 +51,9 @@ export default function Explore() {
               key={project.id}
               project={project}
               forking={forkingId === project.id}
+              togglingLike={toggleLikeId === project.id}
               onForkProject={() => forkProject(project.id)}
+              onToggleLike={() => toggleLike(project.id)}
               author={session?.user.id === project.user_id}
             />
           ))

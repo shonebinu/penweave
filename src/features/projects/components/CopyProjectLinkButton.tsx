@@ -11,7 +11,7 @@ export default function CopyProjectLinkButton({
 }) {
   return (
     <ActionButton
-      tooltip="Copy project link to clipboard"
+      tooltip="Copy project link"
       icon={Share2}
       className="btn btn-square btn-soft"
       onClick={async () => {
