@@ -24,6 +24,7 @@ export function useExploreProjects(
   searchQuery = "",
   exploreUserId?: string,
   followsProjectsOnly = false,
+  bookmarkedProjectsOnly = false,
 ) {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ExploreProject[] | null>(null);
@@ -52,6 +53,7 @@ export function useExploreProjects(
             userId,
             exploreUserId,
             followsProjectsOnly,
+            bookmarkedProjectsOnly,
           );
         setProjects(projs);
         setTotalProjectsCount(total);

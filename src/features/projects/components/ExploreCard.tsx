@@ -1,4 +1,4 @@
-import { GitFork, Heart, UserRound } from "lucide-react";
+import { Bookmark, GitFork, Heart, UserRound } from "lucide-react";
 
 import { Link } from "react-router";
 
@@ -26,6 +26,16 @@ export default function ExploreCard({
           onClick: onToggleLike,
           loading: togglingLike,
           icon: Heart,
+          tooltip: !project.isLikedByCurrentUser
+            ? "Like project"
+            : "Remove Like",
+          className: "btn-square btn join-item btn-soft",
+          iconFill: project.isLikedByCurrentUser ? "currentColor" : "none",
+        },
+        {
+          onClick: onToggleLike,
+          loading: togglingLike,
+          icon: Bookmark,
           tooltip: !project.isLikedByCurrentUser
             ? "Like project"
             : "Remove Like",

@@ -8,12 +8,6 @@ enable google oauth and email/pass in supabase
 
 ## TODO
 
-- bookmarks feature (bookmarks page, explore cards)
+- bookmarks feature (explore cards)
 - share link in editor, disabled if private
-- make mobile responsive
-- Implement Row Level Security (RLS) for tables and storage (only one profile for a user)
-- create demo acc in penweave like pocketbase.io/demo. reset hourly
-- make sense of project preview hook
-- Change Supabase email template
 - Landing page (reference: [codecatch.net](https://codecatch.net/))
-- notifications system using database triggers?

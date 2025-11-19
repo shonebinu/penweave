@@ -292,6 +292,7 @@ const fetchExploreProjects = async (
   currentUserId: string,
   exploreUserId?: string,
   followsProjectsOnly = false,
+  bookmarkedProjectsOnly = false,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -320,6 +321,18 @@ const fetchExploreProjects = async (
     const followsIds = follows.map((f) => f.target_user_id);
 
     query.in("user_id", followsIds);
+  }
+  if (bookmarkedProjectsOnly) {
+    const { data: bookmarks, error: bookmarksError } = await supabase
+      .from("bookmarks")
+      .select("project_id")
+      .eq("user_id", currentUserId);
+
+    if (bookmarksError) throw new Error(bookmarksError.message);
+
+    const bookmarksIds = bookmarks.map((b) => b.project_id);
+
+    query.in("id", bookmarksIds);
   }
 
   query
