@@ -57,7 +57,7 @@ export default function MainLayout() {
 
   return (
     <>
-      <header className="grid h-[var(--header-height)] grid-cols-2 items-center border-b px-2 md:grid-cols-3 md:px-10">
+      <header className="flex h-[var(--header-height)] items-center justify-between border-b px-2 md:px-10">
         <div className="flex gap-2">
           <div className="dropdown">
             <div
@@ -85,7 +85,7 @@ export default function MainLayout() {
           <Logo showNameOnLargeOnly />
         </div>
 
-        <div className="mx-auto hidden md:block">
+        <div className="hidden flex-1 justify-center md:flex">
           <ul className="menu menu-horizontal gap-1 px-1">
             {navItems.map(({ icon: Icon, label, href }) => (
               <li key={label}>

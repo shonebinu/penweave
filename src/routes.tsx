@@ -17,6 +17,7 @@ import AuthLayout from "@/layouts/AuthLayout.tsx";
 import MainLayout from "@/layouts/MainLayout.tsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import ManageFollows from "./features/projects/pages/ManageFollows.tsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <h1>Landing Page</h1> },
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
           { path: "projects", element: <Projects /> },
           { path: "explore", element: <Explore /> },
           { path: "follows", element: <Follows /> },
+          { path: "follows/manage", element: <ManageFollows /> },
           { path: "bookmarks", element: <Bookmarks /> },
           { path: "settings", element: <Settings /> },
           { path: "users/:userId", element: <Users /> },

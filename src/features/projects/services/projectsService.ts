@@ -277,6 +277,7 @@ const fetchExploreProjects = async (
   searchQuery: string,
   currentUserId: string,
   exploreUserId?: string,
+  followsProjectsOnly = false,
 ) => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -294,6 +295,18 @@ const fetchExploreProjects = async (
     .eq("is_private", false);
 
   if (exploreUserId) query.eq("user_id", exploreUserId);
+  if (followsProjectsOnly) {
+    const { data: follows, error: followsError } = await supabase
+      .from("follows")
+      .select("target_user_id")
+      .eq("user_id", currentUserId);
+
+    if (followsError) throw new Error(followsError.message);
+
+    const followsIds = follows.map((f) => f.target_user_id);
+
+    query.in("user_id", followsIds);
+  }
 
   query
     .ilike("title", `%${searchQuery}%`)
@@ -366,8 +379,30 @@ const unFollowUser = async (userId: string, targetUserId: string) => {
   if (error) throw new Error(error.message);
 };
 
+const fetchFollowingProfiles = async (userId: string) => {
+  const { data: followingUsers, error: followsError } = await supabase
+    .from("follows")
+    .select()
+    .eq("user_id", userId);
+
+  if (followsError) throw new Error(followsError.message);
+
+  const followingIds = followingUsers?.map((row) => row.target_user_id);
+
+  const { data: followingProfiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select()
+    .in("user_id", followingIds)
+    .order("display_name");
+
+  if (profilesError) throw new Error(profilesError.message);
+
+  return followingProfiles;
+};
+
 export {
   fetchProject,
+  fetchFollowingProfiles,
   updateOwnedProjectCode,
   updateOwnedProjectThumbnail,
   toggleOwnedProjectVisibility,

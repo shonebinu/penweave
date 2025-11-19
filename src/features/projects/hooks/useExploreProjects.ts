@@ -23,6 +23,7 @@ export function useExploreProjects(
   pageSize = 8,
   searchQuery = "",
   exploreUserId?: string,
+  followsProjectsOnly = false,
 ) {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ExploreProject[] | null>(null);
@@ -50,6 +51,7 @@ export function useExploreProjects(
             searchQuery,
             userId,
             exploreUserId,
+            followsProjectsOnly,
           );
         setProjects(projs);
         setTotalProjectsCount(total);
@@ -69,7 +71,7 @@ export function useExploreProjects(
     };
 
     loadExploreProjects();
-  }, [page, pageSize, searchQuery, userId, exploreUserId]);
+  }, [page, pageSize, searchQuery, userId, exploreUserId, followsProjectsOnly]);
 
   const forkProject = async (projectId: string) => {
     if (!userId || !projectId) return;
@@ -98,7 +100,7 @@ export function useExploreProjects(
       toast.success(
         followInfo?.userFollows
           ? "Successfully unfollowed"
-          : "Following successfull",
+          : "Successfully followed",
       );
     } catch (err) {
       handleError(

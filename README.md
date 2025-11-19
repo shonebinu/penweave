@@ -8,8 +8,7 @@ enable google oauth and email/pass in supabase
 
 ## TODO
 
-- following page
-- bookmarks
+- bookmarks feature
 - make mobile responsive
 - Implement Row Level Security (RLS) for tables and storage (only one profile for a user)
 - create demo acc in penweave like pocketbase.io/demo. reset hourly
