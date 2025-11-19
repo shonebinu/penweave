@@ -12,7 +12,7 @@ export default function EditorProjectInfo({
   return (
     <div className="mr-2 flex flex-col">
       <div className="flex items-center gap-1.5">
-        <p className="line-clamp-1 font-medium">{projectInfo.title}</p>{" "}
+        <p className="line-clamp-1 font-medium">{projectInfo.title}</p>
         <span
           className="badge badge-sm badge-accent badge-soft ml-auto"
           title="Number of likes"

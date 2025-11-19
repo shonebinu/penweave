@@ -16,12 +16,15 @@ import type { SafeProject } from "@/types/project.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {
+  addBookmark,
   deleteOwnedProject,
+  fetchBookmarkInfo,
   fetchForkInfo,
   fetchLikeInfo,
   fetchProject,
   forkPublicProject,
   likeProject,
+  removeBookmark,
   removeLike,
   toggleOwnedProjectVisibility,
   updateOwnedProjectCode,
@@ -49,6 +52,10 @@ export function useProject(
     likeCount: number;
     isLikedByCurrentUser: boolean;
   } | null>(null);
+  const [bookmarkToggling, setBookmarkToggling] = useState(false);
+  const [bookmarkInfo, setBookmarkInfo] = useState<{
+    isBookmarkedByCurrentUser: boolean;
+  } | null>(null);
 
   const navigate = useNavigate();
 
@@ -64,15 +71,18 @@ export function useProject(
           return;
         }
 
-        const [profile, forkInfo, likeInfo] = await Promise.all([
+        const [profile, forkInfo, likeInfo, bookmarkInfo] = await Promise.all([
           fetchProfile(proj.user_id),
           fetchForkInfo(proj.id),
           userId && fetchLikeInfo(userId, proj.id),
+          userId && fetchBookmarkInfo(userId, proj.id),
         ]);
 
         setAuthorProfile(profile);
         setForkInfo(forkInfo);
         if (likeInfo) setLikeInfo(likeInfo);
+        if (bookmarkInfo) setBookmarkInfo(bookmarkInfo);
+
         setProject({
           ...proj,
           html: proj.html ?? "",
@@ -139,6 +149,40 @@ export function useProject(
       );
     } finally {
       setLikeToggling(false);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    if (!bookmarkInfo || !userId || !projectId) return;
+
+    try {
+      setBookmarkToggling(true);
+      if (bookmarkInfo.isBookmarkedByCurrentUser) {
+        await removeBookmark(userId, projectId);
+      } else {
+        await addBookmark(userId, projectId);
+      }
+      setBookmarkInfo((prev) =>
+        prev
+          ? {
+              isBookmarkedByCurrentUser: !prev.isBookmarkedByCurrentUser,
+            }
+          : prev,
+      );
+      toast.success(
+        !bookmarkInfo.isBookmarkedByCurrentUser
+          ? "Project has been bookmarked"
+          : "Project bookmark has been removed",
+      );
+    } catch (err) {
+      handleError(
+        err,
+        bookmarkInfo.isBookmarkedByCurrentUser
+          ? "Bookmarking failed"
+          : "Remove bookmark failed",
+      );
+    } finally {
+      setBookmarkToggling(false);
     }
   };
 
@@ -269,5 +313,8 @@ export function useProject(
     likeInfo,
     likeToggling,
     toggleLike,
+    bookmarkInfo,
+    bookmarkToggling,
+    toggleBookmark,
   };
 }

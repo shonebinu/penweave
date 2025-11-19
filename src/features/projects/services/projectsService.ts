@@ -129,6 +129,20 @@ const fetchLikeInfo = async (userId: string, projectId: string) => {
   };
 };
 
+const fetchBookmarkInfo = async (userId: string, projectId: string) => {
+  const { error, data } = await supabase
+    .from("bookmarks")
+    .select()
+    .eq("project_id", projectId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+
+  return {
+    isBookmarkedByCurrentUser: data.length === 0 ? false : true,
+  };
+};
+
 const fetchFollowInfo = async (sessionUserId: string, targetUserId: string) => {
   const { data, error } = await supabase
     .from("follows")
@@ -379,6 +393,24 @@ const unFollowUser = async (userId: string, targetUserId: string) => {
   if (error) throw new Error(error.message);
 };
 
+const addBookmark = async (userId: string, projectId: string) => {
+  const { error } = await supabase
+    .from("bookmarks")
+    .insert({ user_id: userId, project_id: projectId });
+
+  if (error) throw new Error(error.message);
+};
+
+const removeBookmark = async (userId: string, projectId: string) => {
+  const { error } = await supabase
+    .from("bookmarks")
+    .delete()
+    .eq("user_id", userId)
+    .eq("project_id", projectId);
+
+  if (error) throw new Error(error.message);
+};
+
 const fetchFollowingProfiles = async (userId: string) => {
   const { data: followingUsers, error: followsError } = await supabase
     .from("follows")
@@ -419,4 +451,7 @@ export {
   fetchFollowInfo,
   followUser,
   unFollowUser,
+  addBookmark,
+  removeBookmark,
+  fetchBookmarkInfo,
 };

@@ -176,6 +176,38 @@ on follows
 for delete
 using (auth.uid() = user_id);
 
+-- bookmarks
+create table bookmarks (
+  user_id uuid references auth.users(id) on delete cascade not null,
+  project_id uuid references projects(id) on delete cascade not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, project_id)
+);
+
+alter table bookmarks enable row level security;
+
+create policy "Users can read their own bookmarks"
+on bookmarks
+for select
+using (auth.uid() = user_id);
+
+create policy "Users can insert their own bookmarks (but not on their own projects)"
+on bookmarks
+for insert
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from projects p
+    where p.id = project_id
+      and p.user_id <> auth.uid()
+  )
+);
+
+create policy "Users can delete their own bookmarks"
+on bookmarks
+for delete
+using (auth.uid() = user_id);
 
 
 -- STORAGE

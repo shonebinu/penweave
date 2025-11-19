@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   GitFork,
   HardDriveUpload,
   Heart,
@@ -37,6 +38,9 @@ export default function EditorHeader({
   isCurrentUserLiked,
   likeToggling,
   toggleLike,
+  isCurrentUserBookmarked,
+  bookmarkToggling,
+  toggleBookmark,
 }: {
   viewerType: ViewerType;
   projectInfo: EditorHeaderProjectInfo;
@@ -56,6 +60,9 @@ export default function EditorHeader({
   isCurrentUserLiked?: boolean;
   likeToggling: boolean;
   toggleLike: () => void;
+  isCurrentUserBookmarked?: boolean;
+  bookmarkToggling: boolean;
+  toggleBookmark: () => void;
 }) {
   const creatorActions = {
     // ActionButton component receives these fields as props
@@ -112,6 +119,16 @@ export default function EditorHeader({
       className: "btn btn-square btn-soft",
       tooltip: isCurrentUserLiked ? "Remove your like" : "Like this project",
       iconFill: isCurrentUserLiked ? "currentColor" : "none",
+    },
+    {
+      onClick: toggleBookmark,
+      loading: bookmarkToggling,
+      icon: Bookmark,
+      className: "btn btn-square btn-soft",
+      tooltip: isCurrentUserBookmarked
+        ? "Remove your bookmark"
+        : "Bookmark this project",
+      iconFill: isCurrentUserBookmarked ? "currentColor" : "none",
     },
     {
       onClick: onForkProject,

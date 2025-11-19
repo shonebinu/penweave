@@ -47,6 +47,9 @@ export default function Editor() {
     likeInfo,
     likeToggling,
     toggleLike,
+    bookmarkInfo,
+    bookmarkToggling,
+    toggleBookmark,
   } = useProject(session?.user?.id, projectId, authLoading);
 
   const {
@@ -102,6 +105,9 @@ export default function Editor() {
         isCurrentUserLiked={likeInfo?.isLikedByCurrentUser}
         likeToggling={likeToggling}
         toggleLike={toggleLike}
+        isCurrentUserBookmarked={bookmarkInfo?.isBookmarkedByCurrentUser}
+        bookmarkToggling={bookmarkToggling}
+        toggleBookmark={toggleBookmark}
       />
       <PanelGroup direction="vertical" className="flex flex-1 flex-col">
         <Panel minSize={10} defaultSize={45}>
