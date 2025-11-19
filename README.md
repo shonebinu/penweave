@@ -9,5 +9,6 @@ enable google oauth and email/pass in supabase
 ## MVP TODO
 
 - Landing page (reference: [codecatch.net](https://codecatch.net/))
+- 404 page
 - better readme
 - host in cloudflare & supabase

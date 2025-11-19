@@ -18,9 +18,11 @@ import MainLayout from "@/layouts/MainLayout.tsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import ManageFollows from "./features/projects/pages/ManageFollows.tsx";
+import Landing from "./pages/Landing.tsx";
+import NotFound from "./pages/NotFound.tsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <h1>Landing Page</h1> },
+  { path: "/", element: <Landing /> },
   { path: "projects/:projectId", element: <Editor /> },
   {
     element: <ProtectedRoute />,
@@ -50,7 +52,7 @@ const router = createBrowserRouter([
       { path: "logout", element: <Logout /> },
     ],
   },
-  { path: "*", element: <h1>Not Found</h1> },
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default router;

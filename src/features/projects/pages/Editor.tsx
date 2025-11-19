@@ -1,9 +1,11 @@
 import { Ellipsis } from "lucide-react";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
+import { lazy } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Navigate, useParams } from "react-router";
 
+import LoadingDots from "@/components/LoadingDots.tsx";
 import LoadingScreen from "@/components/LoadingScreen.tsx";
 import { useAuth } from "@/features/auth/hooks/useAuth.ts";
 import { useModal } from "@/features/projects/hooks/useModal.ts";
@@ -11,10 +13,11 @@ import { useModal } from "@/features/projects/hooks/useModal.ts";
 import DeleteProjectModal from "../components/DeleteProjectModal.tsx";
 import EditTitleModal from "../components/EditTitleModal.tsx";
 import EditorHeader from "../components/EditorHeader.tsx";
-import EditorTabs from "../components/EditorTabs.tsx";
 import { useProject } from "../hooks/useProject.ts";
 import { useProjectRenderer } from "../hooks/useProjectRenderer.ts";
 import type { ViewerType } from "../types/types.ts";
+
+const EditorTabs = lazy(() => import("../components/EditorTabs.tsx"));
 
 export default function Editor() {
   const { projectId } = useParams();
@@ -111,14 +114,22 @@ export default function Editor() {
       />
       <PanelGroup direction="vertical" className="flex flex-1 flex-col">
         <Panel minSize={10} defaultSize={45}>
-          <EditorTabs
-            htmlCode={project.html}
-            cssCode={project.css}
-            jsCode={project.js}
-            setHtmlCode={(val) => updateCode("html", val)}
-            setCssCode={(val) => updateCode("css", val)}
-            setJsCode={(val) => updateCode("js", val)}
-          />
+          <Suspense
+            fallback={
+              <div className="flex h-full items-center justify-center">
+                <LoadingDots />
+              </div>
+            }
+          >
+            <EditorTabs
+              htmlCode={project.html}
+              cssCode={project.css}
+              jsCode={project.js}
+              setHtmlCode={(val) => updateCode("html", val)}
+              setCssCode={(val) => updateCode("css", val)}
+              setJsCode={(val) => updateCode("js", val)}
+            />
+          </Suspense>
         </Panel>
         <PanelResizeHandle>
           <Ellipsis size="1rem" className="mx-auto" />
