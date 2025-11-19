@@ -6,8 +6,8 @@ create a new proj in supabase and copy the env to .env
 
 enable google oauth and email/pass in supabase
 
-## TODO
+## MVP TODO
 
-- bookmarks feature (explore cards)
-- share link in editor, disabled if private
 - Landing page (reference: [codecatch.net](https://codecatch.net/))
+- better readme
+- host in cloudflare & supabase

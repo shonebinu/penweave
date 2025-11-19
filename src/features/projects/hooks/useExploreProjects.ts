@@ -7,11 +7,13 @@ import type { Profile } from "@/types/profile.ts";
 import { handleError } from "@/utils/error.ts";
 
 import {
+  addBookmark,
   fetchExploreProjects,
   fetchFollowInfo,
   followUser,
   forkPublicProject,
   likeProject,
+  removeBookmark,
   removeLike,
   unFollowUser,
 } from "../services/projectsService.ts";
@@ -31,6 +33,7 @@ export function useExploreProjects(
   const [totalProjectsCount, setTotalProjectsCount] = useState(0);
   const [forkingId, setForkingId] = useState<string | null>(null);
   const [toggleLikeId, setToggleLikeId] = useState<string | null>(null);
+  const [toggleBookmarkId, setToggleBookmarkId] = useState<string | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [followInfo, setFollowInfo] = useState<{ userFollows: boolean } | null>(
     null,
@@ -73,7 +76,15 @@ export function useExploreProjects(
     };
 
     loadExploreProjects();
-  }, [page, pageSize, searchQuery, userId, exploreUserId, followsProjectsOnly]);
+  }, [
+    page,
+    pageSize,
+    searchQuery,
+    userId,
+    exploreUserId,
+    followsProjectsOnly,
+    bookmarkedProjectsOnly,
+  ]);
 
   const forkProject = async (projectId: string) => {
     if (!userId || !projectId) return;
@@ -158,6 +169,57 @@ export function useExploreProjects(
     }
   };
 
+  const toggleBookmark = async (projectId: string) => {
+    if (!userId || !projectId || !projects) return;
+
+    const proj = projects.find((p) => p.id === projectId);
+
+    if (!proj) return;
+
+    try {
+      setToggleBookmarkId(projectId);
+      if (proj.isBookmarkedByCurrentUser) {
+        await removeBookmark(userId, projectId);
+      } else {
+        await addBookmark(userId, projectId);
+      }
+
+      setProjects((prev) => {
+        if (!prev) return prev;
+
+        return prev.reduce<ExploreProject[]>((acc, p) => {
+          const updated =
+            p.id === projectId
+              ? {
+                  ...p,
+                  isBookmarkedByCurrentUser: !p.isBookmarkedByCurrentUser,
+                }
+              : p;
+
+          if (!bookmarkedProjectsOnly || updated.isBookmarkedByCurrentUser) {
+            acc.push(updated);
+          }
+          return acc;
+        }, []);
+      });
+
+      toast.success(
+        !proj.isBookmarkedByCurrentUser
+          ? "Project has been bookmarked"
+          : "Project bookmark has been removed",
+      );
+    } catch (err) {
+      handleError(
+        err,
+        !proj.isBookmarkedByCurrentUser
+          ? "Bookmarking failed"
+          : "Remove bookmark failed",
+      );
+    } finally {
+      setToggleBookmarkId(null);
+    }
+  };
+
   return {
     profile,
     loading,
@@ -170,5 +232,7 @@ export function useExploreProjects(
     followInfo,
     togglingFollow,
     toggleFollow,
+    toggleBookmarkId,
+    toggleBookmark,
   };
 }

@@ -20,4 +20,5 @@ export type ProjectWithForkAndLikeInfo = Project & {
 export type ExploreProject = ProjectWithForkAndLikeInfo & {
   authorDisplayName: string | null;
   isLikedByCurrentUser: boolean;
+  isBookmarkedByCurrentUser: boolean;
 };

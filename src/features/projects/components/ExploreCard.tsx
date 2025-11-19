@@ -12,6 +12,8 @@ export default function ExploreCard({
   author,
   onToggleLike,
   togglingLike,
+  togglingBookmark,
+  onToggleBookmark,
 }: {
   project: ExploreProject;
   forking: boolean;
@@ -19,6 +21,8 @@ export default function ExploreCard({
   author: boolean;
   onToggleLike: () => void;
   togglingLike: boolean;
+  togglingBookmark: boolean;
+  onToggleBookmark: () => void;
 }) {
   const exploreActions = !author
     ? [
@@ -28,26 +32,26 @@ export default function ExploreCard({
           icon: Heart,
           tooltip: !project.isLikedByCurrentUser
             ? "Like project"
-            : "Remove Like",
-          className: "btn-square btn join-item btn-soft",
+            : "Remove like",
+          className: "btn-square btn join-item btn-soft hover:btn-accent",
           iconFill: project.isLikedByCurrentUser ? "currentColor" : "none",
         },
         {
-          onClick: onToggleLike,
-          loading: togglingLike,
+          onClick: onToggleBookmark,
+          loading: togglingBookmark,
           icon: Bookmark,
-          tooltip: !project.isLikedByCurrentUser
-            ? "Like project"
-            : "Remove Like",
-          className: "btn-square btn join-item btn-soft",
-          iconFill: project.isLikedByCurrentUser ? "currentColor" : "none",
+          tooltip: !project.isBookmarkedByCurrentUser
+            ? "Bookmark project"
+            : "Remove bookmark",
+          className: "btn-square btn join-item btn-soft hover:btn-info",
+          iconFill: project.isBookmarkedByCurrentUser ? "currentColor" : "none",
         },
         {
           onClick: onForkProject,
           loading: forking,
           icon: GitFork,
           tooltip: "Fork project",
-          className: "btn-square btn join-item btn-soft",
+          className: "btn-square btn join-item btn-soft hover:btn-primary",
         },
       ]
     : [];

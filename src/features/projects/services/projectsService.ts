@@ -303,11 +303,13 @@ const fetchExploreProjects = async (
       `
     *,
     forks!forks_forked_to_fkey (forked_from),
-    likes:likes (user_id)
+    likes:likes (user_id),
+    bookmarks:bookmarks (user_id)
   `,
       { count: "exact" },
     )
     .eq("is_private", false);
+  // bookmarks only returns one row if user bookmarked bcuz of rls policy
 
   if (exploreUserId) query.eq("user_id", exploreUserId);
   if (followsProjectsOnly) {
@@ -353,16 +355,21 @@ const fetchExploreProjects = async (
 
   if (profileError) throw new Error(profileError.message);
 
-  const exploreProjects = projects.map(({ forks, likes, ...proj }) => ({
-    ...proj,
-    forkedFrom: forks[0]?.forked_from ?? null,
-    likeCount: likes?.length ?? 0,
-    isLikedByCurrentUser:
-      (likes as Like[] | undefined)?.some((l) => l.user_id === currentUserId) ??
-      false,
-    authorDisplayName:
-      profiles?.find((pr) => pr.user_id === proj.user_id)?.display_name ?? null,
-  }));
+  const exploreProjects = projects.map(
+    ({ forks, likes, bookmarks, ...proj }) => ({
+      ...proj,
+      forkedFrom: forks[0]?.forked_from ?? null,
+      likeCount: likes?.length ?? 0,
+      isLikedByCurrentUser:
+        (likes as Like[] | undefined)?.some(
+          (l) => l.user_id === currentUserId,
+        ) ?? false,
+      isBookmarkedByCurrentUser: bookmarks?.[0]?.user_id === currentUserId,
+      authorDisplayName:
+        profiles?.find((pr) => pr.user_id === proj.user_id)?.display_name ??
+        null,
+    }),
+  );
 
   return {
     projects: exploreProjects as ExploreProject[],

@@ -29,6 +29,8 @@ export default function Bookmarks() {
     toggleLikeId,
     forkingId,
     toggleLike,
+    toggleBookmark,
+    toggleBookmarkId,
   } = useExploreProjects(
     session?.user.id,
     page,
@@ -73,6 +75,8 @@ export default function Bookmarks() {
               onForkProject={() => forkProject(project.id)}
               onToggleLike={() => toggleLike(project.id)}
               author={session?.user.id === project.user_id}
+              onToggleBookmark={() => toggleBookmark(project.id)}
+              togglingBookmark={toggleBookmarkId === project.id}
             />
           ))
         )}
