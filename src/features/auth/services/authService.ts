@@ -1,7 +1,7 @@
 import { supabase } from "@/supabaseClient.ts";
 
-const emailVerificationRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/projects`;
-const forgotPassRedirectUrl = `${import.meta.env.VITE_PUBLIC_SITE_URL}/reset-password`;
+const emailVerificationRedirectUrl = `${window.location.origin}/projects`;
+const forgotPassRedirectUrl = `${window.location.origin}/reset-password`;
 const googleSignInRedirectUrl = emailVerificationRedirectUrl;
 
 const signUpUser = async (email: string, password: string, name: string) => {
