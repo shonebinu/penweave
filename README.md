@@ -28,7 +28,7 @@ The frontend of this app is React and as for the backend it is Supabase, You sho
 
 To get Google OAuth working, enable it on your Supabase dashboard along with regular Email sign up.
 
-Also don't forget to run `sschema.sql` files content in your Supabase project to generate the necessary tables.
+Also don't forget to run `supabase/schema.sql` files content in your Supabase project to generate the necessary tables.
 
 You should also change Supabase URL Configuration if necessary in the dashboard.
 
