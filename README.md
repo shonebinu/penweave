@@ -8,8 +8,8 @@ enable google oauth and email/pass in supabase
 
 ## MVP TODO
 
-- organise runner and other code
 - Landing page
 - 404 page
+- email template
 - better readme
 - host in cloudflare & supabase
