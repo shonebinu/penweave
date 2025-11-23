@@ -7,7 +7,7 @@
 - Write code in HTML, CSS and JS.
 - Generates instant live preview.
 - Allows public and private projects.
-- Public projects can be shared with anyone even those who don't use the platform. [See Demo](https://penweave.pages.dev/projects/955f3653-d771-4ab3-9ef5-b6299c6606e9)
+- Public projects can be shared with anyone even those who don't use the platform. [See Demo](https://penweave.pages.dev/projects/d6192c1c-7bd6-4b14-bb65-6923bc831ea1)
 - Allows to fork public projects and make your changes!
 - Follow other creators, bookmark projects, like them...
 
@@ -33,4 +33,4 @@ Also don't forget to run `supabase/schema.sql` files content in your Supabase pr
 You should also change Supabase URL Configuration if necessary in the dashboard.
 
 ## Credits
-The inspiration is very much from [Codepen](https://codepen.io/). 
+The inspiration is very much from [Codepen](https://codepen.io/).
