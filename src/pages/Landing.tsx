@@ -35,7 +35,7 @@ export default function Landing() {
           </p>
           <div className="mt-6 flex justify-center space-x-3">
             <a
-              href="https://penweave.pages.dev/projects/d6192c1c-7bd6-4b14-bb65-6923bc831ea1"
+              href="https://penweave.pages.dev/projects/4999252e-140f-428a-aabf-28f87a75d2ae"
               className="btn"
               target="_blank"
             >

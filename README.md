@@ -7,7 +7,7 @@
 - Write code in HTML, CSS and JS.
 - Generates instant live preview.
 - Allows public and private projects.
-- Public projects can be shared with anyone even those who don't use the platform. [See Demo](https://penweave.pages.dev/projects/d6192c1c-7bd6-4b14-bb65-6923bc831ea1)
+- Public projects can be shared with anyone even those who don't use the platform. 
 - Allows to fork public projects and make your changes!
 - Follow other creators, bookmark projects, like them...
 
