@@ -5,7 +5,7 @@ create extension if not exists moddatetime schema extensions;
 create table projects (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
-  title text not null, 
+  title text not null,
   html text,
   css text,
   js text,
@@ -85,12 +85,12 @@ using (auth.uid() = user_id);
 -- forks
 create table forks (
   id uuid primary key default gen_random_uuid(),
-  forked_from uuid,
-  forked_to uuid,
+  forked_from uuid not null,
+  forked_to uuid not null,
   created_at timestamptz not null default now(),
   check (forked_from IS DISTINCT FROM forked_to),
-  constraint forks_forked_from_fkey foreign key (forked_from) references projects(id) on delete set null,
-  constraint forks_forked_to_fkey foreign key (forked_to) references projects(id) on delete set null
+  constraint forks_forked_from_fkey foreign key (forked_from) references projects(id) on delete cascade,
+  constraint forks_forked_to_fkey foreign key (forked_to) references projects(id) on delete cascade
 );
 
 alter table forks enable row level security;
