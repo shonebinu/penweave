@@ -41,6 +41,7 @@ export default function BaseProjectCard({
               src={project.thumbnail_url}
               alt="Project thumbnail"
               className="h-full w-full object-cover object-left-top"
+              loading="lazy"
             />
           ) : (
             <span className="text-sm">No Thumbnail</span>
